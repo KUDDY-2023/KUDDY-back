@@ -28,8 +28,12 @@ subprojects {
 
     dependencies {
         // 공통 의존성 (예: 모든 모듈에서 사용되는 라이브러리)
+
+        //spring boot
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
         //lombok
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
