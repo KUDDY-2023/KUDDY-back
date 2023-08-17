@@ -1,0 +1,5 @@
+rootProject.name = 'kuddy-back'
+include 'api-server'
+include 'noti-server'
+include 'chat-server'
+include 'common'

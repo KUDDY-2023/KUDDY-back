@@ -1,0 +1,19 @@
+jar {
+    enabled = false
+}
+dependencies {
+    //implementation project(path: ':common') //common 모듈을 반드시 Implementation
+
+    //kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+    //DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+    //websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // logging
+//    implementation 'net.logstash.logback:logstash-logback-encoder:7.2'
+}

@@ -1,0 +1,23 @@
+bootJar { enabled = false } // core 은 bootJar 로 패키징 할 필요 없음
+jar { enabled = true }
+dependencies {
+
+
+    implementation 'com.querydsl:querydsl-jpa'
+    //querydsl 추가
+    implementation 'com.querydsl:querydsl-apt'
+    //JWT
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+}
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.14'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+java {
+    sourceCompatibility = '11'
+}
+repositories {
+    mavenCentral()
+}
+
+bootJar.enabled = false
+//subprojects 부분에서 포함된 내용이 각각의 하위 모듈에 반영되는 부분 -> 하위 모듈에서 사용할 DB 관련 의존성을 추가
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'kuddy.com'
+    version = '1.0'
+    sourceCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // 공통 의존성 (예: 모든 모듈에서 사용되는 라이브러리)
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        //lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        //validation
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+}
+
+project(':common') {
+    // 공통 코드
+    dependencies {
+    }
+}
+
+project(':api-server') {
+    dependencies {
+        implementation project(path:':common', configuration: 'default')
+    }
+}
+
+project(':chat-server') {
+    dependencies {
+        implementation project(path:':common', configuration: 'default')
+        // 채팅 서버에만 필요한 의존성
+    }
+}
+
+project(':noti-server') {
+    dependencies {
+        implementation project(path:':common', configuration: 'default')
+        // 알림 서버에만 필요한 의존성
+    }
+}
+
+

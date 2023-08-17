@@ -1,0 +1,8 @@
+jar {
+    enabled = false
+}
+dependencies {
+//    implementation project(path: ':common') //common 모듈을 반드시 Implementation
+
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+}

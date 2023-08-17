@@ -1,0 +1,9 @@
+jar {
+    enabled = false
+}
+dependencies {
+    //implementation project(path: ':common') //common 모듈을 반드시 Implementation
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}
