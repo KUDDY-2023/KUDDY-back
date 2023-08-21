@@ -5,5 +5,5 @@ import com.kuddy.common.exception.custom.UnAuthorizedException;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class InvalidRefreshTokenException extends UnAuthorizedException {
+public class UnAuthorizedTokenException extends UnAuthorizedException {
 }

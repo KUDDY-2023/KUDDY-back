@@ -15,37 +15,49 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.kuddy.common.redis.RedisService;
+import com.kuddy.common.security.exception.AuthExceptionHandler;
+import com.kuddy.common.security.exception.ExpiredTokenException;
 import com.kuddy.common.security.exception.InvalidRefreshTokenException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 	private final JwtProvider jwtProvider;
 
 	private final RedisService redisService;
+	private final AuthExceptionHandler authExceptionHandler;
 
 	@Override
 	protected void doFilterInternal(
 		HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 		throws ServletException, IOException {
 
-		// HTTP Request Header에서 Token 값 가져오기
 		String jwt = resolveToken(request);
 
-		// 유효성 검사 후, 정상적인 토큰인 경우 Security Context에 저장한다.
-		if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
+		try {
+			if (StringUtils.hasText(jwt)) {
+				if (jwtProvider.validateToken(response, jwt)) {
+					Optional<String> isBlackList = redisService.getBlackList(jwt);
+					isBlackList.ifPresent(t -> {
+						throw new InvalidRefreshTokenException();
+					});
 
-			// BlackList에 존재하는 토큰으로 요청이 온 경우.
-			Optional<String> isBlackList = redisService.getBlackList(jwt);
-			isBlackList.ifPresent(t -> {
-				throw new InvalidRefreshTokenException();
-			});
-
-			Authentication authentication = jwtProvider.getAuthentication(jwt);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+					Authentication authentication = jwtProvider.getAuthentication(jwt);
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+				} else {
+					return;
+				}
+			}
+		} catch (InvalidRefreshTokenException e) {
+			log.error("Invalid refresh token exception:", e);
+			authExceptionHandler.handleException(response, new ExpiredTokenException());
+			return;
 		}
+
 		filterChain.doFilter(request, response);
 	}
 

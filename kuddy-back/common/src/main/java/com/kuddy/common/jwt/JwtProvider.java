@@ -1,8 +1,11 @@
 package com.kuddy.common.jwt;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.kuddy.common.exception.custom.UnAuthorizedException;
-import com.kuddy.common.redis.RedisService;
+import com.kuddy.common.security.exception.AuthExceptionHandler;
 import com.kuddy.common.security.exception.ExpiredTokenException;
 import com.kuddy.common.security.exception.InvalidTokenException;
 import com.kuddy.common.security.exception.InvalidTokenTypeException;
@@ -32,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
-	private final RedisService redisService;
+	private final AuthExceptionHandler authExceptionHandler;
 
 	private final UserDetailsServcieImpl userDetailsService;
 
@@ -89,7 +92,8 @@ public class JwtProvider {
 		return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 	}
 
-	public boolean validateToken(String token) {
+	public boolean validateToken(HttpServletResponse response,String token) throws
+		IOException {
 		try {
 			Jwts.parserBuilder()
 				.setSigningKey(getSignKey(secretKey))
@@ -98,17 +102,21 @@ public class JwtProvider {
 			return true;
 		} catch (ExpiredJwtException e) {
 			log.error("만료된 토큰입니다. {}", e.toString());
-			throw new ExpiredTokenException();
+			authExceptionHandler.handleException(response, new ExpiredTokenException());
+			return false;
 		} catch (UnsupportedJwtException e) {
 			log.error("잘못된 형식의 토큰입니다. {}", e.toString());
-			throw new InvalidTokenTypeException();
+			authExceptionHandler.handleException(response, new InvalidTokenTypeException());
+			return false;
 		} catch (MalformedJwtException e) {
 			log.error("잘못된 구조의 토큰입니다. {}", e.toString());
-			throw new InvalidTokenTypeException();
+			authExceptionHandler.handleException(response, new InvalidTokenTypeException());
+			return false;
 		}
 		catch (IllegalArgumentException e) {
 			log.error("잘못 생성된 토큰입니다. {}", e.toString());
-			throw new InvalidTokenException();
+			authExceptionHandler.handleException(response, new InvalidTokenException());
+			return false;
 		}
 	}
 

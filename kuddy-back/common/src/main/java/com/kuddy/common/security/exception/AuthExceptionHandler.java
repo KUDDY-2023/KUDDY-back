@@ -1,39 +1,39 @@
-package com.kuddy.common.jwt;
+package com.kuddy.common.security.exception;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import net.minidev.json.JSONObject;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kuddy.common.exception.custom.UnAuthorizedException;
 import com.kuddy.common.exception.dto.ErrorResponse;
-import com.kuddy.common.security.exception.InvalidTokenTypeException;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class JwtEntryPoint implements AuthenticationEntryPoint { //인증에 실패할 경우 진행될 EntryPoint를 생성
-
-	@Override
-	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-		// 이미 응답이 커밋된 경우, 더 이상 응답을 보내지 않는다.
-		if (response.isCommitted()) {
-			return;
+public class AuthExceptionHandler {
+	public void handleException(HttpServletResponse response,
+		UnAuthorizedException ex) throws IOException {
+		if (ex instanceof InvalidTokenTypeException) {
+			commence(response, ex);
+		} else if (ex instanceof InvalidTokenException) {
+			commence(response, ex);
 		}
+		else if (ex instanceof ExpiredTokenException) {
+			commence(response, ex);
+		}
+	}
+	public void commence(HttpServletResponse response, UnAuthorizedException authException) throws
+		IOException {
+
 		log.error("Unauthorized Error : {}", authException.getMessage());
 		// ErrorResponse 객체 생성
 		ErrorResponse errorResponse = ErrorResponse.builder()
 			.status(HttpStatus.UNAUTHORIZED)
-			.code("AUTH_ERROR")
+			.code(authException.getErrorCode())
 			.message(authException.getMessage())
 			.build();
 
@@ -47,7 +47,4 @@ public class JwtEntryPoint implements AuthenticationEntryPoint { //인증에 실
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		response.getWriter().write(jsonResponse);
 	}
-
-
 }
-
