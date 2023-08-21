@@ -70,6 +70,7 @@ public class SecurityConfiguration {
 			.userService(customOAuth2UserService)
 			.and()
 			.successHandler(oAuth2AuthenticationSuccessHandler)
+			.failureHandler(oAuth2AuthenticationFailureHandler)
 
 			.and() // 시큐리티는 기본적으로 세션을 사용하지만, 우리는 세션을 사용하지 않기 때문에 Stateless로 설정
 			.sessionManagement()
@@ -94,7 +95,6 @@ public class SecurityConfiguration {
 		configuration.addAllowedHeader("*");
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedOrigin("http://localhost:3000");
-		configuration.addAllowedOrigin("http://localhost:5500");
 		configuration.setAllowCredentials(true);
 		configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
 
