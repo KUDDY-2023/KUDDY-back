@@ -2,10 +2,10 @@ package com.kuddy.common.member.exception;
 
 import com.kuddy.common.exception.custom.NotFoundException;
 
-public class MemberNotFoundException extends NotFoundException {
+import lombok.NoArgsConstructor;
 
-	public MemberNotFoundException() {
-	}
+@NoArgsConstructor
+public class MemberNotFoundException extends NotFoundException {
 
 	public MemberNotFoundException(String memberEmail) {
 		super("member email : " + memberEmail);

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.User;
 import lombok.Getter;
 
 @Getter
-public class MemberAdapter extends User { //본 Member에 바로 User을 상속 받으면 도메인 객체는 특정 기능에 종속되므로 Best prac 이 아님
+public class MemberAdapter extends User {
 	private Member member;
 
 	public MemberAdapter(Member member) {
