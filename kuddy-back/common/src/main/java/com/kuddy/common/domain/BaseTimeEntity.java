@@ -1,4 +1,4 @@
-package com.kuddy.common.entity;
+package com.kuddy.common.domain;
 
 import java.time.LocalDateTime;
 
