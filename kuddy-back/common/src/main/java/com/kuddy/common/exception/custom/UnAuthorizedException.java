@@ -7,4 +7,5 @@ public class UnAuthorizedException extends ApplicationException {
 	public UnAuthorizedException() {
 		super(HttpStatus.UNAUTHORIZED);
 	}
+
 }
