@@ -34,16 +34,15 @@ public class SpotController {
                 .build());
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<StatusResponse> getSpotsByCategory(@PathVariable String category, @RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
         Page<Spot> spotPage = spotService.findSpotByCategory(category.toUpperCase(), page - 1, size);
-        PageInfo pageInfo = new PageInfo(page, size, spotPage.getTotalElements(), spotPage.getTotalPages());
-        List<SpotResDto> spotList = spotService.changeSpotToResFormat(spotPage);
-        SpotPageResDto spotPageResDto = new SpotPageResDto(spotList, pageInfo);
+        return spotService.changeToResponse(spotPage, page, size);
+    }
 
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(spotPageResDto)
-                .build());
-    }}
+    @GetMapping("/district/{district}")
+    public ResponseEntity<StatusResponse> getSpotsByDistrict(@PathVariable String district, @RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
+        Page<Spot> spotPage = spotService.findSpotByDistrict(district.toUpperCase(), page - 1, size);
+        return spotService.changeToResponse(spotPage, page, size);
+    }
+}

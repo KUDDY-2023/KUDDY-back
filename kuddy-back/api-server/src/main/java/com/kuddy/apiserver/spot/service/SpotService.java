@@ -1,6 +1,10 @@
 package com.kuddy.apiserver.spot.service;
 
+import com.kuddy.apiserver.spot.dto.SpotPageResDto;
 import com.kuddy.apiserver.spot.dto.SpotResDto;
+import com.kuddy.common.page.PageInfo;
+import com.kuddy.common.response.StatusEnum;
+import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.spot.domain.Category;
 import com.kuddy.common.spot.domain.District;
 import com.kuddy.common.spot.domain.Spot;
@@ -10,6 +14,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,14 +62,27 @@ public class SpotService {
         return spotRepository.findAllByCategory(Category.valueOf(category), pageRequest);
     }
 
-    public List<SpotResDto> changeSpotToResFormat(Page<Spot> spotPage) {
+    public Page<Spot> findSpotByDistrict(String district, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return spotRepository.findAllByDistrict(District.valueOf(district), pageRequest);
+    }
+
+    public ResponseEntity<StatusResponse> changeToResponse(Page<Spot> spotPage, int page, int size) {
         List<Spot> spotList = spotPage.getContent();
         List<SpotResDto> respone = new ArrayList<>();
         for(Spot spot : spotList) {
             SpotResDto spotResDto = SpotResDto.of(spot);
             respone.add(spotResDto);
         }
-        return respone;
+
+        PageInfo pageInfo = new PageInfo(page, size, spotPage.getTotalElements(), spotPage.getTotalPages());
+        SpotPageResDto spotPageResDto = new SpotPageResDto(respone, pageInfo);
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(spotPageResDto)
+                .build());
     }
 }
 
