@@ -1,5 +1,6 @@
 package com.kuddy.apiserver.spot.service;
 
+import com.kuddy.apiserver.spot.dto.SpotResDto;
 import com.kuddy.common.spot.domain.Category;
 import com.kuddy.common.spot.domain.District;
 import com.kuddy.common.spot.domain.Spot;
@@ -7,8 +8,13 @@ import com.kuddy.common.spot.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -44,6 +50,21 @@ public class SpotService {
                         .build());
             }
         }
+    }
+
+    public Page<Spot> findSpotByCategory(String category, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return spotRepository.findAllByCategory(Category.valueOf(category), pageRequest);
+    }
+
+    public List<SpotResDto> changeSpotToResFormat(Page<Spot> spotPage) {
+        List<Spot> spotList = spotPage.getContent();
+        List<SpotResDto> respone = new ArrayList<>();
+        for(Spot spot : spotList) {
+            SpotResDto spotResDto = SpotResDto.of(spot);
+            respone.add(spotResDto);
+        }
+        return respone;
     }
 }
 
