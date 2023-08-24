@@ -67,6 +67,11 @@ public class SpotService {
         return spotRepository.findAllByDistrict(District.valueOf(district), pageRequest);
     }
 
+    public Page<Spot> findAllSpots(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return spotRepository.findAll(pageRequest);
+    }
+
     public ResponseEntity<StatusResponse> changeToResponse(Page<Spot> spotPage, int page, int size) {
         List<Spot> spotList = spotPage.getContent();
         List<SpotResDto> respone = new ArrayList<>();

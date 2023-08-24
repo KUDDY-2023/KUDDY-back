@@ -45,4 +45,10 @@ public class SpotController {
         Page<Spot> spotPage = spotService.findSpotByDistrict(district.toUpperCase(), page - 1, size);
         return spotService.changeToResponse(spotPage, page, size);
     }
+
+    @GetMapping("")
+    public ResponseEntity<StatusResponse> getSpotsList(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
+        Page<Spot> spotPage = spotService.findAllSpots(page - 1, size);
+        return spotService.changeToResponse(spotPage, page, size);
+    }
 }
