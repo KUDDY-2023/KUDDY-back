@@ -1,6 +1,6 @@
 package com.kuddy.apiserver.spot.dto;
 
-import com.kuddy.common.spot.domain.Category;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kuddy.common.spot.domain.Spot;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SpotResDto {
     private Long id;
     private String name;
@@ -18,6 +19,8 @@ public class SpotResDto {
     private String district;
     private String category;
     private String imageUrl;
+    private String mapX;
+    private String mapY;
 
     public static SpotResDto of(Spot spot){
         return SpotResDto.builder()

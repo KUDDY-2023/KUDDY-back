@@ -1,7 +1,6 @@
 package com.kuddy.apiserver.spot.dto;
 
 import com.kuddy.common.page.PageInfo;
-import com.kuddy.common.spot.domain.Spot;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SpotPageResDto {
-    private List<SpotResDto> data;
+    private List<SpotResDto> spots;
     private PageInfo pageInfo;
 }

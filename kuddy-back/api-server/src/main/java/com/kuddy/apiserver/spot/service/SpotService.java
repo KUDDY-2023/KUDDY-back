@@ -29,7 +29,7 @@ public class SpotService {
 
     private final SpotRepository spotRepository;
 
-    //필요한 정보(이름, 지역, 카테고리, 사진, 고유id)만 db에 저장
+    //JSON 응답값 중 필요한 정보(이름, 지역, 카테고리, 사진, 고유id)만 db에 저장
     public void changeAndSave(JSONArray spotArr) {
         for (Object o : spotArr) {
             JSONObject item = (JSONObject) o;
@@ -57,27 +57,36 @@ public class SpotService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Page<Spot> findSpotByCategory(String category, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return spotRepository.findAllByCategory(Category.valueOf(category), pageRequest);
     }
 
+    @Transactional(readOnly = true)
     public Page<Spot> findSpotByDistrict(String district, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return spotRepository.findAllByDistrict(District.valueOf(district), pageRequest);
     }
 
+    @Transactional(readOnly = true)
     public Page<Spot> findAllSpots(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return spotRepository.findAll(pageRequest);
     }
 
-    public ResponseEntity<StatusResponse> changeToResponse(Page<Spot> spotPage, int page, int size) {
+    //조회한 spot 리스트와 페이지 정보를 공통응답형식으로 반환하도록 변환하는 메소드
+    public ResponseEntity<StatusResponse> changePageToResponse(Page<Spot> spotPage, int page, int size) {
         List<Spot> spotList = spotPage.getContent();
         List<SpotResDto> respone = new ArrayList<>();
         for(Spot spot : spotList) {
             SpotResDto spotResDto = SpotResDto.of(spot);
             respone.add(spotResDto);
+        }
+
+        //페이지가 1장일 경우 요소의 총 개수가 size
+        if(spotPage.getTotalPages() == 1) {
+            size = (int) spotPage.getTotalElements();
         }
 
         PageInfo pageInfo = new PageInfo(page, size, spotPage.getTotalElements(), spotPage.getTotalPages());
@@ -89,5 +98,49 @@ public class SpotService {
                 .data(spotPageResDto)
                 .build());
     }
-}
 
+
+    //Tour Api에서 조회한 정보를 db에 저장하지 않고 공통응답형식으로 반환하도록 변환하는 메소드(위치 기반 추천)
+    public ResponseEntity<StatusResponse> changeJsonToResponse(JSONObject body) {
+        int numOfRows = Integer.parseInt(String.valueOf(body.get("numOfRows")));
+        int pageNo = Integer.parseInt(String.valueOf(body.get("pageNo")));
+        long totalCount = (long) body.get("totalCount");
+        JSONObject items = (JSONObject) body.get("items");
+        JSONArray spotArr = (JSONArray) items.get("item");
+
+        List<SpotResDto> respone = new ArrayList<>();
+        for(Object o : spotArr) {
+            JSONObject item = (JSONObject) o;
+            String contentType = "";
+            String areaCode = "";
+            for (Category category : Category.values()) {
+                if (item.get("contenttypeid").equals(category.getCode()))
+                    contentType = category.getType();
+            }
+            for (District district : District.values()) {
+                if (item.get("sigungucode").equals(district.getCode()))
+                    areaCode = district.getArea();
+            }
+
+            SpotResDto spotResDto = SpotResDto.builder()
+                    .name((String) item.get("title"))
+                    .contentId(Long.valueOf((String)item.get("contentid")))
+                    .district(areaCode)
+                    .category(contentType)
+                    .imageUrl((String) item.get("firstimage"))
+                    .mapX(String.valueOf(item.get("mapx")))
+                    .mapY(String.valueOf(item.get("mapy")))
+                    .build();
+            respone.add(spotResDto);
+        }
+
+        PageInfo pageInfo = new PageInfo(pageNo, numOfRows, totalCount, (int)(totalCount / 20 + 1));
+        SpotPageResDto spotPageResDto = new SpotPageResDto(respone, pageInfo);
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(spotPageResDto)
+                .build());
+    }
+}

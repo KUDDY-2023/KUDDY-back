@@ -52,4 +52,38 @@ public class TourApiService {
             throw new TourApiExeption();
         }
     }
+
+    //현재 위치 기반으로 2km 반경 관광지 20개씩 조회
+    public JSONObject getLocationBasedApi(int page, double mapX, double mapY) {
+
+        try {
+            String result = "";
+
+            URL url = new URL("https://apis.data.go.kr/B551011/EngService1/locationBasedList1?numOfRows=20&pageNo=" +
+                    page +
+                    "&MobileOS=ETC&MobileApp=Kuddy&_type=json&listYN=Y&arrange=A&mapX=" +
+                    mapX +
+                    "&mapY=" +
+                    mapY +
+                    "&radius=2000&serviceKey="
+                    + SECRET_KEY);
+
+            BufferedReader bf;
+            bf = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+            result = bf.readLine();
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
+            JSONObject response = (JSONObject) jsonObject.get("response");
+            JSONObject body = (JSONObject) response.get("body");
+
+            return body;
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new TourApiExeption();
+        }
+    }
+
+
 }
