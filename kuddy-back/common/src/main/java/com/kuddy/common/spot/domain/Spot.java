@@ -22,8 +22,9 @@ public class Spot {
     @Column(nullable = false, name = "content_id")
     private Long contentId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String district;
+    private District district;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
@@ -33,7 +34,7 @@ public class Spot {
     private String imageUrl;
 
     @Builder
-    public Spot(String name, Long contentId, String district, String imageUrl, Category category) {
+    public Spot(String name, Long contentId, District district, String imageUrl, Category category) {
         this.name= name;
         this.contentId = contentId;
         this.district = district;
