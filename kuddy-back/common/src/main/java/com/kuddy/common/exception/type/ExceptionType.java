@@ -12,6 +12,7 @@ import com.kuddy.common.security.exception.InvalidTokenException;
 import com.kuddy.common.security.exception.InvalidTokenTypeException;
 import com.kuddy.common.security.exception.UnAuthorizedTokenException;
 
+import com.kuddy.common.spot.exception.TourApiExeption;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -38,13 +39,15 @@ public enum ExceptionType {
 	UNAUTHORIZED_TOKEN_EXCEPTION("C1010", "유효한 액세스 토큰으로 리프레시 토큰을 발급할 수 없습니다.", UnAuthorizedTokenException.class),
 	INVALID_ACCESS_TOKEN_AT_RENEW_EXCEPTION("C1011", "유효하지 않는 액세스 토큰으로 권한이 없는 유저입니다. 재로그인을 해주세요",
 		InvalidAccessTokenAtRenewException.class),
-	INVALID_TOKEN_EXCEPTION("C1012", "토큰이 유효하지 않습니다.", InvalidTokenException.class);
+	INVALID_TOKEN_EXCEPTION("C1012", "토큰이 유효하지 않습니다.", InvalidTokenException.class),
 
 
+	//관광지 관련 - C4***
+	TOUR_API_EXCEPTION("C4000", "TourApi를 불러올 수 없습니다.", TourApiExeption.class);
 
 	//회원 관련 - C2***
 	//프로필 관련 - C3***
-	//관광지 관련 - C4***
+
 	//게시글 관련 - C5***
 	//댓글 관련 - C6***
 
