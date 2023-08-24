@@ -1,4 +1,4 @@
-package com.kuddy.apiserver.spot.domain;
+package com.kuddy.common.spot.domain;
 
 import lombok.Builder;
 import lombok.Getter;
