@@ -6,6 +6,8 @@ import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.spot.domain.Spot;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +50,16 @@ public class SpotController {
     }
 
     @GetMapping("/recommendation")
-    public ResponseEntity<StatusResponse> recommandSpot(@RequestParam(value = "page") int page, @RequestParam(value = "x") double mapX, @RequestParam(value = "y") double mapY) {
-        return spotService.changeJsonToResponse(tourApiService.getLocationBasedApi(page, mapX, mapY));
+    public ResponseEntity<StatusResponse> recommendSpot(@RequestParam(value = "page") int page, @RequestParam(value = "x") double mapX, @RequestParam(value = "y") double mapY) {
+        return spotService.changeJsonToResponse(tourApiService.getLocationBasedApi(page, 20, mapX, mapY));
+    }
+
+    @GetMapping("/{contentId}")
+    public ResponseEntity<StatusResponse> getSpotDetail(@PathVariable Long contentId, @RequestParam(value = "x") double mapX, @RequestParam(value = "y") double mapY) {
+        Spot spot = spotService.findSpotByContentId(contentId);
+        Object spotDetail = tourApiService.getDetailInfo(spot);
+        JSONObject nearbySpots = tourApiService.getLocationBasedApi(1, 5, mapX, mapY);
+        JSONArray imageArr = tourApiService.getDetailImages(contentId);
+        return spotService.responseDetailInfo(spotDetail, nearbySpots, imageArr, spot);
     }
 }

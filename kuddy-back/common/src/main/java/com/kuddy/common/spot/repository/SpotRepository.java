@@ -12,4 +12,5 @@ public interface SpotRepository extends JpaRepository<Spot, Long> {
     boolean existsByContentId(Long contentId);
     Page<Spot> findAllByCategory(Category category, Pageable pageable);
     Page<Spot> findAllByDistrict(District district, Pageable pageable);
+    Spot findByContentId(Long contentId);
 }
