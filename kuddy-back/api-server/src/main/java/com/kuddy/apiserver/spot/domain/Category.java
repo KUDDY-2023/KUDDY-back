@@ -6,10 +6,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Category {
-    Attraction,
-    Culture,
-    Shopping,
-    Restaurant,
-    Leisure,
-    Festival;
+    Attraction("76"),
+    Culture("78"),
+    Shopping("79"),
+    Restaurant("82"),
+    Leisure("75"),
+    Festival("85");
+
+    private final String type;
 }
