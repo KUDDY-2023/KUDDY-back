@@ -1,6 +1,7 @@
 package com.kuddy.apiserver.heart.service;
 
 import com.kuddy.common.heart.domain.Heart;
+import com.kuddy.common.heart.exception.HeartNotFoundException;
 import com.kuddy.common.heart.repository.HeartRepository;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.response.StatusEnum;
@@ -40,5 +41,18 @@ public class HeartService {
                     .data(heart)
                     .build());
         }
+    }
+
+    public ResponseEntity<StatusResponse> cancelSpotLike(Long id, Member member) {
+        Spot spot =  spotRepository.findById(id).orElseThrow(() -> new SpotNotFoundException(id));
+        Heart heart = heartRepository.findByMemberAndSpot(member, spot).orElseThrow(HeartNotFoundException::new);
+        heartRepository.delete(heart);
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(id+"번 관광지 찜 취소")
+                .build());
+
     }
 }
