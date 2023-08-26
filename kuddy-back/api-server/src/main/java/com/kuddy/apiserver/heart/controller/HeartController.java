@@ -23,4 +23,9 @@ public class HeartController {
     public ResponseEntity<StatusResponse> cancelSpot(@PathVariable Long id, @AuthUser Member member) {
         return heartService.cancelSpotLike(id, member);
     }
+
+    @GetMapping("/member")
+    public ResponseEntity<StatusResponse> getHeartSpotList(@AuthUser Member member) {
+        return heartService.findHeartSpotList(member);
+    }
 }

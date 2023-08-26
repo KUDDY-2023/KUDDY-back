@@ -1,5 +1,7 @@
 package com.kuddy.apiserver.heart.service;
 
+import com.kuddy.apiserver.heart.dto.HeartResDto;
+import com.kuddy.apiserver.spot.dto.SpotResDto;
 import com.kuddy.common.heart.domain.Heart;
 import com.kuddy.common.heart.exception.HeartNotFoundException;
 import com.kuddy.common.heart.repository.HeartRepository;
@@ -13,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -54,5 +59,26 @@ public class HeartService {
                 .data(id+"번 관광지 찜 취소")
                 .build());
 
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> findHeartSpotList(Member member) {
+        List<Heart> heartList = heartRepository.findAllByMemberOrderByIdDesc(member);
+
+        List<SpotResDto> spotList = new ArrayList<>();
+        for (Heart heart : heartList) {
+            Spot spot = spotRepository.findById(heart.getSpot().getId()).orElseThrow(() -> new SpotNotFoundException(heart.getSpot().getId()));
+            SpotResDto spotResDto = SpotResDto.of(spot);
+            spotList.add(spotResDto);
+        }
+        Long count = heartRepository.countByMember(member);
+
+        HeartResDto response = new HeartResDto(spotList, member.getId(), count);
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(response)
+                .build());
     }
 }
