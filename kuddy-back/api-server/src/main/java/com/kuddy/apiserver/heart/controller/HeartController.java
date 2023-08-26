@@ -1,0 +1,24 @@
+package com.kuddy.apiserver.heart.controller;
+
+import com.kuddy.apiserver.heart.service.HeartService;
+import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.response.StatusResponse;
+import com.kuddy.common.security.user.AuthUser;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/hearts")
+public class HeartController {
+    private  final HeartService heartService;
+
+    @PostMapping("/{id}")
+    public ResponseEntity<StatusResponse> likeSpot(@PathVariable Long id, @AuthUser Member member) {
+        return heartService.likeSpot(id, member);
+    }
+}

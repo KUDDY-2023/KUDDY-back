@@ -12,6 +12,7 @@ import com.kuddy.common.security.exception.InvalidTokenException;
 import com.kuddy.common.security.exception.InvalidTokenTypeException;
 import com.kuddy.common.security.exception.UnAuthorizedTokenException;
 
+import com.kuddy.common.spot.exception.SpotNotFoundException;
 import com.kuddy.common.spot.exception.TourApiExeption;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,7 +44,8 @@ public enum ExceptionType {
 
 
 	//관광지 관련 - C4***
-	TOUR_API_EXCEPTION("C4000", "TourApi를 불러올 수 없습니다.", TourApiExeption.class);
+	TOUR_API_EXCEPTION("C4000", "TourApi를 불러올 수 없습니다.", TourApiExeption.class),
+	SPOT_NOT_FOUND_EXCEPTION("C4001", "해당 관광지 정보를 찾을 수 없습니다.", SpotNotFoundException.class);
 
 	//회원 관련 - C2***
 	//프로필 관련 - C3***
