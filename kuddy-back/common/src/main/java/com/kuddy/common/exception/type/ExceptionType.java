@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import com.kuddy.common.exception.custom.ApplicationException;
+import com.kuddy.common.heart.exception.AlreadyLikedException;
 import com.kuddy.common.heart.exception.HeartNotFoundException;
 import com.kuddy.common.security.exception.EmptyTokenException;
 import com.kuddy.common.security.exception.InvalidAccessTokenAtRenewException;
@@ -47,7 +48,8 @@ public enum ExceptionType {
 	//관광지 관련 - C4***
 	TOUR_API_EXCEPTION("C4000", "TourApi를 불러올 수 없습니다.", TourApiExeption.class),
 	SPOT_NOT_FOUND_EXCEPTION("C4001", "해당 관광지 정보를 찾을 수 없습니다.",SpotNotFoundException.class),
-	HEART_NOT_FOUND_EXCEPTION("C4002", "해당 관광지에 대한 찜 정보를 찾을 수 없습니다.", HeartNotFoundException.class);
+	HEART_NOT_FOUND_EXCEPTION("C4002", "해당 관광지에 대한 찜 정보를 찾을 수 없습니다.", HeartNotFoundException.class),
+	ALREADY_LIKED_EXCEPTION("C4003", "이미 찜한 관광지입니다.", AlreadyLikedException.class);
 
 	//회원 관련 - C2***
 	//프로필 관련 - C3***

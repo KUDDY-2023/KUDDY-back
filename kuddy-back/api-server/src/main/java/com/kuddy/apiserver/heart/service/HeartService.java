@@ -3,6 +3,7 @@ package com.kuddy.apiserver.heart.service;
 import com.kuddy.apiserver.heart.dto.HeartResDto;
 import com.kuddy.apiserver.spot.dto.SpotResDto;
 import com.kuddy.common.heart.domain.Heart;
+import com.kuddy.common.heart.exception.AlreadyLikedException;
 import com.kuddy.common.heart.exception.HeartNotFoundException;
 import com.kuddy.common.heart.repository.HeartRepository;
 import com.kuddy.common.member.domain.Member;
@@ -30,20 +31,16 @@ public class HeartService {
         Spot spot =  spotRepository.findById(id).orElseThrow(() -> new SpotNotFoundException(id));
 
         if(heartRepository.findByMemberAndSpot(member, spot).isPresent()) {
-            return ResponseEntity.ok(StatusResponse.builder()
-                    .status(StatusEnum.BAD_REQUEST.getStatusCode())
-                    .message(StatusEnum.BAD_REQUEST.getCode())
-                    .data("이미 찜한 관광지입니다.")
-                    .build());
+            throw new AlreadyLikedException();
         } else {
-            Heart heart = heartRepository.save(Heart.builder()
+            heartRepository.save(Heart.builder()
                     .member(member)
                     .spot(spot)
                     .build());
             return ResponseEntity.ok(StatusResponse.builder()
                     .status(StatusEnum.OK.getStatusCode())
                     .message(StatusEnum.OK.getCode())
-                    .data(heart)
+                    .data(id+"번 관광지 찜")
                     .build());
         }
     }
