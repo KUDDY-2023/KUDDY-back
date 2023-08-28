@@ -16,7 +16,7 @@ public class Spot {
     @Column(updatable = false)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     private String name;
 
     @Column(nullable = false, name = "content_id")
