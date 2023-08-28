@@ -1,11 +1,11 @@
-package com.kuddy.common.profile;
+package com.kuddy.common.profile.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Entertainment {
+public enum CareerMajor {
 	STUDY("1", "Study"),
 	WORK_LIFE("2", "Work life"),
 	LANGUAGE("3", "Language"),
@@ -21,7 +21,8 @@ public enum Entertainment {
 	STARTUP("13", "Startup"),
 	INTERN("14", "Intern"),
 	HR("15", "HR");
+
 	private final String code;
 	private final String name;
 
-}
+	}

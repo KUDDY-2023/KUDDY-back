@@ -1,13 +1,13 @@
-package com.kuddy.common.profile;
+package com.kuddy.common.profile.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum DecisionMaking {
-	JUDGING("1", "Judging"),
-	PROSPECTING("2", "Prospecting");
+public enum Temperament {
+	INTROVERT("1", "EXTROVERT"),
+	EXTROVERT("2", "Extrovert");
 
 	private final String code;
 	private final String name;

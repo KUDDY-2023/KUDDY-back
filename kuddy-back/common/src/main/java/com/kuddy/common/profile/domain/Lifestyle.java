@@ -1,4 +1,4 @@
-package com.kuddy.common.profile;
+package com.kuddy.common.profile.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

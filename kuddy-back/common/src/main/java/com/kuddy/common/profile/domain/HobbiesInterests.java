@@ -1,11 +1,11 @@
-package com.kuddy.common.profile;
+package com.kuddy.common.profile.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Hobby {
+public enum HobbiesInterests {
 	TRAVEL("1", "Travel"),
 	LANGUAGE_EXCHANGE("2", "Language Exchange"),
 	LANGUAGE("3", "Language"),

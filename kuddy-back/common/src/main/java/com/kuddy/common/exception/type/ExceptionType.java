@@ -4,6 +4,12 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import com.kuddy.common.exception.custom.ApplicationException;
+import com.kuddy.common.member.exception.DuplicateNicknameException;
+import com.kuddy.common.member.exception.InvalidNicknameException;
+import com.kuddy.common.profile.domain.Language;
+import com.kuddy.common.profile.exception.AreaNotFoundException;
+import com.kuddy.common.profile.exception.LanguageNotFoundException;
+import com.kuddy.common.profile.exception.ProfileNotFoundException;
 import com.kuddy.common.security.exception.EmptyTokenException;
 import com.kuddy.common.security.exception.InvalidAccessTokenAtRenewException;
 import com.kuddy.common.security.exception.ExpiredTokenException;
@@ -43,13 +49,19 @@ public enum ExceptionType {
 
 
 	//관광지 관련 - C4***
-	TOUR_API_EXCEPTION("C4000", "TourApi를 불러올 수 없습니다.", TourApiExeption.class);
+	TOUR_API_EXCEPTION("C4000", "TourApi를 불러올 수 없습니다.", TourApiExeption.class),
 
 	//회원 관련 - C2***
+	INVALID_NICKNAME_EXCEPTION("C2000", "유효하지 않은 닉네임입니다.", InvalidNicknameException.class),
+	DUPLICATE_NICKNAME_EXCEPTION("C2001", "중복된 닉네임이 존재합니다.", DuplicateNicknameException.class),
 	//프로필 관련 - C3***
+	PROFILE_NOT_FOUND_EXCEPTION("C3000", "프로필을 찾을 수 없습니다.", ProfileNotFoundException.class),
+	LANGUEAGE_NOT_FOUND_EXCEPTION("C3001", "해당 언어를 찾을 수 없습니다.", LanguageNotFoundException.class),
+	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class);
 
 	//게시글 관련 - C5***
 	//댓글 관련 - C6***
+
 
 	private final String errorCode;
 	private final String message;
