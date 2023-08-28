@@ -65,8 +65,8 @@ public class TourApiService {
         }
     }
 
-    //각 관광지 상세 정보 조회
-    public Object getDetailInfo(Spot spot) {
+    //각 관광지 공통 정보 조회
+    public Object getCommonDetail(Spot spot) {
 
         try {
             URL url = new URL(BASE_URL + "detailCommon1?contentTypeId=" +
@@ -74,6 +74,29 @@ public class TourApiService {
                     "&contentId=" +
                     spot.getContentId() +
                     "&MobileOS=ETC&MobileApp=Kuddy&defaultYN=Y&addrinfoYN=Y&overviewYN=Y&_type=json&ServiceKey="
+                    + SECRET_KEY);
+
+            JSONObject items = (JSONObject) extractBody(url).get("items");
+            JSONArray spotArr = (JSONArray) items.get("item");
+            Object item = spotArr.get(0);
+
+            return item;
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new TourApiExeption();
+        }
+    }
+
+    //각 관광지 소개 정보 조회
+    public Object getDetailInfo(Spot spot) {
+
+        try {
+            URL url = new URL(BASE_URL + "detailIntro1?MobileOS=ETC&MobileApp=Kuddy&contentId=" +
+                    spot.getContentId() +
+                    "&contentTypeId=" +
+                    spot.getCategory().getCode() +
+                    "&_type=json&serviceKey="
                     + SECRET_KEY);
 
             JSONObject items = (JSONObject) extractBody(url).get("items");
@@ -96,10 +119,16 @@ public class TourApiService {
                     "&serviceKey="
                     + SECRET_KEY);
 
-            JSONObject items = (JSONObject) extractBody(url).get("items");
-            JSONArray imageArr = (JSONArray) items.get("item");
+            //이미지 없을 경우
+            if(extractBody(url).get("items").equals(""))
+                return null;
+            else {
+                JSONObject items = (JSONObject) extractBody(url).get("items");
+                JSONArray imageArr = (JSONArray) items.get("item");
+                return imageArr;
+            }
 
-            return imageArr;
+
 
         } catch(Exception e) {
             e.printStackTrace();

@@ -140,24 +140,32 @@ public class SpotService {
     }
 
     //각 관광지 상세 정보 조회(사진 여러장 + 찜한 멤버들 + 위치기반추천)
-    public ResponseEntity<StatusResponse> responseDetailInfo(Object o, JSONObject body, JSONArray imageArr, Spot spot) {
+    public ResponseEntity<StatusResponse> responseDetailInfo(Object commonDetail, Object detailInfo, JSONObject nearbySpots, JSONArray imageArr, Spot spot) {
 
         //위치 기반 관광지 추천(5개)
-        List<SpotResDto> recommendationList = changeJsonBodyToList(body);
+        List<SpotResDto> recommendationList = changeJsonBodyToList(nearbySpots);
 
         //이미지
         List<String> imageList = new ArrayList<>();
-        imageList.add(spot.getImageUrl());
-        for(Object object : imageArr) {
-            JSONObject item = (JSONObject) object;
-            String imageUrl = (String) item.get("originimgurl");
-            imageList.add(imageUrl);
+        if(!spot.getImageUrl().isEmpty())
+            imageList.add(spot.getImageUrl());
+        if(!(imageArr == null)) {
+            for (Object object : imageArr) {
+                JSONObject item = (JSONObject) object;
+                String imageUrl = (String) item.get("originimgurl");
+                imageList.add(imageUrl);
+            }
         }
 
         //상세 정보
-        JSONObject item = (JSONObject) o;
+        JSONObject additionalInfo = (JSONObject) detailInfo;
+        additionalInfo.remove("contenttypeid");
+        additionalInfo.remove("contentid");
+
+        //공통 정보
+        JSONObject item = (JSONObject) commonDetail;
         SpotDetailResDto spotDetailResDto = SpotDetailResDto.of(spot, (String) item.get("overview"), (String) item.get("tel"),
-                (String) item.get("homepage"), (String) item.get("addr1"), (String) item.get("zipcode"), recommendationList, imageList);
+                (String) item.get("homepage"), (String) item.get("addr1"), (String) item.get("zipcode"), (Object) additionalInfo, recommendationList, imageList);
 
         return ResponseEntity.ok(StatusResponse.builder()
                         .status(StatusEnum.OK.getStatusCode())
