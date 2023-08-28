@@ -33,13 +33,13 @@ public class MemberService {
 			throw new InvalidNicknameException();
 		}
 
-		if (isNicknameExists(nickname)) {  // 변경: isNicknameUnique -> isNicknameExists
+		if (isNicknameExists(nickname)) {
 			throw new DuplicateNicknameException();
 		}
 	}
 
 	@Transactional(readOnly = true)
-	public boolean isNicknameExists(String nickname) { // 변경: Boolean -> boolean
+	public boolean isNicknameExists(String nickname) {
 		return memberRepository.existsByNickname(nickname);
 	}
 
