@@ -53,6 +53,7 @@ public class SpotService {
                         .district(District.valueOf(areaCode))
                         .category(Category.valueOf(contentType))
                         .imageUrl((String) item.get("firstimage"))
+                        .numOfHearts(0L)
                         .build());
             }
         }
@@ -79,6 +80,21 @@ public class SpotService {
     @Transactional(readOnly = true)
     public Spot findSpotByContentId(Long contentId) {
         return spotRepository.findByContentId(contentId);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> getTrendMagazine() {
+        List<Spot> spotList = spotRepository.findTop5ByOrderByNumOfHeartsDesc();
+        List<SpotResDto> respone = new ArrayList<>();
+        for (Spot spot : spotList) {
+            SpotResDto spotResDto = SpotResDto.of(spot);
+            respone.add(spotResDto);
+        }
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(respone)
+                .build());
     }
 
     //조회한 spot 리스트와 페이지 정보를 공통응답형식으로 반환하도록 변환하는 메소드

@@ -62,4 +62,9 @@ public class SpotController {
         JSONArray imageArr = tourApiService.getDetailImages(contentId);
         return spotService.responseDetailInfo(spotDetail, nearbySpots, imageArr, spot);
     }
+
+    @GetMapping("/trend")
+    public ResponseEntity<StatusResponse> getTrend() {
+        return spotService.getTrendMagazine();
+    }
 }
