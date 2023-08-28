@@ -1,14 +1,21 @@
 package com.kuddy.common.member.domain;
 
+
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import com.kuddy.common.domain.BaseTimeEntity;
+import com.kuddy.common.member.exception.InvalidNicknameException;
+import com.kuddy.common.profile.domain.Profile;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,10 +39,12 @@ public class Member extends BaseTimeEntity {
 	@Column(name = "profile_image_url")
 	private String profileImageUrl;
 
-	@Column(length = 50)
+	@Column(length = 15, nullable = false)
 	private String nickname;
 
-	@Column(length = 20)
+
+
+	@Column(length = 10)
 	@Enumerated(EnumType.STRING)
 	private ProviderType providerType;
 
@@ -43,6 +52,8 @@ public class Member extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private RoleType roleType;
 
+	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+	private Profile profile;
 
 	@Builder
 	public Member(String username, String email, String profileImageUrl, String nickname,
@@ -55,14 +66,26 @@ public class Member extends BaseTimeEntity {
 		this.roleType = roleType;
 	}
 
-	public void updateMember(String email){
-		this.email = email;
+	public boolean validateNickName(String nickname) {
+		if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > 15 || !nickname.matches("[a-zA-Z0-9_]+")) {
+			throw new InvalidNicknameException();
+		}else{
+			return true;
+		}
 	}
-
-	public void updateNickname(String nickname){
-		this.nickname = nickname;
+	public void updateMember(String email) {
+		if (!Objects.equals(this.email, email)) {
+			this.email = email;
+		}
 	}
-
-
-	public void updateRole(RoleType roleType){this.roleType = roleType;}
+	public void updateNickname(String nickname) {
+		if (validateNickName(nickname) && !Objects.equals(this.nickname, nickname)) {
+			this.nickname = nickname;
+		}
+	}
+	public void updateRole(RoleType roleType) {
+		if (roleType != null && !Objects.equals(this.roleType, roleType)) {
+			this.roleType = roleType;
+		}
+	}
 }
