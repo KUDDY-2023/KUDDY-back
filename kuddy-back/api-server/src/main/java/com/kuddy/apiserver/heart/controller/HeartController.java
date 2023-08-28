@@ -19,7 +19,7 @@ public class HeartController {
         return heartService.likeSpot(id, member);
     }
 
-    @DeleteMapping("/cancel/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<StatusResponse> cancelSpot(@PathVariable Long id, @AuthUser Member member) {
         return heartService.cancelSpotLike(id, member);
     }
