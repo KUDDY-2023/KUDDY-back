@@ -73,7 +73,7 @@ public class SpotService {
     @Transactional(readOnly = true)
     public Page<Spot> findSpotByDistrict(String district, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return spotRepository.findAllByDistrictOOrderByNumOfHeartsDesc(District.valueOf(district), pageRequest);
+        return spotRepository.findAllByDistrictOrderByNumOfHeartsDesc(District.valueOf(district), pageRequest);
     }
 
     @Transactional(readOnly = true)
