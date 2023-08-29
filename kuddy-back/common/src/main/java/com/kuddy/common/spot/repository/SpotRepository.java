@@ -12,8 +12,9 @@ import java.util.List;
 public interface SpotRepository extends JpaRepository<Spot, Long> {
 
     boolean existsByContentId(Long contentId);
-    Page<Spot> findAllByCategory(Category category, Pageable pageable);
-    Page<Spot> findAllByDistrict(District district, Pageable pageable);
+    Page<Spot> findAllByCategoryOrderByNumOfHeartsDesc(Category category, Pageable pageable);
+    Page<Spot> findAllByDistrictOOrderByNumOfHeartsDesc(District district, Pageable pageable);
     Spot findByContentId(Long contentId);
     List<Spot> findTop5ByOrderByNumOfHeartsDesc();
+    Page<Spot> findAllByOrderByNumOfHeartsDesc(Pageable pageable);
 }

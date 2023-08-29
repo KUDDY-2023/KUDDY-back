@@ -67,19 +67,19 @@ public class SpotService {
     @Transactional(readOnly = true)
     public Page<Spot> findSpotByCategory(String category, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return spotRepository.findAllByCategory(Category.valueOf(category), pageRequest);
+        return spotRepository.findAllByCategoryOrderByNumOfHeartsDesc(Category.valueOf(category), pageRequest);
     }
 
     @Transactional(readOnly = true)
     public Page<Spot> findSpotByDistrict(String district, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return spotRepository.findAllByDistrict(District.valueOf(district), pageRequest);
+        return spotRepository.findAllByDistrictOOrderByNumOfHeartsDesc(District.valueOf(district), pageRequest);
     }
 
     @Transactional(readOnly = true)
     public Page<Spot> findAllSpots(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return spotRepository.findAll(pageRequest);
+        return spotRepository.findAllByOrderByNumOfHeartsDesc(pageRequest);
     }
 
     @Transactional(readOnly = true)
