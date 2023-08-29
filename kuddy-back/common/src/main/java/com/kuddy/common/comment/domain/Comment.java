@@ -28,11 +28,11 @@ public class Comment extends BaseTimeEntity {
     private boolean isRemoved;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer_id")
+    @JoinColumn(name = "writer_id", updatable = false)
     private Member writer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", updatable = false)
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)

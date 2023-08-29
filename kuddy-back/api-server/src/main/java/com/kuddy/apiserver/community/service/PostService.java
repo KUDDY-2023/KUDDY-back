@@ -1,14 +1,15 @@
 package com.kuddy.apiserver.community.service;
 
 import com.kuddy.apiserver.community.dto.request.ImageUploadReqDto;
-import com.kuddy.apiserver.community.dto.request.ItineraryReqDto;
-import com.kuddy.apiserver.community.dto.request.TalkingboardReqDto;
+import com.kuddy.apiserver.community.dto.request.PostReqDto;
 import com.kuddy.apiserver.community.dto.response.*;
 import com.kuddy.apiserver.image.S3Upload;
+import com.kuddy.common.comment.exception.NoPostExistException;
 import com.kuddy.common.community.domain.Post;
 import com.kuddy.common.community.domain.PostImage;
 import com.kuddy.common.community.domain.PostType;
 import com.kuddy.common.community.exception.EmptyInputFilenameException;
+import com.kuddy.common.community.exception.NoAuthorityPostRemove;
 import com.kuddy.common.community.exception.WrongImageFormatException;
 import com.kuddy.common.community.repository.PostImageRepository;
 import com.kuddy.common.community.repository.PostRepository;
@@ -50,50 +51,39 @@ public class PostService {
     @Value("${image.prefix}")
     private String imagePath;
 
-    public ResponseEntity<StatusResponse> saveTalkingboardPost(TalkingboardReqDto reqDto, Member member) {
-        Post post = null;
-        if (reqDto.getPostType().equals("joinus")) {
+    public ResponseEntity<StatusResponse> savePost(String type, PostReqDto reqDto, Member member) {
+        if (type.equals("itinerary")) {
+            return saveItineraryPost(reqDto, member);
+        } else {
+            return saveTalkingboardPost(reqDto, member);
+        }
+    }
+
+    private ResponseEntity<StatusResponse> saveItineraryPost(PostReqDto reqDto, Member member) {
+        List<Spot> spots = validateItinerarySpots(reqDto.getSpots());
+        String spotStr = changelistToStr(reqDto.getSpots());
+        Post post = reqDto.toEntityFromItinerary(reqDto, spotStr, member);
+        postRepository.save(post);
+        ItineraryResDto itineraryResDto = ItineraryResDto.of(post, spots);
+
+        return ResponseEntity.ok(createStatusResponse(itineraryResDto));
+    }
+
+    private ResponseEntity<StatusResponse> saveTalkingboardPost(PostReqDto reqDto, Member member) {
+        Post post;
+        if ("joinus".equals(reqDto.getPostType())) {
             post = reqDto.toEntityFromJoinUs(reqDto, member);
         } else {
             post = reqDto.toEntityFromOthers(reqDto, member);
         }
         postRepository.save(post);
         List<String> imageUrls = saveImageUrls(reqDto.getImages(), post);
+        TalkingBoardResDto talkingBoardResDto = TalkingBoardResDto.of(post, imageUrls);
 
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(TalkingBoardResDto.of(post, imageUrls))
-                .build());
-
+        return ResponseEntity.ok(createStatusResponse(talkingBoardResDto));
     }
 
-    public ResponseEntity<StatusResponse> saveItineraryFeedbackPost(ItineraryReqDto reqDto, Member member) {
-        List<Spot> spots = validateItinerarySpots(reqDto.getSpots());
-
-        String spotStr = changelistToStr(reqDto.getSpots());
-        Post post = reqDto.toEntity(reqDto, spotStr, member);
-        postRepository.save(post);
-
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(ItineraryResDto.of(post, spots))
-                .build());
-    }
-
-    private List<String> saveImageUrls(List<String> images, Post post) {
-        List<String> imageUrls = new ArrayList<>();
-        for (String fileName : images) {
-            String fileUrl = String.valueOf(imagePath + fileName);
-            PostImage postImage = postImageRepository.save(new PostImage(fileUrl, post));
-            imageUrls.add(postImage.getFileUrl());
-        }
-
-        return imageUrls;
-    }
-
-
+    @Transactional(readOnly = true)
     public ResponseEntity<StatusResponse> getPresignedUrls(Member member, ImageUploadReqDto imageUploadReqDto) {
         List<String> fileNameList = imageUploadReqDto.getImgList();
         log.info(String.valueOf(fileNameList.size()));
@@ -111,61 +101,103 @@ public class PostService {
                     .build();
         }).collect(Collectors.toList());
 
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(urls)
-                .build());
+        return ResponseEntity.ok(createStatusResponse(urls));
     }
 
-    public ResponseEntity<StatusResponse> getTalkingboardList(int page, int size) {
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> getPosts(String type, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        List<PostType> types = List.of(PostType.JOIN_US, PostType.OTHERS);
-        Page<Post> posts = postRepository.findAllByPostTypeIn(types, pageRequest);
+        Page<Post> posts;
 
-        List<TalkingBoardResDto> response = new ArrayList<>();
+        if (type.equals("itinerary")) {
+            posts = postRepository.findAllByPostTypeOrderByCreatedDateDesc(PostType.ITINERARY, pageRequest);
+            List<ItineraryResDto> itineraryResDtos = convertToItineraryResDto(posts);
+            ItineraryPageResDto resDto = new ItineraryPageResDto(itineraryResDtos, createPageInfo(posts));
+            return ResponseEntity.ok(createStatusResponse(resDto));
+        } else {
+            List<PostType> types = List.of(PostType.JOIN_US, PostType.OTHERS);
+            posts = postRepository.findAllByPostTypeInOrderByCreatedDateDesc(types, pageRequest);
+            List<TalkingBoardResDto> talkingBoardResDtos = convertToTalkingBoardResDto(posts);
+            TalkingBoardPageResDto resDto = new TalkingBoardPageResDto(talkingBoardResDtos, createPageInfo(posts));
+            return ResponseEntity.ok(createStatusResponse(resDto));
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> getMyPosts(Member member, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Post> posts = postRepository.findAllByAuthorOrderByCreatedDateDesc(member, pageRequest);
+        List<MyPostResDto> myPostResDtos = new ArrayList<>();
+
+        for (Post post : posts) {
+            MyPostResDto myPostResDto = MyPostResDto.builder()
+                    .id(post.getId())
+                    .postType(post.getPostType().getType())
+                    .title(post.getTitle())
+                    .createdDate(post.getCreatedDate())
+                    .build();
+            myPostResDtos.add(myPostResDto);
+        }
+        MyPostPageResDto resDto = new MyPostPageResDto(myPostResDtos, createPageInfo(posts));
+
+        return ResponseEntity.ok(createStatusResponse(resDto));
+    }
+
+    public ResponseEntity<StatusResponse> deletePost(Member member, Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(NoPostExistException::new);
+        checkValidMember(member.getId(), post.getAuthor().getId());
+        postRepository.delete(post);
+        return ResponseEntity.ok(createStatusResponse("post deleted"));
+    }
+
+    private StatusResponse createStatusResponse(Object data) {
+        return StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(data)
+                .build();
+    }
+
+    private List<String> saveImageUrls(List<String> images, Post post) {
+        List<String> imageUrls = new ArrayList<>();
+        for (String fileName : images) {
+            String fileUrl = String.valueOf(imagePath + fileName);
+            PostImage postImage = postImageRepository.save(new PostImage(fileUrl, post));
+            imageUrls.add(postImage.getFileUrl());
+        }
+
+        return imageUrls;
+    }
+
+    private List<ItineraryResDto> convertToItineraryResDto(Page<Post> posts) {
+        List<ItineraryResDto> resDtos = new ArrayList<>();
+        for (Post post : posts) {
+            List<Long> contentIdList = convertStringToList(post.getItinerarySpots());
+            List<Spot> spots = spotRepository.findAllByContentIdIn(contentIdList);
+            resDtos.add(ItineraryResDto.of(post, spots));
+        }
+
+        return resDtos;
+    }
+
+    private List<TalkingBoardResDto> convertToTalkingBoardResDto(Page<Post> posts) {
+        List<TalkingBoardResDto> resDtos = new ArrayList<>();
         for (Post post : posts) {
             List<String> urlList = postImageRepository.findAllByPost(post)
                     .stream()
                     .map(PostImage::getFileUrl)
                     .collect(Collectors.toList());
 
-            response.add(TalkingBoardResDto.of(post, urlList));
+            resDtos.add(TalkingBoardResDto.of(post, urlList));
         }
-
-        PageInfo pageInfo = new PageInfo(page, size, (int) posts.getTotalElements(), posts.getTotalPages());
-        TalkingBoardPageResDto resDto = new TalkingBoardPageResDto(response, pageInfo);
-
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(resDto)
-                .build());
+        return resDtos;
     }
 
-    public ResponseEntity<StatusResponse> getItineraryFeedbackList(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Post> posts = postRepository.findAllByPostType(PostType.ITINERARY, pageRequest);
-
-        List<ItineraryResDto> response = new ArrayList<>();
-        for (Post post : posts) {
-            List<Long> contentIdList = convertStringToList(post.getItinerarySpots());
-            List<Spot> spots = spotRepository.findAllByContentIdIn(contentIdList);
-            response.add(ItineraryResDto.of(post, spots));
-        }
-
-        PageInfo pageInfo = new PageInfo(page, size, (int) posts.getTotalElements(), posts.getTotalPages());
-        ItineraryPageResDto resDto = new ItineraryPageResDto(response, pageInfo);
-
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(resDto)
-                .build());
-
+    private PageInfo createPageInfo(Page<?> page) {
+        return new PageInfo(page.getNumber(), page.getSize(), (int) page.getTotalElements(), page.getTotalPages());
     }
 
-    public List<Long> convertStringToList(String str) {
+    private List<Long> convertStringToList(String str) {
         long[] spotList = Stream.of(str.split(",")).mapToLong(Long::parseLong).toArray();
         Long[] spotListBoxed = ArrayUtils.toObject(spotList);
         List<Long> spotListResult = Arrays.asList(spotListBoxed);
@@ -202,4 +234,9 @@ public class PostService {
         return StringUtils.join(itineraySpots, ',');
     }
 
+    private void checkValidMember(Long memberId, Long authorId) {
+        if (!memberId.equals(authorId)) {
+            throw new NoAuthorityPostRemove();
+        }
+    }
 }

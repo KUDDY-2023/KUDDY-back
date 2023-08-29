@@ -1,5 +1,6 @@
 package com.kuddy.common.community.domain;
 
+import com.kuddy.common.comment.domain.Comment;
 import com.kuddy.common.community.exception.ExpiredDateException;
 import com.kuddy.common.community.exception.InvalidPostArgumentsException;
 import com.kuddy.common.domain.BaseTimeEntity;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,6 +44,10 @@ public class Post extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member author;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
+
 
     @Builder(builderMethodName = "JoinusBuilder", builderClassName = "JoinusBuilder")
     public Post(String title, String content, Integer people, LocalDate date, District district, PostType postType,
@@ -78,12 +85,14 @@ public class Post extends BaseTimeEntity {
     private void validateJoinusPost(LocalDate date, Integer people, District district) {
         LocalDate currentDate = LocalDate.now();
 
+        if (people == null || district == null || date == null) {
+            throw new InvalidPostArgumentsException();
+        }
+
         if (currentDate.isAfter(date)) {
             throw new ExpiredDateException();
         }
 
-        if (people == null || district == null) {
-            throw new InvalidPostArgumentsException();
-        }
+
     }
 }
