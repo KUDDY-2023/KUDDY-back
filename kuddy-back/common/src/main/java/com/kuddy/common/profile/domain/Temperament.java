@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Temperament {
-	INTROVERT("1", "EXTROVERT"),
+	INTROVERT("1", "Introvert"),
 	EXTROVERT("2", "Extrovert");
 
 	private final String code;
