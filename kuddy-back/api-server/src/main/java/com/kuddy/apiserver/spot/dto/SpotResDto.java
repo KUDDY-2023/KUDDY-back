@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SpotResDto {
-//    private Long id;
     private Long contentId;
     private String name;
     private String district;
@@ -24,7 +23,6 @@ public class SpotResDto {
 
     public static SpotResDto of(Spot spot){
         return SpotResDto.builder()
-//                .id(spot.getId())
                 .name(spot.getName())
                 .contentId(spot.getContentId())
                 .district(spot.getDistrict().getArea())

@@ -1,8 +1,12 @@
 package com.kuddy.apiserver.spot.service;
 
+import com.kuddy.apiserver.member.dto.MemberResDto;
 import com.kuddy.apiserver.spot.dto.SpotDetailResDto;
 import com.kuddy.apiserver.spot.dto.SpotPageResDto;
 import com.kuddy.apiserver.spot.dto.SpotResDto;
+import com.kuddy.common.heart.domain.Heart;
+import com.kuddy.common.heart.repository.HeartRepository;
+import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.page.PageInfo;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
@@ -29,6 +33,7 @@ import java.util.List;
 public class SpotService {
 
     private final SpotRepository spotRepository;
+    private final HeartRepository heartRepository;
 
     //JSON 응답값 중 필요한 정보(이름, 지역, 카테고리, 사진, 고유id)만 db에 저장
     public void changeAndSave(JSONArray spotArr) {
@@ -145,6 +150,16 @@ public class SpotService {
         //위치 기반 관광지 추천(5개)
         List<SpotResDto> recommendationList = changeJsonBodyToList(nearbySpots);
 
+        //찜한 멤버들
+        List<MemberResDto> kuddyList = new ArrayList<>();
+        List<MemberResDto> travelerList = new ArrayList<>();
+        for(Heart heart : heartRepository.findAllBySpot(spot)) {
+            if(heart.getMember().getRoleType().equals(RoleType.KUDDY))
+                kuddyList.add(MemberResDto.of(heart.getMember()));
+            else if(heart.getMember().getRoleType().equals(RoleType.TRAVELER))
+                travelerList.add(MemberResDto.of(heart.getMember()));
+        }
+
         //이미지
         List<String> imageList = new ArrayList<>();
         if(!spot.getImageUrl().isEmpty())
@@ -165,7 +180,8 @@ public class SpotService {
         //공통 정보
         JSONObject item = (JSONObject) commonDetail;
         SpotDetailResDto spotDetailResDto = SpotDetailResDto.of(spot, (String) item.get("overview"), (String) item.get("tel"),
-                (String) item.get("homepage"), (String) item.get("addr1"), (String) item.get("zipcode"), (Object) additionalInfo, recommendationList, imageList);
+                (String) item.get("homepage"), (String) item.get("addr1"), (String) item.get("zipcode"), (Object) additionalInfo,
+                recommendationList, imageList, kuddyList, travelerList);
 
         return ResponseEntity.ok(StatusResponse.builder()
                         .status(StatusEnum.OK.getStatusCode())

@@ -12,4 +12,5 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
     Optional<Heart> findByMemberAndSpot(Member member, Spot spot);
     List<Heart> findAllByMemberOrderByIdDesc(Member member);
     Long countByMember(Member member);
+    List<Heart> findAllBySpot(Spot spot);
 }
