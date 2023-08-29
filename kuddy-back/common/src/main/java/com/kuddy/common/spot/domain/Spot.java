@@ -33,7 +33,7 @@ public class Spot {
     @Column
     private String imageUrl;
 
-    @Column
+    @Column(nullable = false)
     private Long numOfHearts;
 
     @Builder
