@@ -13,7 +13,7 @@ import java.util.List;
 public class CommentResDto {
     private Long id;
     private String content;
-    private boolean isDeleted;
+    private Boolean isRemoved;
     private Boolean isAuthor; //글 작성자인지 여부
     private CommentWriterInfoDto commentWriterInfoDto;
     private LocalDateTime createdDate;
@@ -25,13 +25,16 @@ public class CommentResDto {
         CommentResDtoBuilder builder = CommentResDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
-                .isDeleted(comment.isDeleted())
-                .isAuthor(comment.getWriter().getId().equals(member.getId()))
+                .isRemoved(comment.isRemoved())
+                .isAuthor(comment.getWriter().getId().equals(comment.getPost().getId()))
                 .commentWriterInfoDto(commentWriterInfoDto)
                 .createdDate(comment.getCreatedDate());
 
         if (comment.getParent() != null) {
             builder.parentId(comment.getParent().getId());
+        }
+        if (replyList != null) {
+            builder.replyList(replyList);
         }
         CommentResDto commentResDto = builder.build();
 

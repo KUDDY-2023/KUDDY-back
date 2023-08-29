@@ -7,11 +7,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +25,7 @@ public class Comment extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String content;
-    private boolean isDeleted;
+    private boolean isRemoved;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
@@ -41,8 +43,8 @@ public class Comment extends BaseTimeEntity {
     @OneToMany(mappedBy = "parent")
     private List<Comment> childList = new ArrayList<>();
 
-    public void delete() {
-        this.isDeleted = true;
+    public void remove() {
+        this.isRemoved = true;
     }
 
     public void addChild(Comment child) {
@@ -57,28 +59,46 @@ public class Comment extends BaseTimeEntity {
     @Builder
     public Comment(String content, Member writer, Post post) {
         this.content = content;
-        this.isDeleted = false;
+        this.isRemoved = false;
         this.writer = writer;
         this.post = post;
     }
 
-    public List<Comment> findRemoovableCommentList() {
+    public List<Comment> findCommentListToDelete() {
         List<Comment> result = new ArrayList<>();
-        if (parent != null && parent.isDeleted && parent.isAllChildDeleted()) {// 대댓글인 경우: 부모 댓글  & 부모댓글의 자식들의  모두 isDeleted == true -> db에서 삭제
-            result.addAll(parent.getChildList());
-            result.add(parent);
-        } else if (isAllChildDeleted()) { // 댓글인 경우 : 자식댓글의 isDeleted가 모두 true -> db 삭제
-            result.add(this);
-            result.addAll(getChildList());
+        if (this.parent != null) {
+            processReply(result);
+        } else {
+            processComment(result);
         }
 
         return result;
     }
 
-    private boolean isAllChildDeleted() {
-        return getChildList().stream()
-                .map(Comment::isDeleted)
-                .allMatch(isDeleted -> isDeleted == true);
+    private void processReply(List<Comment> result) {
+        Comment parentComment = this.parent;
+
+        if (parentComment.isRemoved() && parentComment.isAllChildRemoved()) {
+            result.addAll(parentComment.getChildList());
+            result.add(parentComment);
+        }
     }
+
+    private void processComment(List<Comment> result) {
+        if (isAllChildRemoved()) {
+            result.add(this);
+            result.addAll(this.getChildList());
+        }
+    }
+
+
+    private boolean isAllChildRemoved() {
+        if (childList == null) {
+            return true;
+        }
+        return getChildList().stream()
+                .allMatch(comment -> comment.isRemoved);
+    }
+
 
 }

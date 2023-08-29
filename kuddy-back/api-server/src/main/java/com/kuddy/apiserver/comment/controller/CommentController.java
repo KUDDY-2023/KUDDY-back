@@ -27,11 +27,16 @@ public class CommentController {
     public ResponseEntity<StatusResponse> saveReply(@PathVariable("postId") Long postId, @RequestBody ReplyReqDto replyReqDto, @AuthUser Member member) {
         return commentService.saveReply(postId, replyReqDto, member);
     }
-//
-//    @GetMapping("/{postId}")
-//    public ResponseEntity<StatusResponse> getCommentList(@PathVariable("postId") Long postId) {
-//
-//    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<StatusResponse> getCommentList(@PathVariable("postId") Long postId) {
+        return commentService.getCommentList(postId);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<StatusResponse> removeComment(@PathVariable("commentId") Long commentId, @AuthUser Member member) {
+        return commentService.removeComment(commentId, member);
+    }
 
 
 }
