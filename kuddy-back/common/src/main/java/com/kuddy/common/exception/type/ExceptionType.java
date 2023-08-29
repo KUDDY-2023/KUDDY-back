@@ -1,5 +1,7 @@
 package com.kuddy.common.exception.type;
 
+import com.kuddy.common.comment.exception.NoCommentExistsException;
+import com.kuddy.common.comment.exception.NoPostExistException;
 import com.kuddy.common.community.exception.*;
 import com.kuddy.common.exception.custom.ApplicationException;
 import com.kuddy.common.security.exception.*;
@@ -37,17 +39,19 @@ public enum ExceptionType {
 
     //관광지 관련 - C4***
     TOUR_API_EXCEPTION("C4000", "TourApi를 불러올 수 없습니다.", TourApiExeption.class),
-    NO_SPOT_EXISTS("C4001", "존재하지 않는 spot id입니다.", NoSpotExists.class),
+    NO_SPOT_EXISTS_EXCEPTION("C4001", "존재하지 않는 spot id입니다.", NoSpotExists.class),
 
     //회원 관련 - C2***
     //프로필 관련 - C3***
 
     //게시글 관련 - C5***
     EXPIRED_DATE_EXCEPTION("C5000", "이미 지난 날짜를 동행 날짜로 설정할 수 없습니다.", ExpiredDateException.class),
-    EMPTY_INPUT_FILENAME("C5001", "이미지 파일명은 NULL값을 가질 수 없습니다.", EmptyInputFilename.class),
-    WRONG_IMAGE_FORMAT("C5002", "이미지 파일 확장자는 jpg(JPG), png(PNG), jpeg(JPEG)만 가능합니다.", WrongImageFormat.class),
-    NO_DISTRICT_EXISTS("C5003", "유효하지 않은 지역구입니다.", NoDistrictExists.class),
-    INVALID_ARGUMENTS_FOR_POST("C5004", "게시글 타입에 맞지 않는 인자입니다.", InvalidPostArguments.class);
+    EMPTY_INPUT_FILENAME_EXCEPTION("C5001", "이미지 파일명은 NULL값을 가질 수 없습니다.", EmptyInputFilenameException.class),
+    WRONG_IMAGE_FORMAT_EXCEPTION("C5002", "이미지 파일 확장자는 jpg(JPG), png(PNG), jpeg(JPEG)만 가능합니다.", WrongImageFormatException.class),
+    NO_DISTRICT_EXISTS_EXCEPTION("C5003", "유효하지 않은 지역구입니다.", NoDistrictExistsException.class),
+    INVALID_ARGUMENTS_FOR_POST_EXCEPTION("C5004", "게시글 타입에 맞지 않는 인자입니다.", InvalidPostArgumentsException.class),
+    NO_POST_EXIST_EXCEPTION("C5005", "존재하지 않는 게시글입니다.", NoPostExistException.class),
+    NO_COMMENT_EXIST_EXCEPTION("C5006", "존재하지 않는 댓글입니다.", NoCommentExistsException.class);
 
 
     //댓글 관련 - C6***

@@ -1,7 +1,7 @@
 package com.kuddy.common.community.domain;
 
 import com.kuddy.common.community.exception.ExpiredDateException;
-import com.kuddy.common.community.exception.InvalidPostArguments;
+import com.kuddy.common.community.exception.InvalidPostArgumentsException;
 import com.kuddy.common.domain.BaseTimeEntity;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.spot.domain.District;
@@ -83,7 +83,7 @@ public class Post extends BaseTimeEntity {
         }
 
         if (people == null || district == null) {
-            throw new InvalidPostArguments();
+            throw new InvalidPostArgumentsException();
         }
     }
 }

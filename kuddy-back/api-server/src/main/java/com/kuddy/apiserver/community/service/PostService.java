@@ -8,8 +8,8 @@ import com.kuddy.apiserver.image.S3Upload;
 import com.kuddy.common.community.domain.Post;
 import com.kuddy.common.community.domain.PostImage;
 import com.kuddy.common.community.domain.PostType;
-import com.kuddy.common.community.exception.EmptyInputFilename;
-import com.kuddy.common.community.exception.WrongImageFormat;
+import com.kuddy.common.community.exception.EmptyInputFilenameException;
+import com.kuddy.common.community.exception.WrongImageFormatException;
 import com.kuddy.common.community.repository.PostImageRepository;
 import com.kuddy.common.community.repository.PostRepository;
 import com.kuddy.common.member.domain.Member;
@@ -179,13 +179,13 @@ public class PostService {
 
     private void isValidFileExtension(String fileName) {
         if (fileName.length() == 0) {
-            throw new EmptyInputFilename();
+            throw new EmptyInputFilenameException();
         }
 
         String[] validExtensions = {".jpg", ".jpeg", ".png", ".JPG", ".JPEG", ".PNG"};
         String idxFileName = fileName.substring(fileName.lastIndexOf("."));
         if (!Arrays.asList(validExtensions).contains(idxFileName)) {
-            throw new WrongImageFormat();
+            throw new WrongImageFormatException();
         }
     }
 
