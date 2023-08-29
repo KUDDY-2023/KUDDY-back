@@ -1,3 +1,16 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.14'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
+
 bootJar { enabled = false } // core 은 bootJar 로 패키징 할 필요 없음
 jar { enabled = true }
 dependencies {
@@ -21,7 +34,15 @@ dependencies {
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //implementation 은 직접 의존하고 있는 자신만 그 구현을 알고 있으며, 그 자식 모듈(?) 은 해당 의존성에 대한 구현을 참조할 수 없기 때문에, 이것을 api로 변경을 해서 사용
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //implementation 은 직접 의존하고 있는 자신만 그 구현을 알고 있으며, 그 자식 모듈(?) 은 해당 의존성에 대한 구현을 참조할 수 없기 때문에, 이것을 api로 변경을 해서 사용
+
+    //aws
+    implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
+
+    //querydsl
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
 
 }
@@ -29,4 +50,30 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+// JPA 사용 여부 및 사용할 경로 설정
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+// build 시 사용할 sourceSet 추가 설정
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+// querydsl 컴파일 시 사용할 옵션 설정
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+// querydsl이 compileClassPath를 상속하도록 설정
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
