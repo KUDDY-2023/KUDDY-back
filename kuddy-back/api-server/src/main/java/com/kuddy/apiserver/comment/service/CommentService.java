@@ -3,6 +3,7 @@ package com.kuddy.apiserver.comment.service;
 import com.kuddy.apiserver.comment.dto.request.CommentReqDto;
 import com.kuddy.apiserver.comment.dto.request.ReplyReqDto;
 import com.kuddy.apiserver.comment.dto.response.CommentResDto;
+import com.kuddy.apiserver.comment.dto.response.MyCommentResDto;
 import com.kuddy.apiserver.comment.dto.response.ReplyResDto;
 import com.kuddy.common.comment.domain.Comment;
 import com.kuddy.common.comment.exception.NoAuthorityCommentRemove;
@@ -15,6 +16,7 @@ import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.member.repository.MemberRepository;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
+import com.kuddy.common.security.user.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -72,7 +74,7 @@ public class CommentService {
 
     public ResponseEntity<StatusResponse> getCommentList(Long postId) {
         Post findPost = postRepository.findById(postId).orElseThrow(() -> new NoPostExistException());
-        List<Comment> commentList = commentRepository.findAllByPost(findPost);
+        List<Comment> commentList = commentRepository.findAllByPostOrderByCreatedDateDesc(findPost);
         List<CommentResDto> commentResDtos = new ArrayList<>();
         for (Comment comment : commentList) {
             Member member = memberRepository.findById(comment.getWriter().getId()).get();
@@ -89,6 +91,18 @@ public class CommentService {
                 .data(commentResDtos)
                 .build());
 
+    }
+
+    public ResponseEntity<StatusResponse> getMyCommentList(@AuthUser Member member) {
+        List<Comment> myCommentList = commentRepository.findAllByWriterOrderByCreatedDateDesc(member);
+        List<MyCommentResDto> resDtos = myCommentList.stream()
+                .map(MyCommentResDto::of)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(resDtos)
+                .build());
     }
 
     public ResponseEntity<StatusResponse> removeComment(Long commentId, Member member) {

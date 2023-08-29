@@ -52,10 +52,11 @@ public enum ExceptionType {
     NO_DISTRICT_EXISTS_EXCEPTION("C5003", "유효하지 않은 지역구입니다.", NoDistrictExistsException.class),
     INVALID_ARGUMENTS_FOR_POST_EXCEPTION("C5004", "게시글 타입에 맞지 않는 인자입니다.", InvalidPostArgumentsException.class),
     NO_POST_EXIST_EXCEPTION("C5005", "존재하지 않는 게시글입니다.", NoPostExistException.class),
+    NO_AUTHORITY_POST_REMOVE("C5006", "본인이 작성한 게시글만 삭제할 수 있습니다.", NoAuthorityPostRemove.class),
 
     //댓글 관련 - C6***
-    NO_COMMENT_EXIST_EXCEPTION("C5006", "존재하지 않는 댓글입니다.", NoCommentExistsException.class),
-    NO_AUTHORITY_COMMENT_REMOVE("C5007", "본인이 작성한 댓글만 삭제할 수 있습니다.", NoAuthorityCommentRemove.class);
+    NO_COMMENT_EXIST_EXCEPTION("C6001", "존재하지 않는 댓글입니다.", NoCommentExistsException.class),
+    NO_AUTHORITY_COMMENT_REMOVE("C6002", "본인이 작성한 댓글만 삭제할 수 있습니다.", NoAuthorityCommentRemove.class);
 
     private final String errorCode;
     private final String message;

@@ -33,6 +33,11 @@ public class CommentController {
         return commentService.getCommentList(postId);
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<StatusResponse> getMyCommentList(@AuthUser Member member) {
+        return commentService.getMyCommentList(member);
+    }
+
     @DeleteMapping("/{commentId}")
     public ResponseEntity<StatusResponse> removeComment(@PathVariable("commentId") Long commentId, @AuthUser Member member) {
         return commentService.removeComment(commentId, member);
