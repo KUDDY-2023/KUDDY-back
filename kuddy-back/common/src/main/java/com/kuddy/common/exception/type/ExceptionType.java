@@ -8,7 +8,6 @@ import com.kuddy.common.heart.exception.AlreadyLikedException;
 import com.kuddy.common.heart.exception.HeartNotFoundException;
 import com.kuddy.common.member.exception.DuplicateNicknameException;
 import com.kuddy.common.member.exception.InvalidNicknameException;
-import com.kuddy.common.profile.domain.Language;
 import com.kuddy.common.profile.exception.AreaNotFoundException;
 import com.kuddy.common.profile.exception.LanguageNotFoundException;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
@@ -53,10 +52,9 @@ public enum ExceptionType {
 
 	//관광지 관련 - C4***
 	TOUR_API_EXCEPTION("C4000", "TourApi를 불러올 수 없습니다.", TourApiExeption.class),
-	TOUR_API_EXCEPTION("C4000", "TourApi를 불러올 수 없습니다.", TourApiExeption.class),
 	SPOT_NOT_FOUND_EXCEPTION("C4001", "해당 관광지 정보를 찾을 수 없습니다.",SpotNotFoundException.class),
 	HEART_NOT_FOUND_EXCEPTION("C4002", "해당 관광지에 대한 찜 정보를 찾을 수 없습니다.", HeartNotFoundException.class),
-	ALREADY_LIKED_EXCEPTION("C4003", "이미 찜한 관광지입니다.", AlreadyLikedException.class);
+	ALREADY_LIKED_EXCEPTION("C4003", "이미 찜한 관광지입니다.", AlreadyLikedException.class),
 
 	//회원 관련 - C2***
 	INVALID_NICKNAME_EXCEPTION("C2000", "유효하지 않은 닉네임입니다.", InvalidNicknameException.class),
