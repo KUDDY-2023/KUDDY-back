@@ -16,13 +16,18 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<StatusResponse> submitReport(@AuthUser Member member, @RequestBody ReportReqDto reportReqDto) {
         return reportService.createReport(member, reportReqDto);
     }
 
     @GetMapping("/{reportId}")
     public ResponseEntity<StatusResponse> getReport(@PathVariable("reportId") Long reportId) {
-        return reportService.getReport(reportId);
+        return reportService.findReport(reportId);
+    }
+
+    @GetMapping
+    public ResponseEntity<StatusResponse> getReportList() {
+        return reportService.findReportList();
     }
 }

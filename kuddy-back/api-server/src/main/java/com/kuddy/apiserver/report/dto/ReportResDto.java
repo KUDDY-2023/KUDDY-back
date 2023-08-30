@@ -1,8 +1,5 @@
 package com.kuddy.apiserver.report.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.kuddy.apiserver.member.dto.MemberResDto;
-import com.kuddy.common.report.domain.Reason;
 import com.kuddy.common.report.domain.Report;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +12,6 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReportResDto {
     private Long id;
     private Long writerId;

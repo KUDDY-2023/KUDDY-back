@@ -1,5 +1,6 @@
 package com.kuddy.apiserver.report.service;
 
+import com.kuddy.apiserver.report.dto.ReportListResDto;
 import com.kuddy.apiserver.report.dto.ReportReqDto;
 import com.kuddy.apiserver.report.dto.ReportResDto;
 import com.kuddy.common.member.domain.Member;
@@ -12,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -33,12 +37,29 @@ public class ReportService {
                 .build());
     }
 
-    public ResponseEntity<StatusResponse> getReport(Long reportId) {
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> findReport(Long reportId) {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new ReportNotFoundException(reportId));
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
                 .data(ReportResDto.of(report))
+                .build());
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> findReportList() {
+        List<ReportResDto> reportList = new ArrayList<>();
+        for(Report report : reportRepository.findAll()) {
+            reportList.add(ReportResDto.of(report));
+        }
+
+        ReportListResDto response = new ReportListResDto(reportList, reportRepository.count());
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(response)
                 .build());
     }
 }
