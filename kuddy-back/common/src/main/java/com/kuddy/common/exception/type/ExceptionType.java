@@ -11,6 +11,7 @@ import com.kuddy.common.member.exception.InvalidNicknameException;
 import com.kuddy.common.profile.exception.AreaNotFoundException;
 import com.kuddy.common.profile.exception.LanguageNotFoundException;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
+import com.kuddy.common.report.exception.ReportNotFoundException;
 import com.kuddy.common.security.exception.EmptyTokenException;
 import com.kuddy.common.security.exception.InvalidAccessTokenAtRenewException;
 import com.kuddy.common.security.exception.ExpiredTokenException;
@@ -62,11 +63,13 @@ public enum ExceptionType {
 	//프로필 관련 - C3***
 	PROFILE_NOT_FOUND_EXCEPTION("C3000", "프로필을 찾을 수 없습니다.", ProfileNotFoundException.class),
 	LANGUEAGE_NOT_FOUND_EXCEPTION("C3001", "해당 언어를 찾을 수 없습니다.", LanguageNotFoundException.class),
-	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class);
+	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class),
 
 	//게시글 관련 - C5***
 	//댓글 관련 - C6***
 
+	//신고 관련 - C7***
+	REPORT_NOT_FOUND_EXCEPTION("C7000", "해당 신고 기록을 찾을 수 없습니다.", ReportNotFoundException.class);
 
 	private final String errorCode;
 	private final String message;

@@ -4,6 +4,7 @@ import com.kuddy.apiserver.report.dto.ReportReqDto;
 import com.kuddy.apiserver.report.dto.ReportResDto;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.report.domain.Report;
+import com.kuddy.common.report.exception.ReportNotFoundException;
 import com.kuddy.common.report.repository.ReportRepository;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
@@ -28,6 +29,15 @@ public class ReportService {
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.CREATED.getStatusCode())
                 .message(StatusEnum.CREATED.getCode())
+                .data(ReportResDto.of(report))
+                .build());
+    }
+
+    public ResponseEntity<StatusResponse> getReport(Long reportId) {
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new ReportNotFoundException(reportId));
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
                 .data(ReportResDto.of(report))
                 .build());
     }

@@ -20,4 +20,9 @@ public class ReportController {
     public ResponseEntity<StatusResponse> submitReport(@AuthUser Member member, @RequestBody ReportReqDto reportReqDto) {
         return reportService.createReport(member, reportReqDto);
     }
+
+    @GetMapping("/{reportId}")
+    public ResponseEntity<StatusResponse> getReport(@PathVariable("reportId") Long reportId) {
+        return reportService.getReport(reportId);
+    }
 }

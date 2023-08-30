@@ -4,12 +4,14 @@ import com.kuddy.common.domain.BaseTimeEntity;
 import com.kuddy.common.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Table(name = "report")
+@NoArgsConstructor
 public class Report extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
