@@ -26,8 +26,8 @@ public class ReportService {
                 .explanation(reportReqDto.getExplanation())
                 .build());
         return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
+                .status(StatusEnum.CREATED.getStatusCode())
+                .message(StatusEnum.CREATED.getCode())
                 .data(ReportResDto.of(report))
                 .build());
     }
