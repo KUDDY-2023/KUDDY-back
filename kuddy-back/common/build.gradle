@@ -1,5 +1,7 @@
 bootJar { enabled = false } // core 은 bootJar 로 패키징 할 필요 없음
 jar { enabled = true }
+
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
 dependencies {
 
 
@@ -23,9 +25,34 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //implementation 은 직접 의존하고 있는 자신만 그 구현을 알고 있으며, 그 자식 모듈(?) 은 해당 의존성에 대한 구현을 참조할 수 없기 때문에, 이것을 api로 변경을 해서 사용
 
+    //DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
 }
+def querydslDir = "$buildDir/generated/querydsl"
 
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', querydslDir]
+        }
+    }
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
 
 tasks.named('test') {
     useJUnitPlatform()
