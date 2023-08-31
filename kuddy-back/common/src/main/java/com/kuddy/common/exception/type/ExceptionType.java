@@ -3,13 +3,16 @@ package com.kuddy.common.exception.type;
 import java.util.Arrays;
 import java.util.Objects;
 
+import com.kuddy.common.chat.exception.ChatNotFoundException;
 import com.kuddy.common.chat.exception.ChatRoomNotFoundException;
 import com.kuddy.common.chat.exception.RoomNotFoundException;
 import com.kuddy.common.exception.custom.ApplicationException;
 import com.kuddy.common.heart.exception.AlreadyLikedException;
 import com.kuddy.common.heart.exception.HeartNotFoundException;
+import com.kuddy.common.meetup.exception.MeetupNotFoundException;
 import com.kuddy.common.member.exception.DuplicateNicknameException;
 import com.kuddy.common.member.exception.InvalidNicknameException;
+import com.kuddy.common.member.exception.NotAuthorException;
 import com.kuddy.common.profile.exception.AreaNotFoundException;
 import com.kuddy.common.profile.exception.LanguageNotFoundException;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
@@ -40,6 +43,7 @@ public enum ExceptionType {
 	EMPTY_TOKEN_EXCEPTION("C1003", "토큰이 존재하지 않습니다.", EmptyTokenException .class),
 	INVALID_TOKEN_TYPE_EXCEPTION("C1004", "토큰 타입이 올바르지 않습니다.", InvalidTokenTypeException .class),
 	EXPIRED_TOKEN_EXCEPTION("C1005", "토큰이 유효하지 않습니다.", ExpiredTokenException.class),
+	NOT_AUTHOR_EXCEPTION("C1007", "작성자가 아니므로 권한이 없습니다.", NotAuthorException.class),
 	/*HTTP_REQUEST_NULL_EXCEPTION("C1006", "인증할 수 있는 사용자 데이터가 없습니다.", HttpRequestNullException.class),
 	NOT_AUTHOR_EXCEPTION("C1007", "작성자가 아니므로 권한이 없습니다.", NotAuthorException.class),
 	NOT_MEMBER_EXCEPTION("C1008", "회원이 아니므로 권한이 없습니다.", NotMemberException.class),
@@ -71,9 +75,11 @@ public enum ExceptionType {
 
 	//채팅 관련 - C7***
 	CHAT_ROOM_NOT_FOUND_EXCEPTION("C7000", "해당 접속한 채팅방을 찾을 수 없습니다.", ChatRoomNotFoundException.class),
-	ROOM_NOT_FOUND_EXCEPTION("C7000", "해당 채팅방을 찾을 수 없습니다.", RoomNotFoundException.class);
+	ROOM_NOT_FOUND_EXCEPTION("C7001", "해당 채팅방을 찾을 수 없습니다.", RoomNotFoundException.class),
+	CHAT_NOT_FOUND_EXCEPTION("C7002", "해당 채팅을 찾을 수 없습니다.", ChatNotFoundException.class),
 
-
+	//meetup 관련 - C8***
+	MEETUP_NOT_FOUND_EXCEPTION("C8000", "해당 meetup을 찾을 수 없습니다.", MeetupNotFoundException.class);
 	private final String errorCode;
 	private final String message;
 	private Class<? extends ApplicationException> type;
