@@ -9,4 +9,6 @@ import java.util.List;
 public interface PickRepository extends JpaRepository<Pick, Long> {
     @Query(value = "SELECT * FROM pick order by RAND() limit 8",nativeQuery = true)
     List<Pick> findAll();
+
+    List<Pick> findAllByOrderById();
 }

@@ -23,6 +23,17 @@ public class PickService {
     @Transactional(readOnly = true)
     public ResponseEntity<StatusResponse> findRandomThumbnailList() {
         List<Pick> pickList = pickRepository.findAll();
+        return changeThumbnailListToResponse(pickList);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> findAllThumbnailList() {
+        List<Pick> pickList = pickRepository.findAllByOrderById();
+        return changeThumbnailListToResponse(pickList);
+    }
+
+    //썸네일 리스트 -> 공통 응답형식으로 반환 코드
+    public ResponseEntity<StatusResponse> changeThumbnailListToResponse(List<Pick> pickList) {
         List<ThumbnailResDto> thumbnailList = new ArrayList<>();
         for(Pick pick : pickList) {
             ThumbnailResDto thumbnailResDto = ThumbnailResDto.of(pick);

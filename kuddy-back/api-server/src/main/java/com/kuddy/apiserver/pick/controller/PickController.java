@@ -18,4 +18,10 @@ public class PickController {
     public ResponseEntity<StatusResponse> getRandomThumbnailList() {
         return pickService.findRandomThumbnailList();
     }
+
+    //전체 썸네일 리스트 조회(랜덤 아니고 id순)
+    @GetMapping
+    public ResponseEntity<StatusResponse> getAllThumbnailList() {
+        return pickService.findAllThumbnailList();
+    }
 }
