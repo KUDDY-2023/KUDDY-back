@@ -27,7 +27,8 @@ public class MemberController {
 	@GetMapping("/me")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<StatusResponse> readMember(@AuthUser Member member) {
-		MemberResDto response = MemberResDto.of(member);
+		Member findMember = memberService.findById(member.getId());
+		MemberResDto response = MemberResDto.of(findMember);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
 			.message(StatusEnum.OK.getCode())
