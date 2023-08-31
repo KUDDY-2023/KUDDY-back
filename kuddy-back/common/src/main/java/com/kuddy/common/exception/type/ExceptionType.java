@@ -3,6 +3,8 @@ package com.kuddy.common.exception.type;
 import java.util.Arrays;
 import java.util.Objects;
 
+import com.kuddy.common.chat.exception.ChatRoomNotFoundException;
+import com.kuddy.common.chat.exception.RoomNotFoundException;
 import com.kuddy.common.exception.custom.ApplicationException;
 import com.kuddy.common.heart.exception.AlreadyLikedException;
 import com.kuddy.common.heart.exception.HeartNotFoundException;
@@ -62,10 +64,14 @@ public enum ExceptionType {
 	//프로필 관련 - C3***
 	PROFILE_NOT_FOUND_EXCEPTION("C3000", "프로필을 찾을 수 없습니다.", ProfileNotFoundException.class),
 	LANGUEAGE_NOT_FOUND_EXCEPTION("C3001", "해당 언어를 찾을 수 없습니다.", LanguageNotFoundException.class),
-	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class);
+	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class),
 
 	//게시글 관련 - C5***
 	//댓글 관련 - C6***
+
+	//채팅 관련 - C7***
+	CHAT_ROOM_NOT_FOUND_EXCEPTION("C7000", "해당 접속한 채팅방을 찾을 수 없습니다.", ChatRoomNotFoundException.class),
+	ROOM_NOT_FOUND_EXCEPTION("C7000", "해당 채팅방을 찾을 수 없습니다.", RoomNotFoundException.class);
 
 
 	private final String errorCode;
