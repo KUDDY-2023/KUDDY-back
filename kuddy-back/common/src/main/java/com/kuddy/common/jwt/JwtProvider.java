@@ -119,9 +119,32 @@ public class JwtProvider {
 			return false;
 		}
 	}
+	public boolean validateToken(String token)
+	{
+		try {
+			Jwts.parserBuilder()
+				.setSigningKey(getSignKey(secretKey))
+				.build()
+				.parseClaimsJws(token);
+			return true;
+		} catch (ExpiredJwtException e) {
+			log.error("만료된 토큰입니다. {}", e.toString());
+			return false;
+		} catch (UnsupportedJwtException e) {
+			log.error("잘못된 형식의 토큰입니다. {}", e.toString());
+			return false;
+		} catch (MalformedJwtException e) {
+			log.error("잘못된 구조의 토큰입니다. {}", e.toString());
+			return false;
+		}
+		catch (IllegalArgumentException e) {
+			log.error("잘못 생성된 토큰입니다. {}", e.toString());
+			return false;
+		}
+	}
 
 	// JWT payload를 복호화해서 반환
-	private Claims getClaims(String token) {
+	public Claims getClaims(String token) {
 		try {
 			return Jwts.parserBuilder() // JwtParserBuilder 인스턴스 생성
 				.setSigningKey(getSignKey(secretKey)) // JWT Signature 검증을 위한 SecretKey 설정
@@ -157,6 +180,7 @@ public class JwtProvider {
 		Date now = new Date();
 		return expiration.getTime() - now.getTime();
 	}
+
 
 
 
