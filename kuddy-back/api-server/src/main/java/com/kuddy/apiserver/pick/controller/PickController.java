@@ -24,4 +24,10 @@ public class PickController {
     public ResponseEntity<StatusResponse> getAllThumbnailList() {
         return pickService.findAllThumbnailList();
     }
+
+    //랜덤으로 커디스픽 리스트 3개 조회
+    @GetMapping("/random")
+    public ResponseEntity<StatusResponse> getRandomPickList() {
+        return pickService.findRandomPickList();
+    }
 }

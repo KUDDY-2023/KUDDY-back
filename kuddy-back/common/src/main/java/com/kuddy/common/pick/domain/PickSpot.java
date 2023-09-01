@@ -43,4 +43,12 @@ public class PickSpot {
         this.summary = summary;
         this.detail = detail;
     }
+
+    public List<String> getPImageUrlList() {
+        List<String> imageUrlList = new ArrayList<>();
+        for(PickImage pickImage : pickImageList) {
+            imageUrlList.add(pickImage.getImageUrl());
+        }
+        return imageUrlList;
+    }
 }

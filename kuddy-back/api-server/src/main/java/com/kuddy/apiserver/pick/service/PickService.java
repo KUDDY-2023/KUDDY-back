@@ -1,8 +1,11 @@
 package com.kuddy.apiserver.pick.service;
 
+import com.kuddy.apiserver.pick.dto.PickResDto;
+import com.kuddy.apiserver.pick.dto.PickSpotResDto;
 import com.kuddy.apiserver.pick.dto.ThumbnailListResDto;
 import com.kuddy.apiserver.pick.dto.ThumbnailResDto;
 import com.kuddy.common.pick.domain.Pick;
+import com.kuddy.common.pick.domain.PickSpot;
 import com.kuddy.common.pick.repository.PickRepository;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
@@ -40,6 +43,26 @@ public class PickService {
             thumbnailList.add(thumbnailResDto);
         }
         ThumbnailListResDto response = new ThumbnailListResDto(thumbnailList, thumbnailList.size());
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(response)
+                .build());
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> findRandomPickList() {
+        List<Pick> pickList = pickRepository.findAll();
+        List<PickResDto> response = new ArrayList<>();
+        for(int i = 0; i < 3; i++) {
+            List<PickSpot> pickSpotList = pickList.get(i).getPickSpotList();
+            List<PickSpotResDto> pickSpotResDtoList = new ArrayList<>();
+            for(PickSpot pickSpot : pickSpotList) {
+                pickSpotResDtoList.add(PickSpotResDto.of(pickSpot));
+            }
+            response.add(PickResDto.of(pickList.get(i), pickSpotResDtoList));
+        }
 
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
