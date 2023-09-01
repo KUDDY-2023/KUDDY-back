@@ -16,7 +16,7 @@ public class Spot {
     @Column(updatable = false)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     private String name;
 
     @Column(nullable = false, name = "content_id")
@@ -33,12 +33,24 @@ public class Spot {
     @Column
     private String imageUrl;
 
+    @Column(nullable = false)
+    private Long numOfHearts;
+
     @Builder
-    public Spot(String name, Long contentId, District district, String imageUrl, Category category) {
+    public Spot(String name, Long contentId, District district, String imageUrl, Category category, Long numOfHearts) {
         this.name= name;
         this.contentId = contentId;
         this.district = district;
         this.category = category;
         this.imageUrl = imageUrl;
+        this.numOfHearts = numOfHearts;
+    }
+
+    public void likeSpot() {
+        numOfHearts++;
+    }
+
+    public void cancelSpot() {
+        numOfHearts--;
     }
 }

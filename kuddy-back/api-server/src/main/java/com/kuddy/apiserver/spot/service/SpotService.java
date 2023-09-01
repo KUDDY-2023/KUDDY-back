@@ -1,8 +1,12 @@
 package com.kuddy.apiserver.spot.service;
 
+import com.kuddy.apiserver.member.dto.MemberResDto;
 import com.kuddy.apiserver.spot.dto.SpotDetailResDto;
 import com.kuddy.apiserver.spot.dto.SpotPageResDto;
 import com.kuddy.apiserver.spot.dto.SpotResDto;
+import com.kuddy.common.heart.domain.Heart;
+import com.kuddy.common.heart.repository.HeartRepository;
+import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.page.PageInfo;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
@@ -29,6 +33,7 @@ import java.util.List;
 public class SpotService {
 
     private final SpotRepository spotRepository;
+    private final HeartRepository heartRepository;
 
     //JSON 응답값 중 필요한 정보(이름, 지역, 카테고리, 사진, 고유id)만 db에 저장
     public void changeAndSave(JSONArray spotArr) {
@@ -53,6 +58,7 @@ public class SpotService {
                         .district(District.valueOf(areaCode))
                         .category(Category.valueOf(contentType))
                         .imageUrl((String) item.get("firstimage"))
+                        .numOfHearts(0L)
                         .build());
             }
         }
@@ -61,24 +67,39 @@ public class SpotService {
     @Transactional(readOnly = true)
     public Page<Spot> findSpotByCategory(String category, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return spotRepository.findAllByCategory(Category.valueOf(category), pageRequest);
+        return spotRepository.findAllByCategoryOrderByNumOfHeartsDesc(Category.valueOf(category), pageRequest);
     }
 
     @Transactional(readOnly = true)
     public Page<Spot> findSpotByDistrict(String district, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return spotRepository.findAllByDistrict(District.valueOf(district), pageRequest);
+        return spotRepository.findAllByDistrictOrderByNumOfHeartsDesc(District.valueOf(district), pageRequest);
     }
 
     @Transactional(readOnly = true)
     public Page<Spot> findAllSpots(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return spotRepository.findAll(pageRequest);
+        return spotRepository.findAllByOrderByNumOfHeartsDesc(pageRequest);
     }
 
     @Transactional(readOnly = true)
     public Spot findSpotByContentId(Long contentId) {
         return spotRepository.findByContentId(contentId);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> getTrendMagazine() {
+        List<Spot> spotList = spotRepository.findTop5ByOrderByNumOfHeartsDesc();
+        List<SpotResDto> respone = new ArrayList<>();
+        for (Spot spot : spotList) {
+            SpotResDto spotResDto = SpotResDto.of(spot);
+            respone.add(spotResDto);
+        }
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(respone)
+                .build());
     }
 
     //조회한 spot 리스트와 페이지 정보를 공통응답형식으로 반환하도록 변환하는 메소드
@@ -124,24 +145,43 @@ public class SpotService {
     }
 
     //각 관광지 상세 정보 조회(사진 여러장 + 찜한 멤버들 + 위치기반추천)
-    public ResponseEntity<StatusResponse> responseDetailInfo(Object o, JSONObject body, JSONArray imageArr, Spot spot) {
+    public ResponseEntity<StatusResponse> responseDetailInfo(Object commonDetail, Object detailInfo, JSONObject nearbySpots, JSONArray imageArr, Spot spot) {
 
         //위치 기반 관광지 추천(5개)
-        List<SpotResDto> recommendationList = changeJsonBodyToList(body);
+        List<SpotResDto> recommendationList = changeJsonBodyToList(nearbySpots);
+
+        //찜한 멤버들
+        List<MemberResDto> kuddyList = new ArrayList<>();
+        List<MemberResDto> travelerList = new ArrayList<>();
+        for(Heart heart : heartRepository.findAllBySpot(spot)) {
+            if(heart.getMember().getRoleType().equals(RoleType.KUDDY))
+                kuddyList.add(MemberResDto.of(heart.getMember()));
+            else if(heart.getMember().getRoleType().equals(RoleType.TRAVELER))
+                travelerList.add(MemberResDto.of(heart.getMember()));
+        }
 
         //이미지
         List<String> imageList = new ArrayList<>();
-        imageList.add(spot.getImageUrl());
-        for(Object object : imageArr) {
-            JSONObject item = (JSONObject) object;
-            String imageUrl = (String) item.get("originimgurl");
-            imageList.add(imageUrl);
+        if(!spot.getImageUrl().isEmpty())
+            imageList.add(spot.getImageUrl());
+        if(!(imageArr == null)) {
+            for (Object object : imageArr) {
+                JSONObject item = (JSONObject) object;
+                String imageUrl = (String) item.get("originimgurl");
+                imageList.add(imageUrl);
+            }
         }
 
         //상세 정보
-        JSONObject item = (JSONObject) o;
+        JSONObject additionalInfo = (JSONObject) detailInfo;
+        additionalInfo.remove("contenttypeid");
+        additionalInfo.remove("contentid");
+
+        //공통 정보
+        JSONObject item = (JSONObject) commonDetail;
         SpotDetailResDto spotDetailResDto = SpotDetailResDto.of(spot, (String) item.get("overview"), (String) item.get("tel"),
-                (String) item.get("homepage"), (String) item.get("addr1"), (String) item.get("zipcode"), recommendationList, imageList);
+                (String) item.get("homepage"), (String) item.get("addr1"), (String) item.get("zipcode"), (Object) additionalInfo,
+                recommendationList, imageList, kuddyList, travelerList);
 
         return ResponseEntity.ok(StatusResponse.builder()
                         .status(StatusEnum.OK.getStatusCode())
