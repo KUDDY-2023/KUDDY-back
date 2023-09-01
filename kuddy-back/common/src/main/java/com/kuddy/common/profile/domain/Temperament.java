@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Temperament {
+	NOT_SELECTED("0", "Not Selected"),
 	INTROVERT("1", "Introvert"),
 	EXTROVERT("2", "Extrovert");
 
