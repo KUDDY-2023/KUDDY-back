@@ -58,7 +58,7 @@ public enum ExceptionType {
 	SPOT_NOT_FOUND_EXCEPTION("C4001", "해당 관광지 정보를 찾을 수 없습니다.",SpotNotFoundException.class),
 	HEART_NOT_FOUND_EXCEPTION("C4002", "해당 관광지에 대한 찜 정보를 찾을 수 없습니다.", HeartNotFoundException.class),
 	ALREADY_LIKED_EXCEPTION("C4003", "이미 찜한 관광지입니다.", AlreadyLikedException.class),
-  NO_SPOT_EXISTS_EXCEPTION("C4004", "존재하지 않는 spot id입니다.", NoSpotExists.class),
+        NO_SPOT_EXISTS_EXCEPTION("C4004", "존재하지 않는 spot id입니다.", NoSpotExists.class),
 
 	//회원 관련 - C2***
 	INVALID_NICKNAME_EXCEPTION("C2000", "유효하지 않은 닉네임입니다.", InvalidNicknameException.class),
@@ -66,20 +66,20 @@ public enum ExceptionType {
 	//프로필 관련 - C3***
 	PROFILE_NOT_FOUND_EXCEPTION("C3000", "프로필을 찾을 수 없습니다.", ProfileNotFoundException.class),
 	LANGUEAGE_NOT_FOUND_EXCEPTION("C3001", "해당 언어를 찾을 수 없습니다.", LanguageNotFoundException.class),
-	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class);
+	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class),
 
-  //게시글 관련 - C5***
-  EXPIRED_DATE_EXCEPTION("C5000", "이미 지난 날짜를 동행 날짜로 설정할 수 없습니다.", ExpiredDateException.class),
-  EMPTY_INPUT_FILENAME_EXCEPTION("C5001", "이미지 파일명은 NULL값을 가질 수 없습니다.", EmptyInputFilenameException.class),
-  WRONG_IMAGE_FORMAT_EXCEPTION("C5002", "이미지 파일 확장자는 jpg(JPG), png(PNG), jpeg(JPEG)만 가능합니다.", WrongImageFormatException.class),
-  NO_DISTRICT_EXISTS_EXCEPTION("C5003", "유효하지 않은 지역구입니다.", NoDistrictExistsException.class),
-  INVALID_ARGUMENTS_FOR_POST_EXCEPTION("C5004", "게시글 타입에 맞지 않는 인자입니다.", InvalidPostArgumentsException.class),
-  NO_POST_EXIST_EXCEPTION("C5005", "존재하지 않는 게시글입니다.", NoPostExistException.class),
-  NO_AUTHORITY_POST_REMOVE("C5006", "본인이 작성한 게시글만 삭제할 수 있습니다.", NoAuthorityPostRemove.class),
-
-  //댓글 관련 - C6***
-  NO_COMMENT_EXIST_EXCEPTION("C6001", "존재하지 않는 댓글입니다.", NoCommentExistsException.class),
-  NO_AUTHORITY_COMMENT_REMOVE("C6002", "본인이 작성한 댓글만 삭제할 수 있습니다.", NoAuthorityCommentRemove.class);
+	//게시글 관련 - C5***
+	EXPIRED_DATE_EXCEPTION("C5000", "이미 지난 날짜를 동행 날짜로 설정할 수 없습니다.", ExpiredDateException.class),
+	EMPTY_INPUT_FILENAME_EXCEPTION("C5001", "이미지 파일명은 NULL값을 가질 수 없습니다.", EmptyInputFilenameException.class),
+	WRONG_IMAGE_FORMAT_EXCEPTION("C5002", "이미지 파일 확장자는 jpg(JPG), png(PNG), jpeg(JPEG)만 가능합니다.", WrongImageFormatException.class),
+	NO_DISTRICT_EXISTS_EXCEPTION("C5003", "유효하지 않은 지역구입니다.", NoDistrictExistsException.class),
+	INVALID_ARGUMENTS_FOR_POST_EXCEPTION("C5004", "게시글 타입에 맞지 않는 인자입니다.", InvalidPostArgumentsException.class),
+	NO_POST_EXIST_EXCEPTION("C5005", "존재하지 않는 게시글입니다.", NoPostExistException.class),
+	NO_AUTHORITY_POST_REMOVE("C5006", "본인이 작성한 게시글만 삭제할 수 있습니다.", NoAuthorityPostRemove.class),
+	
+	//댓글 관련 - C6***
+	NO_COMMENT_EXIST_EXCEPTION("C6001", "존재하지 않는 댓글입니다.", NoCommentExistsException.class),
+	NO_AUTHORITY_COMMENT_REMOVE("C6002", "본인이 작성한 댓글만 삭제할 수 있습니다.", NoAuthorityCommentRemove.class);
 
 
 	private final String errorCode;
