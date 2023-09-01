@@ -9,6 +9,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CommentWriterInfoDto {
     private Long writerId;
-    private String username;
+    private String nickname;
     private String profileImageUrl;
 }

@@ -21,7 +21,7 @@ public class CommentResDto {
     private Long parentId;
 
     public static CommentResDto of(Comment comment, Member member, List<ReplyResDto> replyList) {
-        CommentWriterInfoDto commentWriterInfoDto = new CommentWriterInfoDto(comment.getWriter().getId(), member.getUsername(), member.getProfileImageUrl());
+        CommentWriterInfoDto commentWriterInfoDto = new CommentWriterInfoDto(comment.getWriter().getId(), member.getNickname(), member.getProfileImageUrl());
         CommentResDtoBuilder builder = CommentResDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())

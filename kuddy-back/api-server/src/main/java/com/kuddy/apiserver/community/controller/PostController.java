@@ -18,33 +18,11 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     private final PostService postService;
 
-    //    @PostMapping("/talkingboard")
-//    public ResponseEntity<StatusResponse> saveTalkingboard(@RequestBody TalkingboardReqDto reqDto,
-//                                                           @AuthUser Member member) {
-//        return postService.saveTalkingboardPost(reqDto, member);
-//    }
-//
-//    @PostMapping("/itinerary")
-//    public ResponseEntity<StatusResponse> saveItineraryFeedback(@RequestBody ItineraryReqDto reqDto,
-//                                                                @AuthUser Member member) {
-//        return postService.saveItineraryFeedbackPost(reqDto, member);
-//    }
     @PostMapping()
     public ResponseEntity<StatusResponse> savePost(@RequestParam String type, @RequestBody PostReqDto reqDto,
                                                    @AuthUser Member member) {
         return postService.savePost(type, reqDto, member);
     }
-
-//    @GetMapping("/talkingboard")
-//    public ResponseEntity<StatusResponse> getTalkingboard(@RequestParam int page, @RequestParam int size) {
-//        return postService.getTalkingboardList(page, size);
-//    }
-//
-//    @GetMapping("/itinerary")
-//    public ResponseEntity<StatusResponse> getItineraryFeedback(@RequestParam int page, @RequestParam int size) {
-//        return postService.getItineraryFeedbackList(page, size);
-//    }
-
 
     @GetMapping()
     public ResponseEntity<StatusResponse> getPosts(@RequestParam String type, @RequestParam int page, @RequestParam int size) {

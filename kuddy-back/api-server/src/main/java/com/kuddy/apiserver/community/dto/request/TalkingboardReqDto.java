@@ -30,16 +30,6 @@ public class TalkingboardReqDto {
     @NotEmpty
     private String postType;
 
-//    @Builder
-//    public TalkingboardReqDto(String title, String content, Integer people, LocalDate date, String district, List<String> images) {
-//        this.title = title;
-//        this.content = content;
-//        this.people = people;
-//        this.date = date;
-//        this.district = district;
-//        this.images = images;
-//    }
-
     public Post toEntityFromJoinUs(TalkingboardReqDto dto, Member member) {
         return Post.JoinusBuilder()
                 .title(dto.getTitle())
