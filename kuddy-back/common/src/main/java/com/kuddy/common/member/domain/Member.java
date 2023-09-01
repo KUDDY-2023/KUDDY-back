@@ -48,22 +48,27 @@ public class Member extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private ProviderType providerType;
 
-	@Column(length = 20)
+	@Column(length = 30)
 	@Enumerated(EnumType.STRING)
 	private RoleType roleType;
+
+	@Column(length = 15)
+	@Enumerated(EnumType.STRING)
+	private MemberStatus memberStatus;
 
 	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
 	private Profile profile;
 
 	@Builder
 	public Member(String username, String email, String profileImageUrl, String nickname,
-		ProviderType providerType, RoleType roleType) {
+		ProviderType providerType, RoleType roleType, MemberStatus status) {
 		this.username = username;
 		this.email = email;
 		this.profileImageUrl = profileImageUrl;
 		this.nickname = nickname;
 		this.providerType = providerType;
 		this.roleType = roleType;
+		this.memberStatus = status;
 	}
 
 	public boolean validateNickName(String nickname) {
@@ -86,6 +91,16 @@ public class Member extends BaseTimeEntity {
 	public void updateRole(RoleType roleType) {
 		if (roleType != null && !Objects.equals(this.roleType, roleType)) {
 			this.roleType = roleType;
+		}
+	}
+	public void updateMemberStatus(MemberStatus memberStatus) {
+		if (memberStatus != null && !Objects.equals(this.memberStatus, memberStatus)) {
+			this.memberStatus = memberStatus;
+		}
+	}
+	public void setProfile(Profile profile){
+		if (profile != null && !Objects.equals(this.profile, profile)){
+			this.profile = profile;
 		}
 	}
 }
