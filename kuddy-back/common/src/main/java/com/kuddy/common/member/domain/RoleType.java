@@ -10,6 +10,7 @@ import lombok.Getter;
 public enum RoleType {
 	MEMBER("ROLE_USER", "member"),
 	KUDDY("ROLE_KUDDY", "k-buddy"),
+	READY_TO_BE_KUDDY("ROLE_READY_TO_BE_KUDDY", "ready to be k-buddy"),
 	TRAVELER("ROLE_TRAVELER", "traveler"),
 
 	ADMIN("ROLE_ADMIN", "admin"),
@@ -20,7 +21,7 @@ public enum RoleType {
 
 	public static RoleType of(String code) {
 		return Arrays.stream(RoleType.values())
-			.filter(r -> r.getCode().equals(code))
+			.filter(r -> r.getCode().equalsIgnoreCase(code))
 			.findAny()
 			.orElse(GUEST);
 	}
