@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Member extends BaseTimeEntity {
+	public static final String FORBIDDEN_WORD = "unknown";
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "member_id", updatable = false)
@@ -72,7 +73,7 @@ public class Member extends BaseTimeEntity {
 	}
 
 	public boolean validateNickName(String nickname) {
-		if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > 15 || !nickname.matches("[a-zA-Z0-9_]+")) {
+		if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > 15 || !nickname.matches("[a-zA-Z0-9_]+") || nickname.equalsIgnoreCase(FORBIDDEN_WORD)) {
 			throw new InvalidNicknameException();
 		}else{
 			return true;
