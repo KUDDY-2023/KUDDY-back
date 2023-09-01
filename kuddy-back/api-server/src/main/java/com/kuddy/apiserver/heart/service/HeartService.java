@@ -37,6 +37,7 @@ public class HeartService {
                     .member(member)
                     .spot(spot)
                     .build());
+            spot.likeSpot();
             return ResponseEntity.ok(StatusResponse.builder()
                     .status(StatusEnum.OK.getStatusCode())
                     .message(StatusEnum.OK.getCode())
@@ -49,7 +50,7 @@ public class HeartService {
         Spot spot =  spotRepository.findById(id).orElseThrow(() -> new SpotNotFoundException(id));
         Heart heart = heartRepository.findByMemberAndSpot(member, spot).orElseThrow(HeartNotFoundException::new);
         heartRepository.delete(heart);
-
+        spot.cancelSpot();
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
