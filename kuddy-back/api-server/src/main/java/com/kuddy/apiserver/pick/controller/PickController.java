@@ -30,4 +30,10 @@ public class PickController {
     public ResponseEntity<StatusResponse> getRandomPickList() {
         return pickService.findRandomPickList();
     }
+
+    //커디스픽 상세 내용 조회
+    @GetMapping("/{pickId}")
+    public ResponseEntity<StatusResponse> getPickDetail(@PathVariable Long pickId) {
+        return pickService.findPick(pickId);
+    }
 }

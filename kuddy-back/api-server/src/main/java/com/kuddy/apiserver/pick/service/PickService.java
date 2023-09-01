@@ -6,6 +6,7 @@ import com.kuddy.apiserver.pick.dto.ThumbnailListResDto;
 import com.kuddy.apiserver.pick.dto.ThumbnailResDto;
 import com.kuddy.common.pick.domain.Pick;
 import com.kuddy.common.pick.domain.PickSpot;
+import com.kuddy.common.pick.exception.PickNotFoundException;
 import com.kuddy.common.pick.repository.PickRepository;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
@@ -63,6 +64,23 @@ public class PickService {
             }
             response.add(PickResDto.of(pickList.get(i), pickSpotResDtoList));
         }
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(response)
+                .build());
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> findPick(Long pickId) {
+        Pick pick = pickRepository.findById(pickId).orElseThrow(() -> new PickNotFoundException(pickId));
+        List<PickSpot> pickSpotList = pick.getPickSpotList();
+        List<PickSpotResDto> pickSpotResDtoList = new ArrayList<>();
+        for(PickSpot pickSpot : pickSpotList) {
+            pickSpotResDtoList.add(PickSpotResDto.of(pickSpot));
+        }
+        PickResDto response =  PickResDto.of(pick, pickSpotResDtoList);
 
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())

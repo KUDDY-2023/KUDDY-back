@@ -8,6 +8,7 @@ import com.kuddy.common.heart.exception.AlreadyLikedException;
 import com.kuddy.common.heart.exception.HeartNotFoundException;
 import com.kuddy.common.member.exception.DuplicateNicknameException;
 import com.kuddy.common.member.exception.InvalidNicknameException;
+import com.kuddy.common.pick.exception.PickNotFoundException;
 import com.kuddy.common.profile.exception.AreaNotFoundException;
 import com.kuddy.common.profile.exception.LanguageNotFoundException;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
@@ -62,11 +63,14 @@ public enum ExceptionType {
 	//프로필 관련 - C3***
 	PROFILE_NOT_FOUND_EXCEPTION("C3000", "프로필을 찾을 수 없습니다.", ProfileNotFoundException.class),
 	LANGUEAGE_NOT_FOUND_EXCEPTION("C3001", "해당 언어를 찾을 수 없습니다.", LanguageNotFoundException.class),
-	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class);
+	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class),
 
 	//게시글 관련 - C5***
 	//댓글 관련 - C6***
 
+
+	//커디스픽 관련 - C10***
+	PICK_NOT_FOUND_EXCEPTION("C10000", "해당 커디스픽 정보를 찾을 수 없습니다.",PickNotFoundException .class);
 
 	private final String errorCode;
 	private final String message;
