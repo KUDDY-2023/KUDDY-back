@@ -60,7 +60,7 @@ public class PickService {
             List<PickSpot> pickSpotList = pickList.get(i).getPickSpotList();
             List<PickSpotResDto> pickSpotResDtoList = new ArrayList<>();
             for(PickSpot pickSpot : pickSpotList) {
-                pickSpotResDtoList.add(PickSpotResDto.of(pickSpot));
+                pickSpotResDtoList.add(new PickSpotResDto(pickSpot));
             }
             response.add(PickResDto.of(pickList.get(i), pickSpotResDtoList));
         }
