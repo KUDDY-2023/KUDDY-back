@@ -22,11 +22,13 @@ public class TourApiService {
     @Value("${tourapi.secret-key}")
     private String SECRET_KEY;
 
+    private static final String BASE_URL = "https://apis.data.go.kr/B551011/EngService1/";
+
     //카테고리별로 20개씩 조회
     public JSONArray getApiDataList(int page, int category) {
 
         try {
-            URL url = new URL("https://apis.data.go.kr/B551011/EngService1/areaBasedList1?numOfRows=20&pageNo=" +
+            URL url = new URL(BASE_URL + "areaBasedList1?numOfRows=20&pageNo=" +
                     page +
                     "&MobileOS=ETC&MobileApp=Kuddy&_type=json&listYN=Y&arrange=A&contentTypeId=" +
                     category +
@@ -48,7 +50,7 @@ public class TourApiService {
     public JSONObject getLocationBasedApi(int page, int size, double mapX, double mapY) {
 
         try {
-            URL url = new URL("https://apis.data.go.kr/B551011/EngService1/locationBasedList1?numOfRows=" +
+            URL url = new URL(BASE_URL + "locationBasedList1?numOfRows=" +
                     size + "&pageNo=" + page +
                     "&MobileOS=ETC&MobileApp=Kuddy&_type=json&listYN=Y&arrange=A&mapX=" +
                     mapX + "&mapY=" + mapY +
@@ -63,11 +65,11 @@ public class TourApiService {
         }
     }
 
-    //각 관광지 상세 정보 조회
-    public Object getDetailInfo(Spot spot) {
+    //각 관광지 공통 정보 조회
+    public Object getCommonDetail(Spot spot) {
 
         try {
-            URL url = new URL("http://apis.data.go.kr/B551011/EngService1/detailCommon1?contentTypeId=" +
+            URL url = new URL(BASE_URL + "detailCommon1?contentTypeId=" +
                     spot.getCategory().getCode() +
                     "&contentId=" +
                     spot.getContentId() +
@@ -86,18 +88,47 @@ public class TourApiService {
         }
     }
 
+    //각 관광지 소개 정보 조회
+    public Object getDetailInfo(Spot spot) {
+
+        try {
+            URL url = new URL(BASE_URL + "detailIntro1?MobileOS=ETC&MobileApp=Kuddy&contentId=" +
+                    spot.getContentId() +
+                    "&contentTypeId=" +
+                    spot.getCategory().getCode() +
+                    "&_type=json&serviceKey="
+                    + SECRET_KEY);
+
+            JSONObject items = (JSONObject) extractBody(url).get("items");
+            JSONArray spotArr = (JSONArray) items.get("item");
+            Object item = spotArr.get(0);
+
+            return item;
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new TourApiExeption();
+        }
+    }
+
     //이미지 정보 조회 API
     public JSONArray getDetailImages(Long contentId) {
         try {
-            URL url = new URL("https://apis.data.go.kr/B551011/EngService1/detailImage1?MobileOS=ETC&MobileApp=Kuddy&_type=json&contentId=" +
+            URL url = new URL(BASE_URL + "detailImage1?MobileOS=ETC&MobileApp=Kuddy&_type=json&contentId=" +
                     contentId +
                     "&serviceKey="
                     + SECRET_KEY);
 
-            JSONObject items = (JSONObject) extractBody(url).get("items");
-            JSONArray imageArr = (JSONArray) items.get("item");
+            //이미지 없을 경우
+            if(extractBody(url).get("items").equals(""))
+                return null;
+            else {
+                JSONObject items = (JSONObject) extractBody(url).get("items");
+                JSONArray imageArr = (JSONArray) items.get("item");
+                return imageArr;
+            }
 
-            return imageArr;
+
 
         } catch(Exception e) {
             e.printStackTrace();
