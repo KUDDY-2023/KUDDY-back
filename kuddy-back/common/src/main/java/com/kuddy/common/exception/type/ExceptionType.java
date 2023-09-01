@@ -68,8 +68,8 @@ public enum ExceptionType {
 	//게시글 관련 - C5***
 	//댓글 관련 - C6***
 
-	//신고 관련 - C7***
-	REPORT_NOT_FOUND_EXCEPTION("C7000", "해당 신고 기록을 찾을 수 없습니다.", ReportNotFoundException.class);
+	//신고 관련 - C9***
+	REPORT_NOT_FOUND_EXCEPTION("C9000", "해당 신고 기록을 찾을 수 없습니다.", ReportNotFoundException.class);
 
 	private final String errorCode;
 	private final String message;
