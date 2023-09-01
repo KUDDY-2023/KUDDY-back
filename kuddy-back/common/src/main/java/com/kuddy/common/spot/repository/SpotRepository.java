@@ -17,4 +17,5 @@ public interface SpotRepository extends JpaRepository<Spot, Long> {
     Spot findByContentId(Long contentId);
     List<Spot> findTop5ByOrderByNumOfHeartsDesc();
     Page<Spot> findAllByOrderByNumOfHeartsDesc(Pageable pageable);
+    List<Spot> findAllByContentIdIn(List<Long> contentIds);
 }

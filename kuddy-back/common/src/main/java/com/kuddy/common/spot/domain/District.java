@@ -3,6 +3,11 @@ package com.kuddy.common.spot.domain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Getter
 @RequiredArgsConstructor
 public enum District {
@@ -34,4 +39,11 @@ public enum District {
 
     private final String code;
     private final String area;
+
+    private static final Map<String, String> DISTRICT_MAP = Collections.unmodifiableMap(
+            Stream.of(values()).collect(Collectors.toMap(District::getArea, District::name)));
+
+    public static District of(final String area) {
+        return District.valueOf(DISTRICT_MAP.get(area));
+    }
 }
