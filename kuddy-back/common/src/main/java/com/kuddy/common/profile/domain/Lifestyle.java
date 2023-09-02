@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Lifestyle {
+	NOT_SELECTED("0", "Not Selected"),
 	LIGHTHEARTED("1", "Lighthearted"),
 	MAKING_FRIENDS("2", "Making Friends"),
 	STAYING_HOME("3", "Staying Home"),

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum HobbiesInterests {
+	NOT_SELECTED("0", "Not Selected"),
 	TRAVEL("1", "Travel"),
 	LANGUAGE_EXCHANGE("2", "Language Exchange"),
 	LANGUAGE("3", "Language"),

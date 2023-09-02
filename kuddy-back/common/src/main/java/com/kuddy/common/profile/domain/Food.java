@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum Food {
+	NOT_SELECTED("0", "Not Selected"),
 	RESTAURANT("1", "Restaurant"),
 	COFFEE("2", "Coffee"),
 	DESSERT("3", "Dessert"),

@@ -1,5 +1,9 @@
 package com.kuddy.common.meetup.domain;
 
+import java.util.Arrays;
+
+import com.kuddy.common.member.domain.RoleType;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -17,11 +21,9 @@ public enum MeetupStatus {
 	private final String name;
 
 	public static MeetupStatus fromString(String name) {
-		for (MeetupStatus value : MeetupStatus.values()) {
-			if (value.name.equalsIgnoreCase(name)) {
-				return value;
-			}
-		}
-		return NOT_ACCEPT;
+		return Arrays.stream(MeetupStatus.values())
+			.filter(r -> r.getCode().equalsIgnoreCase(name))
+			.findAny()
+			.orElse(NOT_ACCEPT);
 	}
 }

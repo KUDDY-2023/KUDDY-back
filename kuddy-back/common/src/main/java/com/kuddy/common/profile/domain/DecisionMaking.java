@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum DecisionMaking {
+	NOT_SELECTED("0", "Not Selected"),
 	JUDGING("1", "Judging"),
 	PROSPECTING("2", "Prospecting");
 

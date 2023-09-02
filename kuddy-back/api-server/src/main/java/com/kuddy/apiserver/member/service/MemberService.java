@@ -1,5 +1,7 @@
 package com.kuddy.apiserver.member.service;
 
+import static com.kuddy.common.member.domain.Member.*;
+
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
@@ -29,9 +31,10 @@ public class MemberService {
 	}
 
 	public void validateNickname(String nickname) {
-		if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > 50) {
+		if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > 15 || !nickname.matches("[a-zA-Z0-9_]+") || nickname.equalsIgnoreCase(FORBIDDEN_WORD)) {
 			throw new InvalidNicknameException();
 		}
+
 
 		if (isNicknameExists(nickname)) {
 			throw new DuplicateNicknameException();
