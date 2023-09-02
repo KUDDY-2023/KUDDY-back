@@ -1,4 +1,4 @@
-package com.kuddy.common.config;
+package com.kuddy.apiserver.security;
 
 
 import java.util.Collections;
@@ -95,6 +95,7 @@ public class SecurityConfiguration {
 		configuration.addAllowedHeader("*");
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedOrigin("http://localhost:3000");
+		configuration.addAllowedOrigin("https://kuddy.co.kr");
 		configuration.setAllowCredentials(true);
 		configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
 
