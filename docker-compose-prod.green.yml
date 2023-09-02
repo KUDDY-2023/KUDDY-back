@@ -1,0 +1,36 @@
+version: "3"
+
+# 두 docker-compose.yml 모두 포트만 다를 뿐 띄우는 컨테이너 정보는 동일
+services:
+  api_server:
+    container_name: kuddy-api-server-green
+    build:
+      context: ./api-server
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    volumes:
+      - /tmp/log:/app/log
+  chat_server:
+    container_name: kuddy-chat-server-green
+    build:
+      context: ./chat-server
+      dockerfile: Dockerfile
+    ports:
+      - "8882:8880"
+    volumes:
+      - /tmp/log:/app/log
+  noti_server:
+    container_name: kuddy-notification-server-green
+    build:
+      context: ./noti-server
+      dockerfile: Dockerfile
+    ports:
+      - "9082:9080"
+    volumes:
+      - /tmp/log:/app/log
+
+networks:
+  default:
+    external:
+      name: kuddy_net

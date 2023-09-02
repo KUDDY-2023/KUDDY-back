@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c10dd88-d089-438f-8652-a0fba892f6ec" name="Changes" comment="feat : github actions workflow 추가&#10;Related to: #32" />
+    <list default="true" id="0c10dd88-d089-438f-8652-a0fba892f6ec" name="Changes" comment="feat : docker file 추가&#10;Related to: #32" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -338,7 +338,14 @@
       <option name="project" value="LOCAL" />
       <updated>1693659299945</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat : docker file 추가&#10;Related to: #32">
+      <created>1693659600756</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1693659600756</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -359,6 +366,7 @@
     <MESSAGE value="chore : 폴더구조 변경" />
     <MESSAGE value="feat : healthCheckController 추가&#10;Related to: #32" />
     <MESSAGE value="feat : github actions workflow 추가&#10;Related to: #32" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : github actions workflow 추가&#10;Related to: #32" />
+    <MESSAGE value="feat : docker file 추가&#10;Related to: #32" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : docker file 추가&#10;Related to: #32" />
   </component>
 </project>
