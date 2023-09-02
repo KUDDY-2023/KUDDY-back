@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c10dd88-d089-438f-8652-a0fba892f6ec" name="Changes" comment="feat : nignx 파일 추가&#10;Related to: #32">
+    <list default="true" id="0c10dd88-d089-438f-8652-a0fba892f6ec" name="Changes" comment="fix : 파일 내용 변경&#10;파일 내용 다른 내용이 들어가 있는 것을 변경&#10;Related to: #32">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/kuddy/common/config/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-server/src/main/java/com/kuddy/apiserver/security/SecurityConfiguration.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,10 +127,22 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="hotfix/32-cicd" />
+    <option name="BRANCH" value="origin/develop" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -143,6 +161,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "feature/8-community",
@@ -159,7 +178,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Gradle.KUDDY-back:common [compileQuerydsl]">
+  <component name="RunManager" selected="Spring Boot.ChatServerApplication">
     <configuration name="KUDDY-back:api-server [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -272,7 +291,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ChatServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <configuration name="ChatServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true">
       <module name="kuddy-back.chat-server.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.kuddy.chatserver.ChatServerApplication" />
       <method v="2">
@@ -288,11 +307,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.ChatServerApplication" />
         <item itemvalue="Gradle.KUDDY-back:common [compileQuerydsl]" />
         <item itemvalue="Gradle.KUDDY-back:common [initQuerydslSourcesDir]" />
         <item itemvalue="Gradle.KUDDY-back:common [querydslClasses]" />
         <item itemvalue="Gradle.KUDDY-back:api-server [build]" />
-        <item itemvalue="Gradle.KUDDY-back:common [cleanQuerydslSourcesDir]" />
       </list>
     </recent_temporary>
   </component>
@@ -330,7 +349,14 @@
       <option name="project" value="LOCAL" />
       <updated>1693662003138</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fix : 파일 내용 변경&#10;파일 내용 다른 내용이 들어가 있는 것을 변경&#10;Related to: #32">
+      <created>1693662766395</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1693662766395</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -350,6 +376,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fix : wrapper 다시 생성&#10;버전 차이로 인한 오류로 다시 생성&#10;Related to: #32" />
     <MESSAGE value="feat : nignx 파일 추가&#10;Related to: #32" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : nignx 파일 추가&#10;Related to: #32" />
+    <MESSAGE value="fix : 파일 내용 변경&#10;파일 내용 다른 내용이 들어가 있는 것을 변경&#10;Related to: #32" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix : 파일 내용 변경&#10;파일 내용 다른 내용이 들어가 있는 것을 변경&#10;Related to: #32" />
   </component>
 </project>
