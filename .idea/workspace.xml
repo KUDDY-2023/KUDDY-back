@@ -5,244 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c10dd88-d089-438f-8652-a0fba892f6ec" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/KUDDY-back.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.2.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.2.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.2.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.2.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.2.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.2.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/ApiServerApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/comment/controller/CommentController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/comment/dto/request/CommentReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/comment/dto/request/ReplyReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/comment/dto/response/CommentResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/comment/dto/response/CommentWriterInfoDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/comment/dto/response/MyCommentResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/comment/dto/response/ReplyResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/comment/service/CommentService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/controller/PostController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/request/ImageUploadReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/request/ItineraryReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/request/PostReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/request/TalkingboardReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/response/ImageUploadResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/response/ItineraryPageResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/response/ItineraryResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/response/MyPostPageResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/response/MyPostResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/response/TalkingBoardPageResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/response/TalkingBoardResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/service/PostService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/heart/controller/HeartController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/heart/dto/HeartResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/heart/service/HeartService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/image/AwsConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/image/S3Upload.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/member/controller/MemberController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/member/dto/MemberResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/member/service/MemberService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/pick/controller/PickController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/pick/dto/PickResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/pick/dto/PickSpotResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/pick/dto/ThumbnailListResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/pick/dto/ThumbnailResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/pick/service/PickService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/profile/controller/MemberProfileController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/profile/dto/MemberAreaDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/profile/dto/MemberLanguageDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/profile/dto/ProfileReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/profile/dto/ProfileResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/profile/dto/ProfileUpdateReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/profile/service/ProfileAreaService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/profile/service/ProfileLanguageService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/profile/service/ProfileService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/report/controller/ReportController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/report/dto/ReportListResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/report/dto/ReportReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/report/dto/ReportResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/report/service/ReportService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/spot/controller/SpotController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/spot/dto/SpotDetailResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/spot/dto/SpotPageResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/spot/dto/SpotResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/spot/service/SpotService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/spot/service/TourApiService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/main/resources/data.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/api-server/src/test/java/com/kuddy/apiserver/ApiServerApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/ChatServerApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/config/ListenerConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/config/ProducerConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/config/WebSocketConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/controller/ChatController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/dto/aggregation/AggregationTarget.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/dto/request/ChatReqDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/dto/response/ChatHistoryResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/dto/response/ChatResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/dto/response/ChatRoomListResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/dto/response/ChatRoomResDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/interceptor/StompHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/service/ChatQueryService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/service/ChatRoomService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/service/ChatService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/service/MessageReceiver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/java/com/kuddy/chatserver/chat/service/MessageSender.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/main/resources/data.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/chat-server/src/test/java/com/kuddy/chatserver/ChatServerApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/domain/ChatType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/domain/Message.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/domain/Room.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/domain/mongo/Chatting.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/domain/redis/ChatRoom.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/exception/ChatNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/exception/ChatRoomNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/exception/RoomNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/repository/MongoChatRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/chat/repository/RoomRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/comment/domain/Comment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/comment/exception/NoAuthorityCommentRemove.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/comment/exception/NoCommentExistsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/comment/exception/NoPostExistException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/comment/repository/CommentRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/domain/ItinerarySpot.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/domain/Post.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/domain/PostImage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/domain/PostType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/domain/Subject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/exception/EmptyInputFilenameException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/exception/ExpiredDateException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/exception/InvalidPostArgumentsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/exception/NoAuthorityPostRemove.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/exception/NoDistrictExistsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/exception/WrongImageFormatException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/repository/PostImageRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/repository/PostRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/config/MogoConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/config/MongoProperties.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/config/QuerydslConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/config/RedisConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/config/SecurityConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/domain/BaseTimeEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/GlobalExceptionHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/custom/ApplicationException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/custom/BadRequestException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/custom/ForbiddenException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/custom/NotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/custom/ServerErrorException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/custom/UnAuthorizedException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/dto/ErrorResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/type/ExceptionType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/heart/domain/Heart.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/heart/exception/AlreadyLikedException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/heart/exception/HeartNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/heart/repository/HeartRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/jwt/JwtAccessDeniedHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/jwt/JwtEntryPoint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/jwt/JwtFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/jwt/JwtProvider.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/meetup/domain/Meetup.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/meetup/domain/MeetupStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/meetup/exception/MeetupNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/meetup/repository/MeetupRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/meetup/service/MeetupService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/domain/Member.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/domain/MemberAdapter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/domain/MemberStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/domain/ProviderType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/domain/RoleType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/exception/DuplicateNicknameException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/exception/InvalidNicknameException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/exception/MemberNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/exception/NotAuthorException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/member/repository/MemberRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/page/PageInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/pick/domain/Pick.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/pick/domain/PickImage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/pick/domain/PickSpot.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/pick/exception/PickNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/pick/repository/PickRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/ActivitiesInvestmentTech.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/Area.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/ArtBeauty.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/CareerMajor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/DecisionMaking.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/Entertainment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/Food.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/GenderType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/HobbiesInterests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/Language.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/Lifestyle.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/Profile.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/ProfileArea.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/ProfileLanguage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/Sports.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/Temperament.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/TicketStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/domain/Wellbeing.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/exception/AreaNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/exception/LanguageNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/exception/ProfileNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/repository/AreaRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/repository/LanguageRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/repository/ProfileAreaRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/repository/ProfileLanguageRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/profile/repository/ProfileRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/redis/RedisService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/report/domain/Reason.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/report/domain/Report.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/report/exception/ReportNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/report/repository/ReportRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/response/StatusEnum.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/response/StatusResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/exception/AuthExceptionHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/exception/EmptyTokenException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/exception/ExpiredTokenException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/exception/InvalidAccessTokenAtRenewException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/exception/InvalidRefreshTokenException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/exception/InvalidTokenException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/exception/InvalidTokenTypeException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/exception/UnAuthorizedTokenException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/repository/CookieAuthorizationRequestRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/service/CustomOAuth2UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/service/OAuth2AuthenticationFailureHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/service/OAuth2AuthenticationSuccessHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/service/UserDetailsServcieImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/user/AuthUser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/user/GoogleUserInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/user/KakaoUserInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/user/OAuth2UserInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/security/user/PrincipalDetails.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/domain/Category.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/domain/District.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/domain/Spot.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/exception/NoSpotExists.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/exception/SpotNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/exception/TourApiExeption.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/repository/SpotRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/util/ConstantUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/util/CookieUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/test/java/com/kuddy/common/CommonApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/noti-server/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/noti-server/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/noti-server/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/noti-server/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/noti-server/src/main/java/com/kuddy/notiserver/NotiServerApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/noti-server/src/test/java/com/kuddy/notiserver/NotiServerApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/kuddy-back/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/common/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -342,6 +113,13 @@
                 <item name="kuddy-back" type="f1a62948:ProjectNode" />
                 <item name="common" type="2d1252cf:ModuleNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="kuddy-back" type="f1a62948:ProjectNode" />
+                <item name="common" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="querydsl" type="c8890929:TasksNode$1" />
               </path>
             </expand>
@@ -351,7 +129,19 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -370,6 +160,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;feature/8-community&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/kwonjiyun/kjy/KUDDY-back/build.gradle&quot;,
@@ -385,7 +176,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Gradle.KUDDY-back:common [compileQuerydsl]">
+  <component name="RunManager" selected="Spring Boot.ApiServerApplication">
     <configuration name="KUDDY-back:api-server [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -533,8 +324,16 @@
       <workItem from="1693274999273" duration="697000" />
       <workItem from="1693275781140" duration="117000" />
       <workItem from="1693656775137" duration="313000" />
-      <workItem from="1693657111375" duration="968000" />
+      <workItem from="1693657111375" duration="1478000" />
     </task>
+    <task id="LOCAL-00001" summary="chore : 폴더구조 변경">
+      <created>1693658476999</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1693658476999</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -550,5 +349,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="chore : 폴더구조 변경" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore : 폴더구조 변경" />
   </component>
 </project>
