@@ -11,8 +11,8 @@ public enum MeetupStatus {
 	REFUSED("2", "Refused"),
 	KUDDY_CANCEL("3", "Kuddy_Canceled"),
 	TRAVELER_CANCEL("4","Traveler_Canceled"),
-	COMPLETED("4", "Completed"),
-	PAYED("5", "Payed");
+	COMPLETED("5", "Completed"),
+	PAYED("6", "Payed");
 	private final String code;
 	private final String name;
 
