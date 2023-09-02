@@ -25,6 +25,7 @@ public class Report extends BaseTimeEntity {
     @Column(nullable = false)
     private Long targetId;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 40, nullable = false)
     private Reason reason;
 
