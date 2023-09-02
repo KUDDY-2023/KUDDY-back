@@ -7,10 +7,7 @@ import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.security.user.AuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/reviews")
@@ -22,5 +19,10 @@ public class ReviewController {
     @PostMapping
     public ResponseEntity<StatusResponse> saveReview(@RequestBody ReviewReqDto reviewReqDto, @AuthUser Member writer) {
         return reviewService.createReview(reviewReqDto, writer);
+    }
+
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<StatusResponse> getReview(@PathVariable("reviewId") Long reviewId) {
+        return reviewService.findReview(reviewId);
     }
 }

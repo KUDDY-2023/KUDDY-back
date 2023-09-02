@@ -10,6 +10,7 @@ import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.review.domain.Grade;
 import com.kuddy.common.review.domain.Review;
+import com.kuddy.common.review.exception.ReviewNotFoundException;
 import com.kuddy.common.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,15 @@ public class ReviewService {
                 .message(StatusEnum.CREATED.getCode())
                 .data(ReviewResDto.of(review))
                 .build());
+    }
 
-
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> findReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException(reviewId));
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(ReviewResDto.of(review))
+                .build());
     }
 }
