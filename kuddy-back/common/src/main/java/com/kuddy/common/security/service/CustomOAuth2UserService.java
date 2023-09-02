@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.member.domain.MemberStatus;
 import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.member.exception.MemberNotFoundException;
 import com.kuddy.common.member.repository.MemberRepository;
@@ -58,13 +59,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			})
 			.orElseGet(() -> {
 				if (!memberRepository.existsByEmail(oAuth2UserInfo.getEmail())) {
+					String nickname = oAuth2UserInfo.getNickname();
+					if(memberRepository.existsByNickname(nickname)){
+						nickname = String.valueOf(System.currentTimeMillis());
+					}
 					return Member.builder()
-						.nickname(oAuth2UserInfo.getNickname())
+						.nickname(nickname)
 						.email(oAuth2UserInfo.getEmail())
 						.profileImageUrl(oAuth2UserInfo.getProfileImageUrl())
 						.username(oAuth2UserInfo.getName())
 						.providerType(oAuth2UserInfo.getProvider())
 						.roleType(RoleType.MEMBER)
+						.status(MemberStatus.REGISTERED)
 						.build();
 				} else {
 					return null;

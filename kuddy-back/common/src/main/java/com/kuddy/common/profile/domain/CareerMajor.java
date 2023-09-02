@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CareerMajor {
+	NOT_SELECTED("0", "Not Selected"),
 	STUDY("1", "Study"),
 	WORK_LIFE("2", "Work life"),
 	LANGUAGE("3", "Language"),

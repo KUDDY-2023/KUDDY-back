@@ -18,12 +18,31 @@ public class RedisService {
 		redisTemplate.opsForValue().set(key, value, expiredTime, TimeUnit.MILLISECONDS);
 	}
 
+	public void setData(String key, String value){
+		redisTemplate.opsForValue().set(key, value);
+	}
 	public String getData(String key){
 		return (String) redisTemplate.opsForValue().get(key);
+	}
+	public boolean existsMember(String key, String roomId){
+		String currentValue = getData(key);
+		if(roomId.equals(currentValue)){
+			redisTemplate.delete(key);
+			return true;  // 삭제 성공
+		}
+		return false;
 	}
 
 	public void deleteData(String key){
 		redisTemplate.delete(key);
+	}
+	public boolean deleteDataIfValueMatches(String key, String expectedValue){
+		String currentValue = getData(key);
+		if(expectedValue.equals(currentValue)){
+			redisTemplate.delete(key);
+			return true;  // 삭제 성공
+		}
+		return false;  // value 불일치로 삭제 실패
 	}
 
 	public Optional<String> getRefreshToken(String accountId){

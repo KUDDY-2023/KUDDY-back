@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Wellbeing {
+	NOT_SELECTED("0", "Not Selected"),
 	HEALTH("1", "Health"),
 	CAMPING("2", "Camping"),
 	MEDITATION("3", "Meditation"),

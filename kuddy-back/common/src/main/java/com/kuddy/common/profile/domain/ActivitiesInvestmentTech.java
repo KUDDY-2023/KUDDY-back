@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ActivitiesInvestmentTech {
+	NOT_SELECTED("0", "Not Selected"),
 	BUSINESS("1", "Business"),
 	STOCK("2", "Stock"),
 	INVESTMENT("3", "Investment"),

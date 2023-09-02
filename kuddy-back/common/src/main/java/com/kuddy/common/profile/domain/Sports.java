@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Sports {
+	NOT_SELECTED("0", "Not Selected"),
 	FITNESS("1", "Fitness"),
 	DANCE("2", "Dance"),
 	BASKETBALL("3", "Basketball"),

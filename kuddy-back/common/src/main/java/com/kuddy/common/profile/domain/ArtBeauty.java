@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ArtBeauty {
+	NOT_SELECTED("0", "Not Selected"),
 	MUSIC("1", "Music"),
 	PICTURE("2", "Picture"),
 	FASHION("3", "Fashion"),

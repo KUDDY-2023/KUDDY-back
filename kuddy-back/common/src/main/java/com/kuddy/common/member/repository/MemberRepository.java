@@ -8,10 +8,11 @@ import com.kuddy.common.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByEmail(String email);
+	Optional<Member> findByNickname(String nickname);
 
-	Boolean existsByEmail(String email);
+	boolean existsByEmail(String email);
 
 	Optional<Member> findByUsername(String username);
 
-	Boolean existsByNickname(String nickname);
+	boolean existsByNickname(String nickname);
 }

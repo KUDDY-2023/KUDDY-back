@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.kuddy.common.exception.custom.UnAuthorizedException;
 import com.kuddy.common.security.exception.AuthExceptionHandler;
+import com.kuddy.common.security.exception.EmptyTokenException;
 import com.kuddy.common.security.exception.ExpiredTokenException;
 import com.kuddy.common.security.exception.InvalidTokenException;
 import com.kuddy.common.security.exception.InvalidTokenTypeException;
@@ -44,6 +45,7 @@ public class JwtProvider {
 
 	private static final Long accessTokenValidationMs = 30 * 60 * 1000L;
 	private static final Long refreshTokenValidationMs = 15 * 24 * 60 * 60 * 1000L;
+	private static final String BEARER_PREFIX = "Bearer ";
 
 	public Long getRefreshTokenValidationMs() { // Redis에 저장 시 사용
 		return refreshTokenValidationMs;
@@ -119,9 +121,32 @@ public class JwtProvider {
 			return false;
 		}
 	}
+	public boolean validateToken(String token)
+	{
+		try {
+			Jwts.parserBuilder()
+				.setSigningKey(getSignKey(secretKey))
+				.build()
+				.parseClaimsJws(token);
+			return true;
+		} catch (ExpiredJwtException e) {
+			log.error("만료된 토큰입니다. {}", e.toString());
+			return false;
+		} catch (UnsupportedJwtException e) {
+			log.error("잘못된 형식의 토큰입니다. {}", e.toString());
+			return false;
+		} catch (MalformedJwtException e) {
+			log.error("잘못된 구조의 토큰입니다. {}", e.toString());
+			return false;
+		}
+		catch (IllegalArgumentException e) {
+			log.error("잘못 생성된 토큰입니다. {}", e.toString());
+			return false;
+		}
+	}
 
 	// JWT payload를 복호화해서 반환
-	private Claims getClaims(String token) {
+	public Claims getClaims(String token) {
 		try {
 			return Jwts.parserBuilder() // JwtParserBuilder 인스턴스 생성
 				.setSigningKey(getSignKey(secretKey)) // JWT Signature 검증을 위한 SecretKey 설정
@@ -152,11 +177,36 @@ public class JwtProvider {
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 
+	public String tokenToEmail(String authorization){
+		String accessToken = getAccessToken(authorization);
+		Claims claims = getClaims(accessToken); //TODO 임시로직 변경 필요
+		return claims.getSubject();
+	}
+	public String getAccessToken(String authorizationHeader) {
+
+		if(authorizationHeader == null || authorizationHeader.equals("null")){
+			throw new EmptyTokenException();
+		}
+		String token = authorizationHeader;
+		if(authorizationHeader.startsWith(BEARER_PREFIX)){
+			token = authorizationHeader.substring(BEARER_PREFIX.length());
+		}
+		else if(authorizationHeader.startsWith("[Bearer ")){
+			token = authorizationHeader.substring(BEARER_PREFIX.length()+1);
+		}
+		if (token.endsWith("]")) {
+			token = token.substring(0, token.length() - 1);
+		}
+		return token;
+	}
+
 	public Long getRemainingTime(String token) {
 		Date expiration = getClaims(token).getExpiration();
 		Date now = new Date();
 		return expiration.getTime() - now.getTime();
 	}
+
+
 
 
 

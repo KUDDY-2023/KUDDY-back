@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Entertainment {
+	NOT_SELECTED("0", "Not Selected"),
 	MOVIES("1", "Movies"),
 	NETFLIX("2", "Netflix"),
 	KPOP("3", "Kpop"),

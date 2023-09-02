@@ -1,3 +1,8 @@
+buildscript {
+    dependencies {
+        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10")
+    }
+}
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.14'
@@ -7,6 +12,7 @@ plugins {
 java {
     sourceCompatibility = '11'
 }
+
 repositories {
     mavenCentral()
 }
@@ -40,6 +46,9 @@ subprojects {
 
         //validation
         implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+        implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+        runtimeOnly 'com.mysql:mysql-connector-j'
     }
 
     tasks.named('test') {
