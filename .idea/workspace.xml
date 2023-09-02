@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0c10dd88-d089-438f-8652-a0fba892f6ec" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/controller/PostController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/dto/request/PostReqDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/community/service/PostService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/image/AwsConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kuddy-back/api-server/src/main/java/com/kuddy/apiserver/image/S3Upload.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/PostType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/domain/ItinerarySpot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/domain/Post.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/domain/PostImage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/community/exception/ExpiredDateException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kuddy-back/common/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/kuddy-back/common/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/type/ExceptionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/exception/type/ExceptionType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/domain/District.java" beforeDir="false" afterPath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/domain/District.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/repository/SpotRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/kuddy-back/common/src/main/java/com/kuddy/common/spot/repository/SpotRepository.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2UdgiT1TWDLnpIS7IquuYYBKpuE" />
+  <component name="ProjectViewState">
+    <option name="flattenPackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showScratchesAndConsoles" value="false" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "feature/8-community",
+    "last_opened_file_path": "C:/Users/gy502/Documents/KUDDY-back/kuddy-back",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0c10dd88-d089-438f-8652-a0fba892f6ec" name="Changes" comment="" />
+      <created>1693274998286</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1693274998286</updated>
+      <workItem from="1693274999273" duration="697000" />
+      <workItem from="1693275781140" duration="117000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

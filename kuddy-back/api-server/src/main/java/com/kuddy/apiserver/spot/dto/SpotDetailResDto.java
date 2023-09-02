@@ -1,5 +1,6 @@
 package com.kuddy.apiserver.spot.dto;
 
+import com.kuddy.apiserver.member.dto.MemberResDto;
 import com.kuddy.common.spot.domain.Spot;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,36 +14,41 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SpotDetailResDto {
-    private Long id;
-    private String name;
     private Long contentId;
+    private String name;
     private String district;
     private String category;
+    private Long heart;
 
     private String about;
     private String phoneNum;
     private String homepage;
     private String location;
     private String post;
+    private Object additionalInfo;
     private List<SpotResDto> nearbyPlace;
     private List<String> imageList;
+    private List<MemberResDto> kuddyList;
+    private List<MemberResDto> travelerList;
 
-    //찜한 멤버들
-
-    public static SpotDetailResDto of(Spot spot, String about, String phoneNum, String homepage, String location, String post, List<SpotResDto> nearbyPlace, List<String> imageList){
+    public static SpotDetailResDto of(Spot spot, String about, String phoneNum, String homepage, String location, String post, Object additionalInfo, List<SpotResDto> nearbyPlace, List<String> imageList, List<MemberResDto> kuddyList, List<MemberResDto> travelerList){
         return SpotDetailResDto.builder()
-                .id(spot.getId())
+//                .id(spot.getId())
                 .name(spot.getName())
                 .contentId(spot.getContentId())
                 .district(spot.getDistrict().getArea())
                 .category(spot.getCategory().getType())
+                .heart(spot.getNumOfHearts())
                 .about(about)
                 .phoneNum(phoneNum)
                 .homepage(homepage)
                 .location(location)
                 .post(post)
+                .additionalInfo(additionalInfo)
                 .nearbyPlace(nearbyPlace)
                 .imageList(imageList)
+                .kuddyList(kuddyList)
+                .travelerList(travelerList)
                 .build();
     }
 
