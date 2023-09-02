@@ -74,7 +74,7 @@ public class Meetup extends BaseTimeEntity {
 
 
 	public void updateReviewed(Boolean reviewed) {
-		if(this.isReviewed.equals(reviewed)){
+		if(!this.isReviewed.equals(reviewed)){
 			isReviewed = reviewed;
 		}
 	}
