@@ -13,6 +13,7 @@ import com.kuddy.common.member.exception.InvalidNicknameException;
 import com.kuddy.common.profile.exception.AreaNotFoundException;
 import com.kuddy.common.profile.exception.LanguageNotFoundException;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
+import com.kuddy.common.report.exception.ReportNotFoundException;
 import com.kuddy.common.security.exception.EmptyTokenException;
 import com.kuddy.common.security.exception.InvalidAccessTokenAtRenewException;
 import com.kuddy.common.security.exception.ExpiredTokenException;
@@ -81,6 +82,8 @@ public enum ExceptionType {
 	NO_COMMENT_EXIST_EXCEPTION("C6001", "존재하지 않는 댓글입니다.", NoCommentExistsException.class),
 	NO_AUTHORITY_COMMENT_REMOVE("C6002", "본인이 작성한 댓글만 삭제할 수 있습니다.", NoAuthorityCommentRemove.class);
 
+	//신고 관련 - C9***
+	REPORT_NOT_FOUND_EXCEPTION("C9000", "해당 신고 기록을 찾을 수 없습니다.", ReportNotFoundException.class);
 
 	private final String errorCode;
 	private final String message;
