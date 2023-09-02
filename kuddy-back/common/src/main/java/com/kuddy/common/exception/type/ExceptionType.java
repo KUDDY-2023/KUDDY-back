@@ -15,6 +15,9 @@ import com.kuddy.common.heart.exception.HeartNotFoundException;
 import com.kuddy.common.meetup.exception.MeetupNotFoundException;
 import com.kuddy.common.member.exception.DuplicateNicknameException;
 import com.kuddy.common.member.exception.InvalidNicknameException;
+
+import com.kuddy.common.pick.exception.PickNotFoundException;
+
 import com.kuddy.common.member.exception.NotAuthorException;
 import com.kuddy.common.profile.exception.AreaNotFoundException;
 import com.kuddy.common.profile.exception.LanguageNotFoundException;
@@ -98,8 +101,14 @@ public enum ExceptionType {
 	REPORT_NOT_FOUND_EXCEPTION("C9000", "해당 신고 기록을 찾을 수 없습니다.", ReportNotFoundException.class),
 
 
+
+	//커디스픽 관련 - C10***
+	PICK_NOT_FOUND_EXCEPTION("C10000", "해당 커디스픽 정보를 찾을 수 없습니다.",PickNotFoundException .class),
+
+
 	//meetup 관련 - C8***
 	MEETUP_NOT_FOUND_EXCEPTION("C8000", "해당 meetup을 찾을 수 없습니다.", MeetupNotFoundException.class);
+
 	private final String errorCode;
 	private final String message;
 	private Class<? extends ApplicationException> type;
