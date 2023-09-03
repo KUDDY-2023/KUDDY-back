@@ -1,6 +1,7 @@
-package com.kuddy.common.report.domain;
+package com.kuddy.common.review.domain;
 
 import com.kuddy.common.domain.BaseTimeEntity;
+import com.kuddy.common.meetup.domain.Meetup;
 import com.kuddy.common.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,9 +11,9 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Table(name = "report")
+@Table(name = "review")
 @NoArgsConstructor
-public class Report extends BaseTimeEntity {
+public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
@@ -22,21 +23,22 @@ public class Report extends BaseTimeEntity {
     @JoinColumn(name = "writer_id", nullable = false)
     private Member writer;
 
-    @Column(nullable = false)
-    private Long targetId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meetup_id", nullable = false)
+    private Meetup meetup;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 40, nullable = false)
-    private Reason reason;
+    @Column(nullable = false, length = 20)
+    private Grade grade;
 
     @Column(length = 500)
-    private String explanation;
+    private String content;
 
     @Builder
-    public Report(Member writer, Long targetId, Reason reason, String explanation) {
+    public Review(Member writer, Meetup meetup, Grade grade, String content) {
         this.writer = writer;
-        this.targetId = targetId;
-        this.reason = reason;
-        this.explanation = explanation;
+        this.meetup = meetup;
+        this.grade = grade;
+        this.content = content;
     }
 }
