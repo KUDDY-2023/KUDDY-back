@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 public class HeartController {
     private  final HeartService heartService;
 
-    @PostMapping("/{id}")
-    public ResponseEntity<StatusResponse> likeSpot(@PathVariable Long id, @AuthUser Member member) {
-        return heartService.likeSpot(id, member);
+    @PostMapping("/{contentId}")
+    public ResponseEntity<StatusResponse> likeSpot(@PathVariable Long contentId, @AuthUser Member member) {
+        return heartService.likeSpot(contentId, member);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<StatusResponse> cancelSpot(@PathVariable Long id, @AuthUser Member member) {
-        return heartService.cancelSpotLike(id, member);
+    @DeleteMapping("/{contentId}")
+    public ResponseEntity<StatusResponse> cancelSpot(@PathVariable Long contentId, @AuthUser Member member) {
+        return heartService.cancelSpotLike(contentId, member);
     }
 
     @GetMapping("/member")

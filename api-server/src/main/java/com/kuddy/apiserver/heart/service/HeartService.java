@@ -27,8 +27,8 @@ public class HeartService {
     private final HeartRepository heartRepository;
     private final SpotRepository spotRepository;
 
-    public ResponseEntity<StatusResponse> likeSpot(Long id, Member member){
-        Spot spot =  spotRepository.findById(id).orElseThrow(() -> new SpotNotFoundException(id));
+    public ResponseEntity<StatusResponse> likeSpot(Long contentId, Member member){
+        Spot spot =  findByContentId(contentId);
 
         if(heartRepository.findByMemberAndSpot(member, spot).isPresent()) {
             throw new AlreadyLikedException();
@@ -41,22 +41,30 @@ public class HeartService {
             return ResponseEntity.ok(StatusResponse.builder()
                     .status(StatusEnum.OK.getStatusCode())
                     .message(StatusEnum.OK.getCode())
-                    .data(id+"번 관광지 찜")
+                    .data(contentId+"번 관광지 찜")
                     .build());
         }
     }
 
-    public ResponseEntity<StatusResponse> cancelSpotLike(Long id, Member member) {
-        Spot spot =  spotRepository.findById(id).orElseThrow(() -> new SpotNotFoundException(id));
+    public ResponseEntity<StatusResponse> cancelSpotLike(Long contentId, Member member) {
+        Spot spot =  findByContentId(contentId);
         Heart heart = heartRepository.findByMemberAndSpot(member, spot).orElseThrow(HeartNotFoundException::new);
         heartRepository.delete(heart);
         spot.cancelSpot();
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
-                .data(id+"번 관광지 찜 취소")
+                .data(contentId+"번 관광지 찜 취소")
                 .build());
 
+    }
+
+    @Transactional(readOnly = true)
+    public Spot findByContentId(Long contentId){
+        Spot spot = spotRepository.findByContentId(contentId);
+        if(spot == (null))
+            throw new SpotNotFoundException(contentId);
+        return spot;
     }
 
     @Transactional(readOnly = true)

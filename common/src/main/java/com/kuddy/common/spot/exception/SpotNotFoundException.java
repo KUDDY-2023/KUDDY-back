@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class SpotNotFoundException extends NotFoundException {
-    public SpotNotFoundException(Long id) {
-        super("id=" + id);
+    public SpotNotFoundException(Long contentId) {
+        super("contentId=" + contentId);
     }
 }
