@@ -40,7 +40,7 @@ public class MemberProfileController {
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<StatusResponse> readProfile(@AuthUser Member member) {
 		Profile profile = profileService.findByMember(member);
-		ProfileResDto response = ProfileResDto.of(member, profile);
+		ProfileResDto response = ProfileResDto.from(member, profile);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
 			.message(StatusEnum.OK.getCode())
@@ -55,7 +55,7 @@ public class MemberProfileController {
 		Member updateMember = memberService.update(member, profileCreateReqDto.getNickname(), profileCreateReqDto.getRoleType());
 		Long profileId = profileService.create(updateMember, profileCreateReqDto);
 		Profile createProfile = profileService.findById(profileId);
-		ProfileResDto response = ProfileResDto.of(updateMember, createProfile);
+		ProfileResDto response = ProfileResDto.from(updateMember, createProfile);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 			.path("/{id}")
 			.buildAndExpand(profileId)
@@ -74,7 +74,7 @@ public class MemberProfileController {
 	public ResponseEntity<StatusResponse> updateProfile(@AuthUser Member member,
 		@Valid @RequestBody final ProfileReqDto.Update profileReqDto) {
 		Profile updateProfile = profileService.update(member, profileReqDto);
-		ProfileResDto response = ProfileResDto.of(member, updateProfile);
+		ProfileResDto response = ProfileResDto.from(member, updateProfile);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
 			.message(StatusEnum.OK.getCode())

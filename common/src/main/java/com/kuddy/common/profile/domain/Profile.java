@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -34,8 +36,11 @@ public class Profile extends BaseTimeEntity {
 	@Column(name = "profile_id", updatable = false)
 	private Long id;
 
-	@Column(length = 10)
+	@Column(length = 100)
 	private String job;
+
+	@Column(columnDefinition = "TEXT")
+	private String introduce;
 
 	@Column(length = 100)
 	private Integer age;
@@ -48,51 +53,70 @@ public class Profile extends BaseTimeEntity {
 
 	@Column(length = 100)
 	@Enumerated(EnumType.STRING)
+	private GenderType genderType;
+
+	@Column(length = 100)
+	@Enumerated(EnumType.STRING)
 	private DecisionMaking decisionMaking;
 
 	@Column(length = 100)
 	@Enumerated(EnumType.STRING)
 	private Temperament temperament;
 
-	@Column(length = 100)
+	@ElementCollection(targetClass = ActivitiesInvestmentTech.class)
+	@CollectionTable(name = "activities_investment_tech_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
-	private ActivitiesInvestmentTech activitiesInvestmentTech;
+	@Column(name = "activities_investment_tech")
+	private List<ActivitiesInvestmentTech> activitiesInvestmentTechs = new ArrayList<>();
 
-	@Column(length = 100)
+	@ElementCollection(targetClass = ArtBeauty.class)
+	@CollectionTable(name = "art_beauty_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
-	private ArtBeauty artBeauty;
+	@Column(name = "art_beauty")
+	private List<ArtBeauty> artBeauties = new ArrayList<>();
 
-	@Column(length = 100)
+	@ElementCollection(targetClass = CareerMajor.class)
+	@CollectionTable(name = "career_major_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
-	private CareerMajor careerMajor;
+	@Column(name = "career_major")
+	private List<CareerMajor> careerMajors = new ArrayList<>();
 
 
-	@Column(length = 100)
+	@ElementCollection(targetClass = Lifestyle.class)
+	@CollectionTable(name = "lifestyle_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
-	private Lifestyle lifestyle;
-	@Column(length = 100)
-	@Enumerated(EnumType.STRING)
-	private Entertainment entertainment;
+	@Column(name = "lifestyle")
+	private List<Lifestyle> lifestyles = new ArrayList<>();
 
-	@Column(length = 100)
+	@ElementCollection(targetClass = Entertainment.class)
+	@CollectionTable(name = "entertainment_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
-	private Food food;
+	@Column(name = "entertainment")
+	private List<Entertainment> entertainments = new ArrayList<>();
 
-	@Column(length = 100)
+	@ElementCollection(targetClass = Food.class)
+	@CollectionTable(name = "food_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
-	private GenderType genderType;
+	@Column(name = "food")
+	private List<Food> foods = new ArrayList<>();
 
-	@Column(length = 100)
+	@ElementCollection(targetClass = HobbiesInterests.class)
+	@CollectionTable(name = "hobbies_interests_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
-	private HobbiesInterests hobbiesInterests;
+	@Column(name = "hobbies_interests")
+	private List<HobbiesInterests> hobbiesInterests = new ArrayList<>();
 
-	@Column(length = 100)
+	@ElementCollection(targetClass = Sports.class)
+	@CollectionTable(name = "sports_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
-	private Sports sports;
+	@Column(name = "sports")
+	private List<Sports> sports = new ArrayList<>();
 
-	@Column(length = 100)
+	@ElementCollection(targetClass = Wellbeing.class)
+	@CollectionTable(name = "wellbeing_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
-	private Wellbeing wellbeing;
+	@Column(name = "wellbeing")
+	private List<Wellbeing> wellbeings = new ArrayList<>();
 
 
 	@OneToOne
@@ -113,29 +137,15 @@ public class Profile extends BaseTimeEntity {
 	@Builder
 	public Profile(String job, Integer age, String nationality,
 		DecisionMaking decisionMaking,
-		Temperament temperament, ActivitiesInvestmentTech activitiesInvestmentTech, ArtBeauty artBeauty,
-		CareerMajor careerMajor, Lifestyle lifestyle, Entertainment entertainment, Food food, GenderType genderType,
-		HobbiesInterests hobbiesInterests, Sports sports, Wellbeing wellbeing, List<ProfileArea> districts, Member member,
-		List<ProfileLanguage> availableLanguages) {
+		Temperament temperament, GenderType genderType, Member member) {
 		this.job = job;
 		this.age = age;
 		this.kuddyLevel = KuddyLevel.NOT_KUDDY;
 		this.nationality = nationality;
 		this.decisionMaking = decisionMaking;
 		this.temperament = temperament;
-		this.activitiesInvestmentTech = activitiesInvestmentTech;
-		this.artBeauty = artBeauty;
-		this.careerMajor = careerMajor;
-		this.lifestyle = lifestyle;
-		this.entertainment = entertainment;
-		this.food = food;
 		this.genderType = genderType;
-		this.hobbiesInterests = hobbiesInterests;
-		this.sports = sports;
-		this.wellbeing = wellbeing;
-		this.districts = districts;
 		this.member = member;
-		this.availableLanguages = availableLanguages;
 		this.ticketStatus = TicketStatus.NOT_SUBMITTED;
 	}
 
@@ -146,69 +156,91 @@ public class Profile extends BaseTimeEntity {
 	public void updateTicketStatus(TicketStatus ticketStatus){
 		this.ticketStatus = ticketStatus;
 	}
+	public void updateIntroduce(String introduce){
+		this.introduce = introduce;
+	}
 
 
 	public void setNationality(String newNationality){
-		if (!Objects.equals(this.nationality, newNationality)) {
+		if (this.nationality.equals(newNationality)) {
 			this.nationality = newNationality;
 		}
 	}
 
-	public void setActivitiesInvestmentTech(ActivitiesInvestmentTech newActivitiesInvestmentTech) {
-		if (!Objects.equals(this.activitiesInvestmentTech, newActivitiesInvestmentTech)) {
-			this.activitiesInvestmentTech = newActivitiesInvestmentTech;
+	public void setActivitiesInvestmentTechs(List<ActivitiesInvestmentTech> newActivitiesInvestmentTechs) {
+		for (ActivitiesInvestmentTech newActivitiesInvestmentTech : newActivitiesInvestmentTechs) {
+			if (!this.activitiesInvestmentTechs.contains(newActivitiesInvestmentTech)) {
+				this.activitiesInvestmentTechs.add(newActivitiesInvestmentTech);
+			}
 		}
 	}
 
-	public void setArtBeauty(ArtBeauty newArtBeauty) {
-		if (!Objects.equals(this.artBeauty, newArtBeauty)) {
-			this.artBeauty = newArtBeauty;
+	public void setArtBeauties(List<ArtBeauty> newArtBeauties) {
+		for (ArtBeauty newArtBeauty : newArtBeauties) {
+			if (!this.artBeauties.contains(newArtBeauty)) {
+				this.artBeauties.add(newArtBeauty);
+			}
 		}
 	}
-	public void setCareerMajor(CareerMajor newCareerMajor) {
-		if (!Objects.equals(this.careerMajor, newCareerMajor)) {
-			this.careerMajor = newCareerMajor;
+
+	public void setCareerMajors(List<CareerMajor> newCareerMajors) {
+		for (CareerMajor newCareerMajor : newCareerMajors) {
+			if (!this.careerMajors.contains(newCareerMajor)) {
+				this.careerMajors.add(newCareerMajor);
+			}
 		}
 	}
+
 
 	public void setDecisionMaking(DecisionMaking newDecisionMaking) {
-		if (!Objects.equals(this.decisionMaking, newDecisionMaking)) {
+		if (!this.decisionMaking.equals(newDecisionMaking)) {
 			this.decisionMaking = newDecisionMaking;
 		}
 	}
 
-	public void setEntertainment(Entertainment newEntertainment) {
-		if (!Objects.equals(this.entertainment, newEntertainment)) {
-			this.entertainment = newEntertainment;
+	public void setEntertainments(List<Entertainment> newEntertainments) {
+		for (Entertainment newEntertainment : newEntertainments) {
+			if (!this.entertainments.contains(newEntertainment)) {
+				this.entertainments.add(newEntertainment);
+			}
 		}
 	}
 
-	public void setFood(Food newFood) {
-		if (!Objects.equals(this.food, newFood)) {
-			this.food = newFood;
+	public void setFoods(List<Food> newFoods) {
+		for (Food newFood : newFoods) {
+			if (!this.foods.contains(newFood)) {
+				this.foods.add(newFood);
+			}
 		}
 	}
-	public void setLifestyle(Lifestyle newLifestyle) {
-		if (!Objects.equals(this.lifestyle, newLifestyle)) {
-			this.lifestyle = newLifestyle;
+
+	public void setLifestyles(List<Lifestyle> newLifestyles) {
+		for (Lifestyle newLifestyle : newLifestyles) {
+			if (!this.lifestyles.contains(newLifestyle)) {
+				this.lifestyles.add(newLifestyle);
+			}
 		}
 	}
 
 	public void setGenderType(GenderType newGenderType) {
-		if (!Objects.equals(this.genderType, newGenderType)) {
+		if (!this.genderType.equals(newGenderType)) {
 			this.genderType = newGenderType;
 		}
 	}
 
-	public void setHobby(HobbiesInterests newHobby) {
-		if (!Objects.equals(this.hobbiesInterests, newHobby)) {
-			this.hobbiesInterests = newHobby;
+	public void setHobbies(List<HobbiesInterests> newHobby) {
+		for(HobbiesInterests hobbiesInterest : newHobby){
+			if(!this.sports.contains(hobbiesInterest)){
+				this.hobbiesInterests.add(hobbiesInterest);
+			}
 		}
 	}
 
-	public void setSports(Sports newSports) {
-		if (!Objects.equals(this.sports, newSports)) {
-			this.sports = newSports;
+	public void setSports(List<Sports> newSports) {
+		for(Sports sport : newSports){
+			if(!this.sports.contains(sport)){
+				this.sports.add(sport);
+			}
 		}
 	}
 
@@ -218,11 +250,14 @@ public class Profile extends BaseTimeEntity {
 		}
 	}
 
-	public void setWellbeing(Wellbeing newWellbeing) {
-		if (!Objects.equals(this.wellbeing, newWellbeing)) {
-			this.wellbeing = newWellbeing;
+	public void setWellbeing(List<Wellbeing> newWellbeing) {
+		for (Wellbeing wellbeing : newWellbeing) {
+			if (!this.wellbeings.contains(wellbeing)) {
+				this.wellbeings.add(wellbeing);
+			}
 		}
 	}
+
 	public void updateAvailableLanguages(ProfileLanguage newAvailableLanguage) {
 		if (!this.availableLanguages.contains(newAvailableLanguage)) {
 			this.availableLanguages.add(newAvailableLanguage);

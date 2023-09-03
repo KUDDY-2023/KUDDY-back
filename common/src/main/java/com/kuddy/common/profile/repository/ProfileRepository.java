@@ -10,4 +10,5 @@ import com.kuddy.common.profile.domain.Profile;
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 	Optional<Profile> findByMember(Member member);
 	Optional<Profile> findById(Long id);
+	boolean existsByMember(Member member);
 }

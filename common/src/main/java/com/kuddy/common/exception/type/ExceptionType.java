@@ -18,6 +18,7 @@ import com.kuddy.common.community.exception.NoAuthorityPostRemove;
 import com.kuddy.common.community.exception.NoDistrictExistsException;
 import com.kuddy.common.community.exception.WrongImageFormatException;
 import com.kuddy.common.exception.custom.ApplicationException;
+import com.kuddy.common.profile.exception.DuplicateProfileException;
 import com.kuddy.common.review.exception.NoAuthorityToDeleteReview;
 import com.kuddy.common.review.exception.NotKuddyException;
 import com.kuddy.common.review.exception.NotTravelerException;
@@ -88,7 +89,7 @@ public enum ExceptionType {
 	PROFILE_NOT_FOUND_EXCEPTION("C3000", "프로필을 찾을 수 없습니다.", ProfileNotFoundException.class),
 	LANGUEAGE_NOT_FOUND_EXCEPTION("C3001", "해당 언어를 찾을 수 없습니다.", LanguageNotFoundException.class),
 	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class),
-
+	DUPLICATED_PROFILE_EXCEPTION("C3003", "이미 생성된 프로필이 존재하므로 다시 생성할 수 없습니다.", DuplicateProfileException.class),
 	//게시글 관련 - C5***
 	EXPIRED_DATE_EXCEPTION("C5000", "이미 지난 날짜를 동행 날짜로 설정할 수 없습니다.", ExpiredDateException.class),
 	EMPTY_INPUT_FILENAME_EXCEPTION("C5001", "이미지 파일명은 NULL값을 가질 수 없습니다.", EmptyInputFilenameException.class),
