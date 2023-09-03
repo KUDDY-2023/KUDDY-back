@@ -2,6 +2,10 @@ package com.kuddy.apiserver.profile.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.profile.domain.DecisionMaking;
@@ -24,6 +28,10 @@ public class ProfileReqDto {
 	public static class Create {
 		private String job;
 		private RoleType roleType;
+
+		@NotBlank(message = "닉네임은 비어있을 수 없습니다.")
+		@Size(max = 15, message = "닉네임은 15자를 초과할 수 없습니다.")
+		@Pattern(regexp = "[a-zA-Z0-9_]+", message = "닉네임은 영어, 숫자, 언더바만 포함할 수 있습니다.")
 		private String nickname;
 		private Integer age;
 		private String nationality;
@@ -52,8 +60,15 @@ public class ProfileReqDto {
 	@AllArgsConstructor
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class Update {
+		@Size(max = 100, message = "job은 100자를 초과할 수 없습니다.")
 		private String job;
+		private String introduce;
+
 		private Integer age;
+
+		@NotBlank(message = "닉네임은 비어있을 수 없습니다.")
+		@Size(max = 15, message = "닉네임은 15자를 초과할 수 없습니다.")
+		@Pattern(regexp = "[a-zA-Z0-9_]+", message = "닉네임은 영어, 숫자, 언더바만 포함할 수 있습니다.")
 		private String nickname;
 		private String nationality;
 		private DecisionMaking decisionMaking;

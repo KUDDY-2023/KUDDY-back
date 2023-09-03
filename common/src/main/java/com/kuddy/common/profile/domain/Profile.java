@@ -36,8 +36,11 @@ public class Profile extends BaseTimeEntity {
 	@Column(name = "profile_id", updatable = false)
 	private Long id;
 
-	@Column(length = 10)
+	@Column(length = 100)
 	private String job;
+
+	@Column(columnDefinition = "TEXT")
+	private String introduce;
 
 	@Column(length = 100)
 	private Integer age;
@@ -153,6 +156,9 @@ public class Profile extends BaseTimeEntity {
 	public void updateTicketStatus(TicketStatus ticketStatus){
 		this.ticketStatus = ticketStatus;
 	}
+	public void updateIntroduce(String introduce){
+		this.introduce = introduce;
+	}
 
 
 	public void setNationality(String newNationality){
@@ -224,7 +230,7 @@ public class Profile extends BaseTimeEntity {
 
 	public void setHobbies(List<HobbiesInterests> newHobby) {
 		for(HobbiesInterests hobbiesInterest : newHobby){
-			if(!newHobby.contains(hobbiesInterest)){
+			if(!this.sports.contains(hobbiesInterest)){
 				this.hobbiesInterests.add(hobbiesInterest);
 			}
 		}
@@ -232,7 +238,7 @@ public class Profile extends BaseTimeEntity {
 
 	public void setSports(List<Sports> newSports) {
 		for(Sports sport : newSports){
-			if(!newSports.contains(sport)){
+			if(!this.sports.contains(sport)){
 				this.sports.add(sport);
 			}
 		}
@@ -245,12 +251,13 @@ public class Profile extends BaseTimeEntity {
 	}
 
 	public void setWellbeing(List<Wellbeing> newWellbeing) {
-		for(Wellbeing wellbeing : newWellbeing){
-			if(!newWellbeing.contains(wellbeing)){
+		for (Wellbeing wellbeing : newWellbeing) {
+			if (!this.wellbeings.contains(wellbeing)) {
 				this.wellbeings.add(wellbeing);
 			}
 		}
 	}
+
 	public void updateAvailableLanguages(ProfileLanguage newAvailableLanguage) {
 		if (!this.availableLanguages.contains(newAvailableLanguage)) {
 			this.availableLanguages.add(newAvailableLanguage);

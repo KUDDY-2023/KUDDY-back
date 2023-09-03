@@ -1,5 +1,9 @@
 package com.kuddy.common.security.service;
 
+import static com.kuddy.common.member.domain.Member.*;
+
+import java.util.Objects;
+
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -10,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.member.domain.MemberStatus;
 import com.kuddy.common.member.domain.RoleType;
+import com.kuddy.common.member.exception.DuplicateNicknameException;
+import com.kuddy.common.member.exception.InvalidNicknameException;
 import com.kuddy.common.member.exception.MemberNotFoundException;
 import com.kuddy.common.member.repository.MemberRepository;
 import com.kuddy.common.security.user.GoogleUserInfo;
@@ -60,7 +66,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			.orElseGet(() -> {
 				if (!memberRepository.existsByEmail(oAuth2UserInfo.getEmail())) {
 					String nickname = oAuth2UserInfo.getNickname();
-					if(memberRepository.existsByNickname(nickname)){
+					if(invalidateNickname(nickname)){
 						nickname = String.valueOf(System.currentTimeMillis());
 					}
 					return Member.builder()
@@ -84,6 +90,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		}
 
 		return memberRepository.save(member);
+	}
+
+	public boolean invalidateNickname(String nickname) {
+		if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > 15 || !nickname.matches("[a-zA-Z0-9_]+") || nickname.equalsIgnoreCase(FORBIDDEN_WORD)) {
+			return true;
+		}
+
+		if (memberRepository.existsByNickname(nickname)) {
+			return true;
+		}
+		return false;
 	}
 
 

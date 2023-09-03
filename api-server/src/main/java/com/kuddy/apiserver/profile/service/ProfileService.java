@@ -49,8 +49,10 @@ public class ProfileService {
 	public Profile update(Member member, ProfileReqDto.Update reqDto) {
 		Profile profile = findByMember(member);
 		Member findMember = memberService.findById(member.getId());
+
 		findMember.updateNickname(reqDto.getNickname());
 		profile.changeJob(reqDto.getJob());
+		profile.updateIntroduce(reqDto.getIntroduce());
 		profile.setNationality(reqDto.getNationality());
 		profile.setGenderType(reqDto.getGenderType());
 		profile.setDecisionMaking(reqDto.getDecisionMaking());

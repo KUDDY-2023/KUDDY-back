@@ -30,10 +30,7 @@ import lombok.NoArgsConstructor;
 public class ProfileResDto {
 	private Long memberId;
 	private String role;
-
-	@NotBlank(message = "닉네임은 비어있을 수 없습니다.")
-	@Size(max = 15, message = "닉네임은 15자를 초과할 수 없습니다.")
-	@Pattern(regexp = "[a-zA-Z0-9_]+", message = "닉네임은 영어, 숫자, 언더바만 포함할 수 있습니다.")
+	private String introduce;
 	private String nickname;
 	private String profileImage;
 	private GenderType gender;
@@ -75,6 +72,7 @@ public class ProfileResDto {
 			.role(member.getRoleType().getDisplayName())
 			.nickname(member.getNickname())
 			.profileImage(member.getProfileImageUrl())
+			.introduce(profile.getIntroduce())
 			.age(profile.getAge())
 			.gender(profile.getGenderType())
 			.temperament(profile.getTemperament().getName())
