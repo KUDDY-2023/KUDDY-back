@@ -29,7 +29,9 @@ public class ProfileLanguageService {
 	public List<ProfileLanguage> createProfileLanguage(Profile profile, List<MemberLanguageDto> languageReqDto){
 		List<ProfileLanguage> languages = new ArrayList<>();
 		for(MemberLanguageDto languageDto : languageReqDto) {
+			System.out.println(languageDto.getLanguageType());
 			Language language = findByType(languageDto.getLanguageType());
+			System.out.println("타입");
 			ProfileLanguage profileLanguage = ProfileLanguage.builder()
 				.profile(profile)
 				.laguageLevel(languageDto.getLanguageLevel())

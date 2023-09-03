@@ -18,6 +18,7 @@ import javax.persistence.OneToOne;
 
 import com.kuddy.common.domain.BaseTimeEntity;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.member.domain.RoleType;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,7 +40,9 @@ public class Profile extends BaseTimeEntity {
 	@Column(length = 100)
 	private Integer age;
 
-	private Integer kuddyLevel;
+	@Column(length = 15)
+	@Enumerated(EnumType.STRING)
+	private KuddyLevel kuddyLevel;
 
 	private String nationality;
 
@@ -106,16 +109,17 @@ public class Profile extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private TicketStatus ticketStatus;
 
+
 	@Builder
-	public Profile(String job, Integer age, Integer kuddyLevel, String nationality,
+	public Profile(String job, Integer age, String nationality,
 		DecisionMaking decisionMaking,
 		Temperament temperament, ActivitiesInvestmentTech activitiesInvestmentTech, ArtBeauty artBeauty,
 		CareerMajor careerMajor, Lifestyle lifestyle, Entertainment entertainment, Food food, GenderType genderType,
 		HobbiesInterests hobbiesInterests, Sports sports, Wellbeing wellbeing, List<ProfileArea> districts, Member member,
-		List<ProfileLanguage> availableLanguages, TicketStatus ticketStatus) {
+		List<ProfileLanguage> availableLanguages) {
 		this.job = job;
 		this.age = age;
-		this.kuddyLevel = 0;
+		this.kuddyLevel = KuddyLevel.NOT_KUDDY;
 		this.nationality = nationality;
 		this.decisionMaking = decisionMaking;
 		this.temperament = temperament;
@@ -139,9 +143,6 @@ public class Profile extends BaseTimeEntity {
 		this.job = newJob;
 	}
 
-	public void updateKuddyLevel(Integer newKuddyLevel) {
-		this.kuddyLevel = newKuddyLevel;
-	}
 	public void updateTicketStatus(TicketStatus ticketStatus){
 		this.ticketStatus = ticketStatus;
 	}
@@ -242,5 +243,25 @@ public class Profile extends BaseTimeEntity {
 	public void updateAge(Integer age){
 		this.age = age;
 	}
+
+	public void initKuddyLevel(RoleType roleType){
+		if (roleType == RoleType.KUDDY) {
+			this.kuddyLevel = KuddyLevel.EXPLORER;
+		}
+	}
+	public void updateKuddyLevelByMeetup(long meetNum, RoleType roleType) {
+		KuddyLevel newKuddyLevel;
+
+		if (meetNum < 5) {
+			newKuddyLevel = KuddyLevel.of((int)(meetNum + 1));
+		} else {
+			newKuddyLevel = KuddyLevel.SOULMATE;
+		}
+
+		if (roleType == RoleType.KUDDY && newKuddyLevel != null && this.kuddyLevel != newKuddyLevel) {
+			this.kuddyLevel = newKuddyLevel;
+		}
+	}
+
 
 }

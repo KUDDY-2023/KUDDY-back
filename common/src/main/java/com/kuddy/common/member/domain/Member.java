@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 
 import com.kuddy.common.domain.BaseTimeEntity;
 import com.kuddy.common.member.exception.InvalidNicknameException;
+import com.kuddy.common.profile.domain.KuddyLevel;
 import com.kuddy.common.profile.domain.Profile;
 
 import lombok.AccessLevel;
@@ -85,7 +86,7 @@ public class Member extends BaseTimeEntity {
 		}
 	}
 	public void updateNickname(String nickname) {
-		if (validateNickName(nickname) && !Objects.equals(this.nickname, nickname)) {
+		if (validateNickName(nickname)) {
 			this.nickname = nickname;
 		}
 	}

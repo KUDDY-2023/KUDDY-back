@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.profile.domain.GenderType;
+import com.kuddy.common.profile.domain.KuddyLevel;
 import com.kuddy.common.profile.domain.Profile;
 import com.kuddy.common.profile.domain.ProfileArea;
 import com.kuddy.common.profile.domain.ProfileLanguage;
@@ -52,7 +53,7 @@ public class ProfileResDto {
 	private String nationality;
 	private List<MemberLanguageDto> languages;
 	private List<MemberAreaDto> areas;
-	private Integer kuddyLevel;
+	private KuddyLevel kuddyLevel;
 	private String ticketStatus;
 	public static ProfileResDto of(Member member, Profile profile) {
 		List<MemberLanguageDto> languageList = new ArrayList<>();
@@ -66,7 +67,7 @@ public class ProfileResDto {
 			MemberAreaDto area = new MemberAreaDto(pa.getArea().getDistrict());
 			areaList.add(area);
 		}
-		Integer kuddyLevel = null;
+		KuddyLevel kuddyLevel = null;
 		String ticketStatus = null;
 		if(member.getRoleType().equals(RoleType.KUDDY)){
 			kuddyLevel =  profile.getKuddyLevel();

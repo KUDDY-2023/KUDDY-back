@@ -30,13 +30,13 @@ public class MemberService {
 		return findMember;
 	}
 
-	public void validateNickname(String nickname) {
+	public void validateNickname(Member member, String nickname) {
 		if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > 15 || !nickname.matches("[a-zA-Z0-9_]+") || nickname.equalsIgnoreCase(FORBIDDEN_WORD)) {
 			throw new InvalidNicknameException();
 		}
 
 
-		if (isNicknameExists(nickname)) {
+		if (!member.getNickname().equals(nickname) && isNicknameExists(nickname)) {
 			throw new DuplicateNicknameException();
 		}
 	}
