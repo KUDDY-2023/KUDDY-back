@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ReviewResDto {
     private Long id;
-    private Long writerId;
     private Long meetupId;
+    private MemberResDto writerInfo;
     private MemberResDto kuddyInfo;
     private String grade;
     private String content;
@@ -25,8 +25,8 @@ public class ReviewResDto {
     public static ReviewResDto of(Review review){
         return ReviewResDto.builder()
                 .id(review.getId())
-                .writerId(review.getWriter().getId())
                 .meetupId(review.getMeetup().getId())
+                .writerInfo(MemberResDto.of(review.getWriter()))
                 .kuddyInfo(MemberResDto.of(review.getMeetup().getKuddy()))
                 .grade(review.getGrade().getName())
                 .content(review.getContent())

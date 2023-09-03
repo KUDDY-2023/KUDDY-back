@@ -1,7 +1,13 @@
 package com.kuddy.common.review.repository;
 
+import com.kuddy.common.review.domain.Grade;
 import com.kuddy.common.review.domain.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+    List<Review> findAllByMeetupKuddyIdOrderByCreatedDateDesc(Long id);
+    Long countByMeetupKuddyId(Long id);
+    Long countByMeetupKuddyIdAndGrade(Long id, Grade grade);
 }

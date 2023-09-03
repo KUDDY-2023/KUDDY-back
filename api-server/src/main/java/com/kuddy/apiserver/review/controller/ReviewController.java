@@ -30,4 +30,10 @@ public class ReviewController {
     public ResponseEntity<StatusResponse> deleteReview(@PathVariable Long reviewId, @AuthUser Member member) {
         return reviewService.deleteReview(reviewId, member);
     }
+
+    //Kuddy가 받은 리뷰 리스트 조회
+    @GetMapping("/kuddy/{kuddyId}")
+    public ResponseEntity<StatusResponse> getReviewOfKuddy(@PathVariable("kuddyId") Long kuddyId) {
+        return reviewService.findReviewOfKuudy(kuddyId);
+    }
 }
