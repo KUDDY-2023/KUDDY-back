@@ -41,21 +41,15 @@ public class ProfileResDto {
 	private String temperament;
 	private String decisionMaking;
 	private String job;
-	private String wellbeing;
-	private String activitiesInvestmentTech;
-	private String careerMajor;
-	private String entertainment;
-	private String hobbiesInterests;
-	private String lifestyle;
-	private String artBeauty;
-	private String food;
-	private String sports;
+	private InterestsDto interests;
 	private String nationality;
+
 	private List<MemberLanguageDto> languages;
 	private List<MemberAreaDto> areas;
 	private KuddyLevel kuddyLevel;
 	private String ticketStatus;
-	public static ProfileResDto of(Member member, Profile profile) {
+
+	public static ProfileResDto from(Member member, Profile profile) {
 		List<MemberLanguageDto> languageList = new ArrayList<>();
 		for(ProfileLanguage pl : profile.getAvailableLanguages()) {
 			MemberLanguageDto language = new MemberLanguageDto(pl.getLanguage().getType(), pl.getLaguageLevel());
@@ -85,16 +79,8 @@ public class ProfileResDto {
 			.gender(profile.getGenderType())
 			.temperament(profile.getTemperament().getName())
 			.decisionMaking(profile.getDecisionMaking().getName())
-			.activitiesInvestmentTech(profile.getActivitiesInvestmentTech().getName())
-			.artBeauty(profile.getArtBeauty().getName())
-			.careerMajor(profile.getCareerMajor().getName())
-			.wellbeing(profile.getWellbeing().getName())
-			.entertainment(profile.getEntertainment().getName())
+			.interests(InterestsDto.of(profile))
 			.nationality(profile.getNationality())
-			.lifestyle(profile.getLifestyle().getName())
-			.food(profile.getFood().getName())
-			.sports(profile.getSports().getName())
-			.hobbiesInterests(profile.getHobbiesInterests().getName())
 			.languages(languageList)
 			.areas(areaList)
 			.ticketStatus(ticketStatus)
