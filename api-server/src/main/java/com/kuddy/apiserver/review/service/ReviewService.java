@@ -1,6 +1,6 @@
 package com.kuddy.apiserver.review.service;
 
-import com.kuddy.apiserver.review.dto.KuddyReviewListResDto;
+import com.kuddy.apiserver.review.dto.ReviewListResDto;
 import com.kuddy.apiserver.review.dto.ReviewReqDto;
 import com.kuddy.apiserver.review.dto.ReviewResDto;
 import com.kuddy.common.meetup.domain.Meetup;
@@ -16,6 +16,7 @@ import com.kuddy.common.review.domain.Grade;
 import com.kuddy.common.review.domain.Review;
 import com.kuddy.common.review.exception.NoAuthorityToDeleteReview;
 import com.kuddy.common.review.exception.NotKuddyException;
+import com.kuddy.common.review.exception.NotTravelerException;
 import com.kuddy.common.review.exception.ReviewNotFoundException;
 import com.kuddy.common.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -91,8 +92,22 @@ public class ReviewService {
         Double good = (double) reviewRepository.countByMeetupKuddyIdAndGrade(kuddyId, Grade.GOOD) / count * 100;
         Double disappoint = (double) reviewRepository.countByMeetupKuddyIdAndGrade(kuddyId, Grade.DISAPPOINT) / count * 100;
 
-        KuddyReviewListResDto response = new KuddyReviewListResDto(reviewResDtoList, count, String.format("%.1f%%", perfect), String.format("%.1f%%", good), String.format("%.1f%%", disappoint));
+        ReviewListResDto response = new ReviewListResDto(reviewResDtoList, count, String.format("%.1f%%", perfect), String.format("%.1f%%", good), String.format("%.1f%%", disappoint));
+        return returnStatusResponse(response);
+    }
 
+    public ResponseEntity<StatusResponse> findReviewOfTraveler(Long travelerId) {
+        Member member = memberRepository.findById(travelerId).orElseThrow(MemberNotFoundException::new);;
+        if(!member.getRoleType().equals(RoleType.TRAVELER))
+            throw new NotTravelerException();
+
+        List<Review> reviewList = reviewRepository.findAllByWriterIdOrderByCreatedDateDesc(travelerId);
+        List<ReviewResDto> reviewResDtoList = new ArrayList<>();
+        for(Review review : reviewList) {
+            reviewResDtoList.add(ReviewResDto.of(review));
+        }
+
+        ReviewListResDto response = ReviewListResDto.of(reviewResDtoList, reviewRepository.countByWriterId(travelerId));
         return returnStatusResponse(response);
     }
 

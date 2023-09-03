@@ -10,4 +10,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByMeetupKuddyIdOrderByCreatedDateDesc(Long id);
     Long countByMeetupKuddyId(Long id);
     Long countByMeetupKuddyIdAndGrade(Long id, Grade grade);
+
+    List<Review> findAllByWriterIdOrderByCreatedDateDesc(Long id);
+    Long countByWriterId(Long id);
 }

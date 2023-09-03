@@ -20,6 +20,7 @@ import com.kuddy.common.community.exception.WrongImageFormatException;
 import com.kuddy.common.exception.custom.ApplicationException;
 import com.kuddy.common.review.exception.NoAuthorityToDeleteReview;
 import com.kuddy.common.review.exception.NotKuddyException;
+import com.kuddy.common.review.exception.NotTravelerException;
 import com.kuddy.common.review.exception.ReviewNotFoundException;
 import com.kuddy.common.spot.exception.NoSpotExists;
 import com.kuddy.common.heart.exception.AlreadyLikedException;
@@ -121,7 +122,8 @@ public enum ExceptionType {
 	//리뷰 관련 - C11***
 	REVIEW_NOT_FOUND_EXCEPTION("C11000", "해당 리뷰 정보를 찾을 수 없습니다.", ReviewNotFoundException.class),
 	NO_AUTHORITY_TO_DELETE_REVIEW("C11001", "본인이 작성한 리뷰만 삭제할 수 있습니다.", NoAuthorityToDeleteReview.class),
-	NOT_KUDDY_EXCEPTION("C11002", "해당 Member가 Kuddy인 경우에만 조회 가능합니다", NotKuddyException.class);
+	NOT_KUDDY_EXCEPTION("C11002", "해당 Member가 Kuddy인 경우에만 조회 가능합니다", NotKuddyException.class),
+	NOT_TRAVELER_EXCEPTION("C11002", "해당 Member가 Traveler인 경우에만 조회 가능합니다", NotTravelerException.class);
 
 	private final String errorCode;
 	private final String message;

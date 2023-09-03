@@ -36,4 +36,10 @@ public class ReviewController {
     public ResponseEntity<StatusResponse> getReviewOfKuddy(@PathVariable("kuddyId") Long kuddyId) {
         return reviewService.findReviewOfKuudy(kuddyId);
     }
+
+    //Traveler가 작성한 리뷰 리스트 조회
+    @GetMapping("/traveler/{travelerId}")
+    public ResponseEntity<StatusResponse> getReviewOfTraveler(@PathVariable("travelerId") Long travelerId) {
+        return reviewService.findReviewOfTraveler(travelerId);
+    }
 }
