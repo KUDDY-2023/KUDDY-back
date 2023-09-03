@@ -25,4 +25,9 @@ public class ReviewController {
     public ResponseEntity<StatusResponse> getReview(@PathVariable("reviewId") Long reviewId) {
         return reviewService.findReview(reviewId);
     }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<StatusResponse> deleteReview(@PathVariable Long reviewId, @AuthUser Member member) {
+        return reviewService.deleteReview(reviewId, member);
+    }
 }
