@@ -36,8 +36,8 @@ public class MemberController {
 			.build());
 	}
 	@GetMapping("/nickname")
-	public ResponseEntity<StatusResponse> validateNickname(@RequestParam final String nickname) {
-		memberService.validateNickname(nickname);
+	public ResponseEntity<StatusResponse> validateNickname(@AuthUser Member member, @RequestParam final String nickname) {
+		memberService.validateNickname(member, nickname);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
 			.message(StatusEnum.OK.getCode())

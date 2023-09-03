@@ -36,6 +36,7 @@ public class ProfileService {
 		List<ProfileArea> profileAreas = profileAreaService.createProfileArea(profile, reqDto.getDistricts());
 		profile.setAvailableLanguages(profileLanguages);
 		profile.setDistricts(profileAreas);
+		profile.initKuddyLevel(reqDto.getRoleType());
 		member.setProfile(profile);
 		return profile.getId();
 	}
