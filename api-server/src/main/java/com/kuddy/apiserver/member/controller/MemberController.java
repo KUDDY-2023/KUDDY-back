@@ -2,6 +2,7 @@ package com.kuddy.apiserver.member.controller;
 
 import static org.springframework.http.HttpHeaders.*;
 
+
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseCookie;
@@ -48,6 +49,7 @@ public class MemberController {
 			.build());
 	}
 	@GetMapping("/nickname")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<StatusResponse> validateNickname(@AuthUser Member member, @RequestParam final String nickname) {
 		memberService.validateNickname(member, nickname);
 		return ResponseEntity.ok(StatusResponse.builder()
@@ -69,4 +71,5 @@ public class MemberController {
 				.data(WITHDRAW_SUCCESS)
 				.build());
 	}
+
 }

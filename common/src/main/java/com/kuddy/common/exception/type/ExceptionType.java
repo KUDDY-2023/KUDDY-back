@@ -18,6 +18,7 @@ import com.kuddy.common.community.exception.NoAuthorityPostRemove;
 import com.kuddy.common.community.exception.NoDistrictExistsException;
 import com.kuddy.common.community.exception.WrongImageFormatException;
 import com.kuddy.common.exception.custom.ApplicationException;
+import com.kuddy.common.meetup.exception.NotAdminException;
 import com.kuddy.common.profile.exception.DuplicateProfileException;
 import com.kuddy.common.review.exception.NoAuthorityToDeleteReview;
 import com.kuddy.common.review.exception.NotKuddyException;
@@ -47,6 +48,9 @@ import com.kuddy.common.security.exception.InvalidTokenTypeException;
 import com.kuddy.common.security.exception.UnAuthorizedTokenException;
 import com.kuddy.common.spot.exception.SpotNotFoundException;
 import com.kuddy.common.spot.exception.TourApiExeption;
+import com.kuddy.common.ticket.exception.OnlyTravelerRequestException;
+import com.kuddy.common.ticket.exception.TicketNotFoundException;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -64,6 +68,7 @@ public enum ExceptionType {
 	INVALID_TOKEN_TYPE_EXCEPTION("C1004", "토큰 타입이 올바르지 않습니다.", InvalidTokenTypeException .class),
 	EXPIRED_TOKEN_EXCEPTION("C1005", "토큰이 유효하지 않습니다.", ExpiredTokenException.class),
 	NOT_AUTHOR_EXCEPTION("C1007", "작성자가 아니므로 권한이 없습니다.", NotAuthorException.class),
+	NOT_ADMIN_EXCEPTION("C1008", "관리자가 아니므로 권한이 없습니다.", NotAdminException.class),
 	/*HTTP_REQUEST_NULL_EXCEPTION("C1006", "인증할 수 있는 사용자 데이터가 없습니다.", HttpRequestNullException.class),
 	NOT_AUTHOR_EXCEPTION("C1007", "작성자가 아니므로 권한이 없습니다.", NotAuthorException.class),
 	NOT_MEMBER_EXCEPTION("C1008", "회원이 아니므로 권한이 없습니다.", NotMemberException.class),
@@ -126,7 +131,11 @@ public enum ExceptionType {
 	REVIEW_NOT_FOUND_EXCEPTION("C11000", "해당 리뷰 정보를 찾을 수 없습니다.", ReviewNotFoundException.class),
 	NO_AUTHORITY_TO_DELETE_REVIEW("C11001", "본인이 작성한 리뷰만 삭제할 수 있습니다.", NoAuthorityToDeleteReview.class),
 	NOT_KUDDY_EXCEPTION("C11002", "해당 Member가 Kuddy인 경우에만 조회 가능합니다", NotKuddyException.class),
-	NOT_TRAVELER_EXCEPTION("C11002", "해당 Member가 Traveler인 경우에만 조회 가능합니다", NotTravelerException.class);
+	NOT_TRAVELER_EXCEPTION("C11002", "해당 Member가 Traveler인 경우에만 조회 가능합니다", NotTravelerException.class),
+
+	//티켓 관련 - C12***
+	TICKET_NOT_FOUNED_EXCEPTION("C12000", "티켓 정보를 찾을 수 없습니다.", TicketNotFoundException.class),
+	ONLY_TRAVELER_REQUEST_EXCEPTION("C12001", "Traveler만 가능한 요청입니다.", OnlyTravelerRequestException.class);
 
 	private final String errorCode;
 	private final String message;
