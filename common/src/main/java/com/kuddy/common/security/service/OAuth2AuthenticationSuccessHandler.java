@@ -96,7 +96,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		log.info(redirectUrl);
 
 		String accessToken = jwtProvider.generateAccessToken(email);
-		log.info("access" + accessToken);
+		log.info("access=" + accessToken);
 
 		return UriComponentsBuilder.fromHttpUrl(redirectUrl)
 			.path("/oauth2/redirect")

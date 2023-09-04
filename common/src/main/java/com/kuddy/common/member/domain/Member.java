@@ -15,7 +15,6 @@ import javax.persistence.OneToOne;
 
 import com.kuddy.common.domain.BaseTimeEntity;
 import com.kuddy.common.member.exception.InvalidNicknameException;
-import com.kuddy.common.profile.domain.KuddyLevel;
 import com.kuddy.common.profile.domain.Profile;
 
 import lombok.AccessLevel;
@@ -81,7 +80,7 @@ public class Member extends BaseTimeEntity {
 		}
 	}
 	public void updateMember(String email) {
-		if (!Objects.equals(this.email, email)) {
+		if (!this.email.equals(email)) {
 			this.email = email;
 		}
 	}
@@ -91,18 +90,29 @@ public class Member extends BaseTimeEntity {
 		}
 	}
 	public void updateRole(RoleType roleType) {
-		if (roleType != null && !Objects.equals(this.roleType, roleType)) {
+		if (roleType != null && !this.roleType.equals(roleType)) {
 			this.roleType = roleType;
 		}
 	}
 	public void updateMemberStatus(MemberStatus memberStatus) {
-		if (memberStatus != null && !Objects.equals(this.memberStatus, memberStatus)) {
+		if (memberStatus != null && !this.memberStatus.equals(memberStatus)) {
 			this.memberStatus = memberStatus;
 		}
 	}
 	public void setProfile(Profile profile){
-		if (profile != null && !Objects.equals(this.profile, profile)){
-			this.profile = profile;
+		this.profile = profile;
+	}
+	public void updateProfileImage(String profileImageUrl){
+		if(!this.profileImageUrl.equals(profileImageUrl)){
+			this.profileImageUrl = profileImageUrl;
 		}
+	}
+	public void withdrawInfoProcess(){
+		this.nickname = FORBIDDEN_WORD;
+		this.email = FORBIDDEN_WORD;
+		this.username = FORBIDDEN_WORD;
+		this.providerType = null;
+		this.profileImageUrl = null;
+		this.memberStatus = MemberStatus.WITHDRAW;
 	}
 }

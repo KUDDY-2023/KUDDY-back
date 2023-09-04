@@ -33,7 +33,7 @@ import com.kuddy.common.security.user.AuthUser;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/chat/v1")
 @RequiredArgsConstructor
 public class ChatController {
 	private final ChatService chatService;
