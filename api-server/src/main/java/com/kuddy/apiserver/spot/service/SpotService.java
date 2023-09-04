@@ -111,12 +111,7 @@ public class SpotService {
             respone.add(spotResDto);
         }
 
-        //페이지가 1장일 경우 요소의 총 개수가 size
-        if (spotPage.getTotalPages() == 1) {
-            size = (int) spotPage.getTotalElements();
-        }
-
-        PageInfo pageInfo = new PageInfo(page, size, spotPage.getTotalElements(), spotPage.getTotalPages());
+        PageInfo pageInfo = new PageInfo(page, spotPage.getNumberOfElements(), spotPage.getTotalElements(), spotPage.getTotalPages());
         SpotPageResDto spotPageResDto = new SpotPageResDto(respone, pageInfo);
 
         return ResponseEntity.ok(StatusResponse.builder()
