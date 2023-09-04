@@ -51,6 +51,7 @@ public class ProfileService {
 		Member findMember = memberService.findById(member.getId());
 
 		findMember.updateNickname(reqDto.getNickname());
+		findMember.updateProfileImage(reqDto.getProfileImageUrl());
 		profile.changeJob(reqDto.getJob());
 		profile.updateIntroduce(reqDto.getIntroduce());
 		profile.setNationality(reqDto.getNationality());

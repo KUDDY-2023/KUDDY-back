@@ -33,6 +33,7 @@ public class ProfileReqDto {
 		@Size(max = 15, message = "닉네임은 15자를 초과할 수 없습니다.")
 		@Pattern(regexp = "[a-zA-Z0-9_]+", message = "닉네임은 영어, 숫자, 언더바만 포함할 수 있습니다.")
 		private String nickname;
+		private String profileImageUrl;
 		private Integer age;
 		private String nationality;
 		private GenderType genderType;
@@ -65,6 +66,7 @@ public class ProfileReqDto {
 		private String introduce;
 
 		private Integer age;
+		private String profileImageUrl;
 
 		@NotBlank(message = "닉네임은 비어있을 수 없습니다.")
 		@Size(max = 15, message = "닉네임은 15자를 초과할 수 없습니다.")

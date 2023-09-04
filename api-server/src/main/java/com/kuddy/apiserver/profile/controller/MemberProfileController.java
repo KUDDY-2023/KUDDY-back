@@ -52,7 +52,7 @@ public class MemberProfileController {
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<StatusResponse> createProfile(@AuthUser Member member,
 		@Valid @RequestBody final ProfileReqDto.Create profileCreateReqDto) {
-		Member updateMember = memberService.update(member, profileCreateReqDto.getNickname(), profileCreateReqDto.getRoleType());
+		Member updateMember = memberService.update(member, profileCreateReqDto.getNickname(), profileCreateReqDto.getRoleType(), profileCreateReqDto.getProfileImageUrl());
 		Long profileId = profileService.create(updateMember, profileCreateReqDto);
 		Profile createProfile = profileService.findById(profileId);
 		ProfileResDto response = ProfileResDto.from(updateMember, createProfile);

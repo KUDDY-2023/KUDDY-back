@@ -23,6 +23,8 @@ import com.kuddy.common.review.exception.NoAuthorityToDeleteReview;
 import com.kuddy.common.review.exception.NotKuddyException;
 import com.kuddy.common.review.exception.NotTravelerException;
 import com.kuddy.common.review.exception.ReviewNotFoundException;
+import com.kuddy.common.security.exception.AlreadyLogoutException;
+import com.kuddy.common.security.exception.NotMatchStoredResfreshTokenException;
 import com.kuddy.common.spot.exception.NoSpotExists;
 import com.kuddy.common.heart.exception.AlreadyLikedException;
 import com.kuddy.common.heart.exception.HeartNotFoundException;
@@ -38,7 +40,6 @@ import com.kuddy.common.profile.exception.LanguageNotFoundException;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
 import com.kuddy.common.report.exception.ReportNotFoundException;
 import com.kuddy.common.security.exception.EmptyTokenException;
-import com.kuddy.common.security.exception.InvalidAccessTokenAtRenewException;
 import com.kuddy.common.security.exception.ExpiredTokenException;
 import com.kuddy.common.security.exception.InvalidRefreshTokenException;
 import com.kuddy.common.security.exception.InvalidTokenException;
@@ -69,10 +70,11 @@ public enum ExceptionType {
 
 	 */
 	INVALID_REFRESH_TOKEN_EXCEPTION("C1009", "리프레시 토큰이 유효하지 않습니다.", InvalidRefreshTokenException.class),
-	UNAUTHORIZED_TOKEN_EXCEPTION("C1010", "유효한 액세스 토큰으로 리프레시 토큰을 발급할 수 없습니다.", UnAuthorizedTokenException.class),
-	INVALID_ACCESS_TOKEN_AT_RENEW_EXCEPTION("C1011", "유효하지 않는 액세스 토큰으로 권한이 없는 유저입니다. 재로그인을 해주세요",
-		InvalidAccessTokenAtRenewException.class),
+	UNAUTHORIZED_TOKEN_EXCEPTION("C1010", "권한이 없는 토큰입니다.", UnAuthorizedTokenException.class),
+	NO_MATCH_REFRESHTOKEN_EXCEPTION("C1011", "해당 유저의 저장된 리프레시 토큰과 일치하지 않습니다.",
+		NotMatchStoredResfreshTokenException.class),
 	INVALID_TOKEN_EXCEPTION("C1012", "토큰이 유효하지 않습니다.", InvalidTokenException.class),
+	ALREADY_LOGOUT_EXCEPTION("C1013", "이미 로그아웃된 사용자 입니다.", AlreadyLogoutException.class),
 
 
 	//관광지 관련 - C4***

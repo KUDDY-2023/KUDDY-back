@@ -96,7 +96,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		log.info(redirectUrl);
 
 		String accessToken = jwtProvider.generateAccessToken(email);
-		log.info(accessToken);
+		log.info("access=" + accessToken);
 
 		return UriComponentsBuilder.fromHttpUrl(redirectUrl)
 			.path("/oauth2/redirect")
@@ -127,7 +127,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		Long refreshTokenValidationMs = jwtProvider.getRefreshTokenValidationMs();
 
 		redisService.setData("RefreshToken:" + email, refreshToken, refreshTokenValidationMs);
-
+		log.info("refresh:" + refreshToken);
 		return ResponseCookie.from("refreshToken", refreshToken)
 			.path("/") // 해당 경로 하위의 페이지에서만 쿠키 접근 허용. 모든 경로에서 접근 허용한다.
 			.domain(".kuddy.co.kr")
