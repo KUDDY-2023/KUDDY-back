@@ -38,7 +38,7 @@ public class MemberProfileController {
 
 	@GetMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<StatusResponse> readProfile(@AuthUser Member member) {
+	public ResponseEntity<StatusResponse> readMyProfile(@AuthUser Member member) {
 		Profile profile = profileService.findByMember(member);
 		ProfileResDto response = ProfileResDto.from(member, profile);
 		return ResponseEntity.ok(StatusResponse.builder()
@@ -47,6 +47,7 @@ public class MemberProfileController {
 			.data(response)
 			.build());
 	}
+
 
 	@PostMapping
 	@PreAuthorize("isAuthenticated()")
