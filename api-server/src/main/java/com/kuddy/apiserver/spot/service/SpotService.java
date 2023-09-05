@@ -21,6 +21,7 @@ import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -224,7 +225,7 @@ public class SpotService {
     }
 
     public Page<Spot> getSpotListBySearch(SpotSearchReqDto spotSearchReqDto, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("numOfHearts").descending());
 
         Specification<Spot> spec = Specification.where(containingName(spotSearchReqDto.getKeyword()));
         if(!spotSearchReqDto.getKeyword().isEmpty()) {
