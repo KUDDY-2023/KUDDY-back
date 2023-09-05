@@ -103,16 +103,16 @@ public class SpotService {
     }
 
     //조회한 spot 리스트와 페이지 정보를 공통응답형식으로 반환하도록 변환하는 메소드
-    public ResponseEntity<StatusResponse> changePageToResponse(Page<Spot> spotPage, int page, int size) {
+    public ResponseEntity<StatusResponse> changePageToResponse(Page<Spot> spotPage, int page) {
         List<Spot> spotList = spotPage.getContent();
-        List<SpotResDto> respone = new ArrayList<>();
+        List<SpotResDto> response = new ArrayList<>();
         for (Spot spot : spotList) {
             SpotResDto spotResDto = SpotResDto.of(spot);
-            respone.add(spotResDto);
+            response.add(spotResDto);
         }
 
         PageInfo pageInfo = new PageInfo(page, spotPage.getNumberOfElements(), spotPage.getTotalElements(), spotPage.getTotalPages());
-        SpotPageResDto spotPageResDto = new SpotPageResDto(respone, pageInfo);
+        SpotPageResDto spotPageResDto = new SpotPageResDto(response, pageInfo);
 
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
