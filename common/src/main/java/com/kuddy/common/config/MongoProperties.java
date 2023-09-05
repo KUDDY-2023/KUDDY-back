@@ -7,18 +7,10 @@ import lombok.Data;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "mongodb")
+@ConfigurationProperties(prefix = "spring.data.mongodb")
 public class MongoProperties {
 	private String client;
 	private String name;
 
-	public String getClient(){
-		return "mongodb://localhost:27017";
-	}
-
-	public String getName(){
-		return "kuddy";
-	}
-
-
+	// Getter와 Setter는 Lombok의 @Data로 자동 생성됩니다.
 }
