@@ -1,6 +1,7 @@
 package com.kuddy.apiserver.spot.service;
 
 import com.kuddy.apiserver.member.dto.MemberResDto;
+import com.kuddy.apiserver.spot.dto.SpotSearchReqDto;
 import com.kuddy.apiserver.spot.dto.SpotDetailResDto;
 import com.kuddy.apiserver.spot.dto.SpotPageResDto;
 import com.kuddy.apiserver.spot.dto.SpotResDto;
@@ -19,12 +20,16 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.kuddy.common.spot.repository.SpotSpecification.*;
 
 
 @Service
@@ -216,5 +221,29 @@ public class SpotService {
             response.add(spotResDto);
         }
         return response;
+    }
+
+    public Page<Spot> getSpotListBySearch(SpotSearchReqDto spotSearchReqDto, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Specification<Spot> spec = Specification.where(containingName(spotSearchReqDto.getKeyword()));
+        if(!spotSearchReqDto.getKeyword().isEmpty()) {
+            spec = spec.and(containingName(spotSearchReqDto.getKeyword()));
+            System.out.println(spec);
+        }
+        if(!spotSearchReqDto.getCategory().isEmpty()) {
+            spec = spec.and(equalCategory(Category.valueOf(spotSearchReqDto.getCategory().toUpperCase())));
+            System.out.println(spec);
+        }
+        if(!spotSearchReqDto.getDistrict().isEmpty()) {
+            List<District> districtList = new ArrayList<>();
+            for(String districtName : spotSearchReqDto.getDistrict()) {
+                districtList.add(District.valueOf(districtName.toUpperCase()));
+            }
+            spec = spec.and(belongsToDistrict(districtList));
+            System.out.println(spec);
+        }
+
+        return spotRepository.findAll(spec, pageable);
     }
 }
