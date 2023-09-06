@@ -43,7 +43,8 @@ public class JwtProvider {
 	@Value("${spring.jwt.secret-key}")
 	private String secretKey;
 
-	private static final Long accessTokenValidationMs = 30 * 60 * 1000L;
+	//private static final Long accessTokenValidationMs = 30 * 60 * 1000L;
+	private static final Long accessTokenValidationMs = 1 * 60 * 1000L;
 	private static final Long refreshTokenValidationMs = 15 * 24 * 60 * 60 * 1000L;
 	private static final String BEARER_PREFIX = "Bearer ";
 
