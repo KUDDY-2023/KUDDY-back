@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MeetupService {
 	private final MeetupRepository meetupRepository;
 	private final SpotRepository spotRepository;
+	private final MeetupQueryService meetupQueryService;
 
 	public void create(Message message, Member findMember, Member receiveMember){
 		Spot spot = findByContentId(message.getSpotContentId());
@@ -72,12 +73,13 @@ public class MeetupService {
 	@Transactional(readOnly = true)
 	public List<Meetup> findListByMember(Member member) {
 		RoleType roleType = member.getRoleType();
+		List<MeetupStatus> excludedStatuses = Arrays.asList(MeetupStatus.REFUSED, MeetupStatus.ACCEPTED, MeetupStatus.NOT_ACCEPT);
 
 		switch (roleType) {
 			case KUDDY:
-				return meetupRepository.findAllByKuddyAndMeetupStatusNotInOrderByDesc(member.getId(), MeetupStatus.REFUSED);
+				return meetupQueryService.getKuddyMeetupList(member.getId(), excludedStatuses);
 			case TRAVELER:
-				return meetupRepository.findAllByTravelerAndMeetupStatusNotOrderByDesc(member.getId(), MeetupStatus.REFUSED);
+				return meetupQueryService.getTravelerMeetupList(member.getId(), excludedStatuses);
 			default:
 				throw new MeetupNotFoundException();
 		}

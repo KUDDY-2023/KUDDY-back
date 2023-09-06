@@ -84,6 +84,4 @@ public class ChatQueryService {
 		return memberRepository.findByNickname(memberNickname)
 			.orElseThrow(MemberNotFoundException::new);
 	}
-
-
 }

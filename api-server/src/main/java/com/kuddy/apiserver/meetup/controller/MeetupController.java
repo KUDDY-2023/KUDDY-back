@@ -28,7 +28,7 @@ public class MeetupController {
 	@GetMapping
 	public ResponseEntity<StatusResponse> getMeetupList(@AuthUser Member member) {
 		List<Meetup> meetupList = meetupService.findListByMember(member);
-		MeetupListResDto response = MeetupListResDto.of(meetupList);
+		MeetupListResDto response = MeetupListResDto.from(meetupList, member);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
 			.message(StatusEnum.OK.getCode())
