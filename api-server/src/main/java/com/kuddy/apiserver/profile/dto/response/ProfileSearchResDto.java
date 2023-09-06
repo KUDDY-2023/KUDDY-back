@@ -1,4 +1,4 @@
-package com.kuddy.apiserver.profile.dto;
+package com.kuddy.apiserver.profile.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class ProfileSearchResDto {
 			ticketStatus = profile.getTicketStatus().getDescription();
 		}
 		boolean checkMine = false;
-		if(member.getId() == profile.getMember().getId()){
+		if(member.getId().equals(profile.getMember().getId())){
 			checkMine = true;
 		}
 

@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.kuddy.apiserver.member.service.MemberService;
-import com.kuddy.apiserver.profile.dto.ProfileReqDto;
-import com.kuddy.apiserver.profile.dto.ProfileResDto;
-import com.kuddy.apiserver.profile.dto.ProfileSearchResDto;
+import com.kuddy.apiserver.profile.dto.request.ProfileReqDto;
+import com.kuddy.apiserver.profile.dto.response.ProfileResDto;
+import com.kuddy.apiserver.profile.dto.response.ProfileSearchResDto;
 import com.kuddy.apiserver.profile.service.ProfileService;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.profile.domain.Profile;

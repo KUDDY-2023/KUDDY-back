@@ -91,7 +91,3 @@ Mcommon/src/main/java/com/kuddy/common/meetup/repository/MeetupRepository.java,
 Qcommon/src/main/java/com/kuddy/common/security/exception/EmptyTokenException.java,c/9/c9f00dcf205ce9761f1b3ed0e2c0d261b3a9e62f
 
 Qcommon/src/main/java/com/kuddy/common/exception/custom/UnAuthorizedException.java,b/0/b0b14ddbc5c0b31ceb1ee40a8f2fa028292342e7
-u
-Ecommon/src/main/java/com/kuddy/common/profile/domain/ProfileArea.java,2/2/221be49f5662dbbf17511e64d5ee6a6f70530aac
-n
->common/src/main/java/com/kuddy/common/profile/domain/Area.java,f/b/fbe4d5fc6a64fdc60d1126ea9863cc6e40a3000d

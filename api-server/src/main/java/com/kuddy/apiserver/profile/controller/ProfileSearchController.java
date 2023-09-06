@@ -4,20 +4,25 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kuddy.apiserver.member.service.MemberService;
-import com.kuddy.apiserver.profile.dto.ProfileResDto;
-import com.kuddy.apiserver.profile.dto.ProfileSearchListResDto;
+import com.kuddy.apiserver.profile.dto.request.ProfileSearchReqDto;
+import com.kuddy.apiserver.profile.dto.response.ProfileResDto;
+import com.kuddy.apiserver.profile.dto.response.ProfileSearchListResDto;
 import com.kuddy.apiserver.profile.service.ProfileQueryService;
 import com.kuddy.apiserver.profile.service.ProfileService;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.profile.domain.Profile;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
+
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +64,18 @@ public class ProfileSearchController {
 	public ResponseEntity<StatusResponse> searchNickname(@RequestParam final String nickname) {
 		List<Profile> profileList = profileQueryService.findProfilesByMemberNickname(nickname);
 		ProfileSearchListResDto response = ProfileSearchListResDto.of(profileList);
+		return ResponseEntity.ok(StatusResponse.builder()
+			.status(StatusEnum.OK.getStatusCode())
+			.message(StatusEnum.OK.getCode())
+			.data(response)
+			.build());
+	}
+
+	@PostMapping("/search")
+	public ResponseEntity<StatusResponse> searchNickname(
+		@RequestBody final ProfileSearchReqDto reqDto) {
+		List<Profile> profileList = profileQueryService.findProfilesBySearchCriteria(reqDto);
+		ProfileSearchListResDto response = ProfileSearchListResDto.from(profileList, reqDto.getInterestContent());
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
 			.message(StatusEnum.OK.getCode())

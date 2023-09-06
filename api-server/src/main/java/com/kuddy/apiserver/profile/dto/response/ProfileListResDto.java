@@ -1,4 +1,4 @@
-package com.kuddy.apiserver.profile.dto;
+package com.kuddy.apiserver.profile.dto.response;
 
 import java.util.List;
 

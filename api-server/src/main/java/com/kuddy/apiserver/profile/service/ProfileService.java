@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kuddy.apiserver.member.service.MemberService;
-import com.kuddy.apiserver.profile.dto.InterestsDto;
-import com.kuddy.apiserver.profile.dto.ProfileListResDto;
-import com.kuddy.apiserver.profile.dto.ProfileReqDto;
+import com.kuddy.apiserver.profile.dto.response.InterestsDto;
+import com.kuddy.apiserver.profile.dto.response.ProfileListResDto;
+import com.kuddy.apiserver.profile.dto.request.ProfileReqDto;
 
-import com.kuddy.apiserver.profile.dto.ProfileThumbnailResDto;
+import com.kuddy.apiserver.profile.dto.response.ProfileThumbnailResDto;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.page.PageInfo;
 import com.kuddy.common.profile.domain.Profile;
