@@ -1,5 +1,6 @@
 package com.kuddy.apiserver.profile.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,5 +36,17 @@ public class ProfileSearchController {
 			.message(StatusEnum.OK.getCode())
 			.data(response)
 			.build());
+	}
+
+	@GetMapping("/kuddy")
+	public ResponseEntity<StatusResponse> readKuddyProfile(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
+		Page<Profile> profiles = profileService.getKuddyProfiles(page -1, size);
+		return profileService.changePageToResponse(profiles, page, size);
+	}
+
+	@GetMapping("/traveler")
+	public ResponseEntity<StatusResponse> readTravelerProfile(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
+		Page<Profile> profiles = profileService.getTravelerProfiles(page -1, size);
+		return profileService.changePageToResponse(profiles, page, size);
 	}
 }
