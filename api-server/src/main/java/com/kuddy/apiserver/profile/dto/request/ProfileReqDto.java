@@ -1,4 +1,4 @@
-package com.kuddy.apiserver.profile.dto;
+package com.kuddy.apiserver.profile.dto.request;
 
 import java.util.List;
 
@@ -6,6 +6,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.kuddy.apiserver.profile.dto.response.InterestsDto;
+import com.kuddy.apiserver.profile.dto.response.MemberAreaDto;
+import com.kuddy.apiserver.profile.dto.response.MemberLanguageDto;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.profile.domain.DecisionMaking;
