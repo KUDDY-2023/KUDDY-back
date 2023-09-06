@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,18 @@ public class MemberProfileController {
 	@GetMapping
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<StatusResponse> readMyProfile(@AuthUser Member member) {
+		Profile profile = profileService.findByMember(member);
+		ProfileResDto response = ProfileResDto.from(member, profile);
+		return ResponseEntity.ok(StatusResponse.builder()
+			.status(StatusEnum.OK.getStatusCode())
+			.message(StatusEnum.OK.getCode())
+			.data(response)
+			.build());
+	}
+
+	@GetMapping("/{profileId}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<StatusResponse> readProfile(@AuthUser Member member, @PathVariable Long profileId) {
 		Profile profile = profileService.findByMember(member);
 		ProfileResDto response = ProfileResDto.from(member, profile);
 		return ResponseEntity.ok(StatusResponse.builder()

@@ -15,7 +15,8 @@ import com.kuddy.apiserver.member.service.MemberService;
 import com.kuddy.apiserver.profile.dto.InterestsDto;
 import com.kuddy.apiserver.profile.dto.ProfileListResDto;
 import com.kuddy.apiserver.profile.dto.ProfileReqDto;
-import com.kuddy.apiserver.profile.dto.ProfileResDto;
+
+import com.kuddy.apiserver.profile.dto.ProfileThumbnailResDto;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.page.PageInfo;
 import com.kuddy.common.profile.domain.Profile;
@@ -102,10 +103,10 @@ public class ProfileService {
 
 	public ResponseEntity<StatusResponse> changePageToResponse(Page<Profile> profilePage, int page, int size) {
 		List<Profile> profileList = profilePage.getContent();
-		List<ProfileResDto> respone = new ArrayList<>();
+		List<ProfileThumbnailResDto> respone = new ArrayList<>();
 		for (Profile profile: profileList) {
-			ProfileResDto profileResDto = ProfileResDto.from(profile.getMember(), profile);
-			respone.add(profileResDto);
+			ProfileThumbnailResDto profileThumbnailResDto = ProfileThumbnailResDto.from(profile.getMember(), profile);
+			respone.add(profileThumbnailResDto);
 		}
 
 		//페이지가 1장일 경우 요소의 총 개수가 size

@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProfileListResDto {
-	private List<ProfileResDto> profileList;
+	private List<ProfileThumbnailResDto> profileList;
 	private PageInfo pageInfo;
 
-	public ProfileListResDto(List<ProfileResDto> profileList, PageInfo pageInfo) {
+	public ProfileListResDto(List<ProfileThumbnailResDto> profileList, PageInfo pageInfo) {
 		this.profileList = profileList;
 		this.pageInfo = pageInfo;
 	}
