@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class CommentResDto {
+public class CommentResDto { //TODO: 유저 레벨 추가
     private Long id;
     private String content;
     private Boolean isRemoved;
@@ -21,7 +21,7 @@ public class CommentResDto {
     private Long parentId;
 
     public static CommentResDto of(Comment comment, Member member, List<ReplyResDto> replyList) {
-        CommentWriterInfoDto commentWriterInfoDto = new CommentWriterInfoDto(comment.getWriter().getId(), member.getNickname(), member.getProfileImageUrl());
+        CommentWriterInfoDto commentWriterInfoDto = new CommentWriterInfoDto(comment.getWriter().getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
         CommentResDtoBuilder builder = CommentResDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())

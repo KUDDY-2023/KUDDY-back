@@ -194,7 +194,7 @@ public class PostService {
     }
 
     private PageInfo createPageInfo(Page<?> page) {
-        return new PageInfo(page.getNumber(), page.getSize(), (int) page.getTotalElements(), page.getTotalPages());
+        return new PageInfo(page.getNumber(), page.getNumberOfElements(), (int) page.getTotalElements(), page.getTotalPages());
     }
 
     private List<Long> convertStringToList(String str) {
