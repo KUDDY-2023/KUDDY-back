@@ -1,5 +1,7 @@
 package com.kuddy.apiserver.profile.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kuddy.apiserver.member.service.MemberService;
 import com.kuddy.apiserver.profile.dto.ProfileResDto;
+import com.kuddy.apiserver.profile.dto.ProfileSearchListResDto;
+import com.kuddy.apiserver.profile.service.ProfileQueryService;
 import com.kuddy.apiserver.profile.service.ProfileService;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.profile.domain.Profile;
@@ -24,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ProfileSearchController {
 	private final ProfileService profileService;
+	private final ProfileQueryService profileQueryService;
 	private final MemberService memberService;
 
 	@GetMapping
@@ -48,5 +53,16 @@ public class ProfileSearchController {
 	public ResponseEntity<StatusResponse> readTravelerProfile(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
 		Page<Profile> profiles = profileService.getTravelerProfiles(page -1, size);
 		return profileService.changePageToResponse(profiles, page, size);
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<StatusResponse> searchNickname(@RequestParam final String nickname) {
+		List<Profile> profileList = profileQueryService.findProfilesByMemberNickname(nickname);
+		ProfileSearchListResDto response = ProfileSearchListResDto.of(profileList);
+		return ResponseEntity.ok(StatusResponse.builder()
+			.status(StatusEnum.OK.getStatusCode())
+			.message(StatusEnum.OK.getCode())
+			.data(response)
+			.build());
 	}
 }

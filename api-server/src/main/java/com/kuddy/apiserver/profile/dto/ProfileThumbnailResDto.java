@@ -29,19 +29,20 @@ public class ProfileThumbnailResDto {
 	private String profileImage;
 	private KuddyLevel kuddyLevel;
 
-	public static ProfileThumbnailResDto from(Member member, Profile profile) {
+	public static ProfileThumbnailResDto of(Profile profile) {
+		Member owner = profile.getMember();
 		KuddyLevel kuddyLevel = null;
-		if(member.getRoleType().equals(RoleType.KUDDY)){
+		if(owner.getRoleType().equals(RoleType.KUDDY)){
 			kuddyLevel =  profile.getKuddyLevel();
 		}
 		return ProfileThumbnailResDto.builder()
 			.profileId(profile.getId())
-			.memberId(profile.getMember().getId())
+			.memberId(owner.getId())
 			.introduce(profile.getIntroduce())
-			.profileImage(profile.getMember().getProfileImageUrl())
+			.profileImage(owner.getProfileImageUrl())
 			.kuddyLevel(kuddyLevel)
-			.role(profile.getMember().getRoleType())
-			.nickname(profile.getMember().getNickname())
+			.role(owner.getRoleType())
+			.nickname(owner.getNickname())
 			.build();
 	}
 }

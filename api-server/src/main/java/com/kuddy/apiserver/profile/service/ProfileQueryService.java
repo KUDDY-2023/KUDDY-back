@@ -11,11 +11,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.profile.domain.KuddyLevel;
 import com.kuddy.common.profile.domain.Profile;
 import com.kuddy.common.profile.domain.QProfile;
+
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -80,5 +86,32 @@ public class ProfileQueryService {
 
 		return new PageImpl<>(profiles, pageable, total);
 	}
+	public List<Profile> findProfilesByMemberNickname(String nickname) {
+
+		BooleanExpression predicate = member.nickname.likeIgnoreCase("%" + nickname + "%")
+			.and(member.nickname.ne(Member.FORBIDDEN_WORD)); // FORBIDDEN_WORD를 제외
+
+		NumberExpression<Integer> caseOrder = Expressions.cases()
+			.when(member.nickname.equalsIgnoreCase(nickname)).then(0)
+			.otherwise(1);
+
+		NumberExpression<Integer> lengthOrder = Expressions.numberTemplate(Integer.class, "LENGTH({0})", member.nickname);
+
+		List<Profile> profiles = queryFactory
+			.select(profile)
+			.from(profile)
+			.join(profile.member, member)
+			.where(predicate)
+			.orderBy(
+				caseOrder.asc(),
+				lengthOrder.asc(),
+				profile.createdDate.desc()
+			)
+			.fetch();
+
+		return profiles;
+	}
+
+
 
 }

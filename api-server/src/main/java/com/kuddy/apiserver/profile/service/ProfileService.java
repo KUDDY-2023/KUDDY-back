@@ -1,7 +1,7 @@
 package com.kuddy.apiserver.profile.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -103,11 +103,9 @@ public class ProfileService {
 
 	public ResponseEntity<StatusResponse> changePageToResponse(Page<Profile> profilePage, int page, int size) {
 		List<Profile> profileList = profilePage.getContent();
-		List<ProfileThumbnailResDto> respone = new ArrayList<>();
-		for (Profile profile: profileList) {
-			ProfileThumbnailResDto profileThumbnailResDto = ProfileThumbnailResDto.from(profile.getMember(), profile);
-			respone.add(profileThumbnailResDto);
-		}
+		List<ProfileThumbnailResDto> response = profileList.stream()
+			.map(ProfileThumbnailResDto::of)
+			.collect(Collectors.toList());
 
 		//페이지가 1장일 경우 요소의 총 개수가 size
 		if (profilePage.getTotalPages() == 1) {
@@ -115,7 +113,7 @@ public class ProfileService {
 		}
 
 		PageInfo pageInfo = new PageInfo(page, size, profilePage.getTotalElements(),profilePage.getTotalPages());
-		ProfileListResDto profileListResDto = new ProfileListResDto(respone, pageInfo);
+		ProfileListResDto profileListResDto = new ProfileListResDto(response, pageInfo);
 
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
