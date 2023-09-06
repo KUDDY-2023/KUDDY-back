@@ -15,6 +15,7 @@ import com.kuddy.common.meetup.domain.MeetupStatus;
 import com.kuddy.common.meetup.exception.MeetupNotFoundException;
 import com.kuddy.common.meetup.repository.MeetupRepository;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.spot.domain.Spot;
 import com.kuddy.common.spot.repository.SpotRepository;
 
@@ -28,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MeetupService {
 	private final MeetupRepository meetupRepository;
 	private final SpotRepository spotRepository;
+	private final MeetupQueryService meetupQueryService;
 
 	public void create(Message message, Member findMember, Member receiveMember){
 		Spot spot = findByContentId(message.getSpotContentId());
@@ -67,4 +69,20 @@ public class MeetupService {
 		List<MeetupStatus> excludedStatuses = Arrays.asList(MeetupStatus.REFUSED, MeetupStatus.KUDDY_CANCEL, MeetupStatus.TRAVELER_CANCEL);
 		return meetupRepository.countByKuddyIdAndMeetupStatusNotIn(kuddyId, excludedStatuses);
 	}
+
+	@Transactional(readOnly = true)
+	public List<Meetup> findListByMember(Member member) {
+		RoleType roleType = member.getRoleType();
+		List<MeetupStatus> excludedStatuses = Arrays.asList(MeetupStatus.REFUSED, MeetupStatus.ACCEPTED, MeetupStatus.NOT_ACCEPT);
+
+		switch (roleType) {
+			case KUDDY:
+				return meetupQueryService.getKuddyMeetupList(member.getId(), excludedStatuses);
+			case TRAVELER:
+				return meetupQueryService.getTravelerMeetupList(member.getId(), excludedStatuses);
+			default:
+				throw new MeetupNotFoundException();
+		}
+	}
+
 }
