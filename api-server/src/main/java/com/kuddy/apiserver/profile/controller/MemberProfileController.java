@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.kuddy.apiserver.member.service.MemberService;
 import com.kuddy.apiserver.profile.dto.ProfileReqDto;
 import com.kuddy.apiserver.profile.dto.ProfileResDto;
+import com.kuddy.apiserver.profile.dto.ProfileSearchResDto;
 import com.kuddy.apiserver.profile.service.ProfileService;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.profile.domain.Profile;
@@ -52,8 +53,8 @@ public class MemberProfileController {
 	@GetMapping("/{profileId}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<StatusResponse> readProfile(@AuthUser Member member, @PathVariable Long profileId) {
-		Profile profile = profileService.findByMember(member);
-		ProfileResDto response = ProfileResDto.from(member, profile);
+		Profile profile = profileService.findById(profileId);
+		ProfileSearchResDto response = ProfileSearchResDto.from(member, profile);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
 			.message(StatusEnum.OK.getCode())
