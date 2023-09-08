@@ -1,5 +1,6 @@
 package com.kuddy.chatserver.chat.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -151,7 +152,7 @@ public class ChatService {
 		}
 		return message;
 	}
-	public void updateMessage(Message message, String authorization){
+	public void updateMessage(Message message, String authorization) throws IOException {
 		String email = jwtProvider.tokenToEmail(authorization);
 		checkvalidateMember(email, message.getRoomId());
 		//채팅을 찾아 상태 변경해준다.
