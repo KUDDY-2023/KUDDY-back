@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kuddy.apiserver.profile.dto.MemberAreaDto;
+import com.kuddy.apiserver.profile.dto.response.MemberAreaDto;
 import com.kuddy.common.profile.domain.Area;
 import com.kuddy.common.profile.domain.Profile;
 import com.kuddy.common.profile.domain.ProfileArea;

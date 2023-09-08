@@ -2,7 +2,6 @@ package com.kuddy.common.meetup.domain;
 
 import java.util.Arrays;
 
-import com.kuddy.common.member.domain.RoleType;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,13 +9,14 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MeetupStatus {
-	NOT_ACCEPT("0", "Not_Accepted"),
-	ACCEPTED("1", "Accepted"),
-	REFUSED("2", "Refused"),
-	KUDDY_CANCEL("3", "Kuddy_Canceled"),
-	TRAVELER_CANCEL("4","Traveler_Canceled"),
-	COMPLETED("5", "Completed"),
-	PAYED("6", "Payed");
+	NOT_ACCEPT("0", "NOT_ACCEPT"),
+	ACCEPTED("1", "ACCEPTED"),
+	REFUSED("2", "REFUSED"),
+	KUDDY_CANCEL("3", "KUDDY_CANCEL"),
+	TRAVELER_CANCEL("4","TRAVELER_CANCEL"),
+	COMPLETED("5", "COMPLETED"),
+	PAYED("6", "PAYED"),
+	UNKNOWN("-1", "UNKNOWN");
 	private final String code;
 	private final String name;
 
@@ -26,4 +26,6 @@ public enum MeetupStatus {
 			.findAny()
 			.orElse(NOT_ACCEPT);
 	}
+
+
 }

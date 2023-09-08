@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kuddy.apiserver.profile.dto.MemberLanguageDto;
+import com.kuddy.apiserver.profile.dto.response.MemberLanguageDto;
 import com.kuddy.common.profile.domain.Language;
 import com.kuddy.common.profile.domain.Profile;
 import com.kuddy.common.profile.domain.ProfileLanguage;

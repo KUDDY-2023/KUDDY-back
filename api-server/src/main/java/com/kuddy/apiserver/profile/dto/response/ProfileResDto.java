@@ -1,11 +1,7 @@
-package com.kuddy.apiserver.profile.dto;
+package com.kuddy.apiserver.profile.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kuddy.common.member.domain.Member;

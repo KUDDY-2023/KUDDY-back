@@ -1,14 +1,24 @@
 package com.kuddy.apiserver.profile.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kuddy.apiserver.member.service.MemberService;
-import com.kuddy.apiserver.profile.dto.InterestsDto;
-import com.kuddy.apiserver.profile.dto.ProfileReqDto;
+import com.kuddy.apiserver.profile.dto.response.InterestsDto;
+import com.kuddy.apiserver.profile.dto.response.ProfileListResDto;
+import com.kuddy.apiserver.profile.dto.request.ProfileReqDto;
+
+import com.kuddy.apiserver.profile.dto.response.ProfileThumbnailResDto;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.page.PageInfo;
 import com.kuddy.common.profile.domain.Profile;
 import com.kuddy.common.profile.domain.ProfileArea;
 import com.kuddy.common.profile.domain.ProfileLanguage;
@@ -16,6 +26,8 @@ import com.kuddy.common.profile.exception.DuplicateProfileException;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
 
 import com.kuddy.common.profile.repository.ProfileRepository;
+import com.kuddy.common.response.StatusEnum;
+import com.kuddy.common.response.StatusResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +41,7 @@ public class ProfileService {
 	private final ProfileLanguageService profileLanguageService;
 	private final MemberService memberService;
 	private final ProfileAreaService profileAreaService;
+	private final ProfileQueryService profileQueryService;
 
 	public Long create(Member member, ProfileReqDto.Create reqDto){
 		if(existsProfileByMember(member)){
@@ -66,7 +79,7 @@ public class ProfileService {
 		return profile;
 	}
 
-	private void setInterests(Profile profile, InterestsDto reqDto){
+	public void setInterests(Profile profile, InterestsDto reqDto){
 
 		profile.setActivitiesInvestmentTechs(reqDto.getActivitiesInvestmentTech());
 		profile.setArtBeauties(reqDto.getArtBeauty());
@@ -77,6 +90,36 @@ public class ProfileService {
 		profile.setHobbies(reqDto.getHobbiesInterests());
 		profile.setSports(reqDto.getSports());
 		profile.setWellbeing(reqDto.getWellbeing());
+	}
+
+	public Page<Profile> getKuddyProfiles(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return profileQueryService.findAllExcludeNotKuddyOrderedByKuddyLevel(pageable);
+	}
+	public Page<Profile> getTravelerProfiles(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return profileQueryService.findProfilesTravelerOrderedByCreatedDate(pageable);
+	}
+
+	public ResponseEntity<StatusResponse> changePageToResponse(Page<Profile> profilePage, int page, int size) {
+		List<Profile> profileList = profilePage.getContent();
+		List<ProfileThumbnailResDto> response = profileList.stream()
+			.map(ProfileThumbnailResDto::of)
+			.collect(Collectors.toList());
+
+		//페이지가 1장일 경우 요소의 총 개수가 size
+		if (profilePage.getTotalPages() == 1) {
+			size = (int) profilePage.getTotalElements();
+		}
+
+		PageInfo pageInfo = new PageInfo(page, size, profilePage.getTotalElements(),profilePage.getTotalPages());
+		ProfileListResDto profileListResDto = new ProfileListResDto(response, pageInfo);
+
+		return ResponseEntity.ok(StatusResponse.builder()
+			.status(StatusEnum.OK.getStatusCode())
+			.message(StatusEnum.OK.getCode())
+			.data(profileListResDto)
+			.build());
 	}
 
 

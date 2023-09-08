@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.kuddy.common.chat.exception.NotChatRoomOwnerException;
+import com.kuddy.common.chat.exception.NotMatchLoginMemberEmailException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -113,7 +115,7 @@ public class ChatService {
 	@Transactional(readOnly = true)
 	public void sendMessage(Message message, String authorization) {
 		String email = jwtProvider.tokenToEmail(authorization);
-		Member findMember = memberRepository.findByEmail(email).orElseThrow();
+		Member findMember = findByEmail(email);
 		// 채팅방에 모든 유저가 참여중인지 확인한다.
 		boolean isConnectedAll = chatRoomService.isAllConnected(message.getRoomId());
 		// 1:1 채팅이므로 2명 접속시 readCount 0, 한명 접속시 1
@@ -127,8 +129,7 @@ public class ChatService {
 
 	public Message sendNotificationAndSaveMessage(Message message) {
 		// 메시지 저장과 알람 발송을 위해 메시지를 보낸 회원을 조회
-		Member findMember = memberRepository.findByEmail(message.getSenderEmail())
-			.orElseThrow(IllegalStateException::new);
+		Member findMember = findByEmail(message.getSenderEmail());
 		Member receiveMember = chatQueryService.getReceiverNumber(message.getRoomId(), message.getSenderName());
 		// 상대방이 읽지 않은 경우에만 알림 전송
 		if (message.getReadCount() == 1) {
@@ -155,7 +156,6 @@ public class ChatService {
 	public void updateMessage(Message message, String authorization) throws IOException {
 		String email = jwtProvider.tokenToEmail(authorization);
 		checkvalidateMember(email, message.getRoomId());
-		//채팅을 찾아 상태 변경해준다.
 		if(message.getContentType().equals(MEETUP_TYPE)){
 			Chatting chatting = mongoChatRepository.findById(message.getId()).orElseThrow(ChatNotFoundException::new);
 			chatting.setAppointmentTime(message.getAppointmentTime());
@@ -163,8 +163,9 @@ public class ChatService {
 			chatting.setSpotName(message.getSpotName());
 			chatting.setMeetStatus(message.getMeetStatus());
 			chatting.setPrice(message.getPrice());
+			chatting.setReadCount(message.getReadCount());
 			meetupService.update(message);
-			sender.send(ConstantUtil.KAFKA_TOPIC + message.getRoomId(), message);
+			sender.send(ConstantUtil.KAFKA_TOPIC, message);
 		}
 	}
 	private void checkvalidateMember(String email, Long roomId){
@@ -189,9 +190,7 @@ public class ChatService {
 
 	// 읽지 않은 메시지 채팅장 입장시 읽음 처리
 	public void updateCountAllZero(Long chatRoomId, String email) {
-		Member findMember = memberRepository.findByEmail(email)
-			.orElseThrow(MemberNotFoundException::new);
-
+		Member findMember = findByEmail(email);
 		Update update = new Update().set("readCount", 0);
 		Query query = new Query(Criteria.where("roomId").is(chatRoomId)
 			.and("senderName").ne(findMember.getNickname()));
@@ -211,5 +210,33 @@ public class ChatService {
 	@Transactional(readOnly = true)
 	public Room findByRoomId(Long roomId){
 		return roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
+	}
+
+	public String checkRoomIdOwnerValidation(Member member, Long roomId) {
+		boolean isValid = roomRepository.existsByRoomIdAndAnyMember(roomId, member);
+		if(isValid){
+			return member.getEmail();
+		}
+		else{
+			throw new NotChatRoomOwnerException();
+		}
+	}
+
+	public void checkEmailValidation(String loginEmail, String email) {
+		if(!loginEmail.equals(email)){
+			throw new NotMatchLoginMemberEmailException();
+		}
+	}
+
+	@Transactional(readOnly = true)
+	public Room findByMembers(Member member, String email) {
+		Member targetMember = findByEmail(email);
+		return roomRepository.findRoomByMembers(member, targetMember);
+	}
+
+	@Transactional(readOnly = true)
+	public Member findByEmail(String email){
+		return memberRepository.findByEmail(email)
+				.orElseThrow(MemberNotFoundException::new);
 	}
 }

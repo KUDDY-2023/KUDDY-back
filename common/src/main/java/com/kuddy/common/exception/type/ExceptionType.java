@@ -4,9 +4,7 @@ package com.kuddy.common.exception.type;
 import java.util.Arrays;
 import java.util.Objects;
 
-import com.kuddy.common.chat.exception.ChatNotFoundException;
-import com.kuddy.common.chat.exception.ChatRoomNotFoundException;
-import com.kuddy.common.chat.exception.RoomNotFoundException;
+import com.kuddy.common.chat.exception.*;
 
 import com.kuddy.common.comment.exception.NoAuthorityCommentRemove;
 import com.kuddy.common.comment.exception.NoCommentExistsException;
@@ -66,7 +64,7 @@ public enum ExceptionType {
 
 	//권한 관련 - C1***
   
-	EMPTY_TOKEN_EXCEPTION("C1003", "토큰이 존재하지 않습니다.", EmptyTokenException .class),
+	EMPTY_TOKEN_EXCEPTION("C1003", "토큰이 존재하지 않습니다.", EmptyTokenException.class),
 	INVALID_TOKEN_TYPE_EXCEPTION("C1004", "토큰 타입이 올바르지 않습니다.", InvalidTokenTypeException .class),
 	EXPIRED_TOKEN_EXCEPTION("C1005", "토큰이 유효하지 않습니다.", ExpiredTokenException.class),
 	NOT_AUTHOR_EXCEPTION("C1007", "작성자가 아니므로 권한이 없습니다.", NotAuthorException.class),
@@ -116,6 +114,8 @@ public enum ExceptionType {
 	CHAT_ROOM_NOT_FOUND_EXCEPTION("C7000", "해당 접속한 채팅방을 찾을 수 없습니다.", ChatRoomNotFoundException.class),
 	ROOM_NOT_FOUND_EXCEPTION("C7001", "해당 채팅방을 찾을 수 없습니다.", RoomNotFoundException.class),
 	CHAT_NOT_FOUND_EXCEPTION("C7002", "해당 채팅을 찾을 수 없습니다.", ChatNotFoundException.class),
+	NOT_CHATROOM_OWNER_EXCEPTION("C7003", "해당 roomId의 주인이 아니므로 권한이 없습니다.", NotChatRoomOwnerException.class),
+	NOT_MATCH_LOGINMEMBER_EXCEPTION("C7004", "해당 email과 로그인한 유저의 email이 일치하지 않습니다.", NotMatchLoginMemberEmailException.class),
 
 	//신고 관련 - C9***
 	REPORT_NOT_FOUND_EXCEPTION("C9000", "해당 신고 기록을 찾을 수 없습니다.", ReportNotFoundException.class),

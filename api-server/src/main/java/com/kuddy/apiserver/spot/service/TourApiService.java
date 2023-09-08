@@ -52,7 +52,7 @@ public class TourApiService {
         try {
             URL url = new URL(BASE_URL + "locationBasedList1?numOfRows=" +
                     size + "&pageNo=" + page +
-                    "&MobileOS=ETC&MobileApp=Kuddy&_type=json&listYN=Y&arrange=A&mapX=" +
+                    "&MobileOS=ETC&MobileApp=Kuddy&_type=json&listYN=Y&mapX=" +
                     mapX + "&mapY=" + mapY +
                     "&radius=2000&serviceKey="
                     + SECRET_KEY);
