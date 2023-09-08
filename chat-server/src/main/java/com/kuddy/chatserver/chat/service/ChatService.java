@@ -155,11 +155,6 @@ public class ChatService {
 	public void updateMessage(Message message, String authorization){
 		String email = jwtProvider.tokenToEmail(authorization);
 		checkvalidateMember(email, message.getRoomId());
-		// 채팅방에 모든 유저가 참여중인지 확인한다.
-		boolean isConnectedAll = chatRoomService.isAllConnected(message.getRoomId());
-		// 1:1 채팅이므로 2명 접속시 readCount 0, 한명 접속시 1
-		Integer readCount = isConnectedAll ? 0 : 1;
-		//채팅을 찾아 상태 변경해준다.
 		if(message.getContentType().equals(MEETUP_TYPE)){
 			Chatting chatting = mongoChatRepository.findById(message.getId()).orElseThrow(ChatNotFoundException::new);
 			chatting.setAppointmentTime(message.getAppointmentTime());
@@ -167,7 +162,7 @@ public class ChatService {
 			chatting.setSpotName(message.getSpotName());
 			chatting.setMeetStatus(message.getMeetStatus());
 			chatting.setPrice(message.getPrice());
-			chatting.setReadCount(readCount);
+			chatting.setReadCount(message.getReadCount());
 			meetupService.update(message);
 			sender.send(ConstantUtil.KAFKA_TOPIC, message);
 		}
