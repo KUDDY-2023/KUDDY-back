@@ -97,16 +97,12 @@ public class SpotService {
     @Transactional(readOnly = true)
     public ResponseEntity<StatusResponse> getTrendMagazine() {
         List<Spot> spotList = spotRepository.findTop5ByOrderByNumOfHeartsDesc();
-        List<SpotResDto> respone = new ArrayList<>();
+        List<SpotResDto> response = new ArrayList<>();
         for (Spot spot : spotList) {
             SpotResDto spotResDto = SpotResDto.of(spot);
-            respone.add(spotResDto);
+            response.add(spotResDto);
         }
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(respone)
-                .build());
+        return returnStatusResponse(response);
     }
 
     //조회한 spot 리스트와 페이지 정보를 공통응답형식으로 반환하도록 변환하는 메소드
@@ -121,11 +117,7 @@ public class SpotService {
         PageInfo pageInfo = new PageInfo(page, spotPage.getNumberOfElements(), spotPage.getTotalElements(), spotPage.getTotalPages());
         SpotPageResDto spotPageResDto = new SpotPageResDto(response, pageInfo);
 
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(spotPageResDto)
-                .build());
+        return returnStatusResponse(spotPageResDto);
     }
 
 
@@ -139,11 +131,7 @@ public class SpotService {
         PageInfo pageInfo = new PageInfo(pageNo, numOfRows, totalCount, (int) (totalCount / 20 + 1));
         SpotPageResDto spotPageResDto = new SpotPageResDto(response, pageInfo);
 
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(spotPageResDto)
-                .build());
+        return returnStatusResponse(spotPageResDto);
     }
 
     //각 관광지 상세 정보 조회(사진 여러장 + 찜한 멤버들 + 위치기반추천)
@@ -185,11 +173,15 @@ public class SpotService {
                 (String) item.get("homepage"), (String) item.get("addr1"), (String) item.get("zipcode"), (Object) additionalInfo,
                 recommendationList, imageList, kuddyList, travelerList);
 
+        return returnStatusResponse(spotDetailResDto);
+    }
+
+    private ResponseEntity<StatusResponse> returnStatusResponse(Object data) {
         return ResponseEntity.ok(StatusResponse.builder()
-                        .status(StatusEnum.OK.getStatusCode())
-                        .message(StatusEnum.OK.getCode())
-                        .data(spotDetailResDto)
-                        .build());
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(data)
+                .build());
     }
 
     //JSONObject에서 필요한 정보만 담아 List로 반환하는 반복적인 코드
