@@ -35,6 +35,7 @@ public class ChatController {
 	private final ChatRoomService chatRoomService;
 	private static final String CHAT_ROOM_DISCONNECTED= "성공적으로 접속 해제했습니다.";
 
+
 	@PostMapping("/chatrooms")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<StatusResponse> createChatRoom(@RequestBody @Valid final ChatReqDto requestDto, @AuthUser Member member) {
@@ -80,6 +81,17 @@ public class ChatController {
 			.message(StatusEnum.OK.getCode())
 			.data(response)
 			.build());
+	}
+	@GetMapping("/chatrooms/check")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<StatusResponse> hasChatRoom(@AuthUser Member member,@RequestParam("email") String email) {
+		Room room = chatService.findByMembers(member, email);
+		ChatRoomResDto response = new ChatRoomResDto(room);
+		return ResponseEntity.ok(StatusResponse.builder()
+				.status(StatusEnum.OK.getStatusCode())
+				.message(StatusEnum.OK.getCode())
+				.data(response)
+				.build());
 	}
 
 	@MessageMapping("/message")
