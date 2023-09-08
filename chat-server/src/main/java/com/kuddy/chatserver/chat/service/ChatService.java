@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.kuddy.common.chat.exception.NotChatRoomOwnerException;
+import com.kuddy.common.chat.exception.NotMatchLoginMemberEmailException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -189,8 +191,7 @@ public class ChatService {
 	// 읽지 않은 메시지 채팅장 입장시 읽음 처리
 	public void updateCountAllZero(Long chatRoomId, String email) {
 		Member findMember = memberRepository.findByEmail(email)
-			.orElseThrow(MemberNotFoundException::new);
-
+				.orElseThrow(MemberNotFoundException::new);
 		Update update = new Update().set("readCount", 0);
 		Query query = new Query(Criteria.where("roomId").is(chatRoomId)
 			.and("senderName").ne(findMember.getNickname()));
@@ -211,4 +212,21 @@ public class ChatService {
 	public Room findByRoomId(Long roomId){
 		return roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
 	}
+
+	public String checkRoomIdOwnerValidation(Member member, Long roomId) {
+		boolean isValid = roomRepository.existsByRoomIdAndAnyMember(roomId, member);
+		if(isValid){
+			return member.getEmail();
+		}
+		else{
+			throw new NotChatRoomOwnerException();
+		}
+	}
+
+	public void checkEmailValidation(String loginEmail, String email) {
+		if(!loginEmail.equals(email)){
+			throw new NotMatchLoginMemberEmailException();
+		}
+	}
+
 }
