@@ -29,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.kuddy.common.spot.repository.SpotSpecification.*;
-
 
 @Service
 @Transactional
@@ -40,6 +40,7 @@ public class SpotService {
 
     private final SpotRepository spotRepository;
     private final HeartRepository heartRepository;
+    private final SpotQueryService spotQueryService;
 
     //JSON 응답값 중 필요한 정보(이름, 지역, 카테고리, 사진, 고유id)만 db에 저장
     public void changeAndSave(JSONArray spotArr) {
@@ -227,14 +228,17 @@ public class SpotService {
     public Page<Spot> getSpotListBySearch(SpotSearchReqDto spotSearchReqDto, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("numOfHearts").descending());
 
-        Specification<Spot> spec = Specification.where(containingName(spotSearchReqDto.getKeyword()));
+        Specification<Spot> spec = (root, query, criteriaBuilder) -> null;
         if(!spotSearchReqDto.getKeyword().isEmpty()) {
-            spec = spec.and(containingName(spotSearchReqDto.getKeyword()));
-            System.out.println(spec);
+            String searchKeyword = spotSearchReqDto.getKeyword().replaceAll(" ", "");
+            List<Spot> spotList = spotQueryService.findSpotByNameContains(searchKeyword);
+            List<Long> contentIdList = spotList.stream()
+                    .map(Spot::getContentId)
+                    .collect(Collectors.toList());
+            spec = spec.and(matchSpotList(contentIdList));
         }
         if(!spotSearchReqDto.getCategory().isEmpty()) {
             spec = spec.and(equalCategory(Category.valueOf(spotSearchReqDto.getCategory().toUpperCase())));
-            System.out.println(spec);
         }
         if(!spotSearchReqDto.getDistrict().isEmpty()) {
             List<District> districtList = new ArrayList<>();
@@ -242,9 +246,7 @@ public class SpotService {
                 districtList.add(District.valueOf(districtName.toUpperCase()));
             }
             spec = spec.and(belongsToDistrict(districtList));
-            System.out.println(spec);
         }
-
         return spotRepository.findAll(spec, pageable);
     }
 }
