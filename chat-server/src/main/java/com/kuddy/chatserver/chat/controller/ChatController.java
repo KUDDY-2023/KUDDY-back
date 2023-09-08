@@ -95,7 +95,7 @@ public class ChatController {
 	}
 
 	// 채팅방 접속 끊기
-	@PostMapping("/chatrooms/{roomId}")
+	@DeleteMapping("/chatrooms/{roomId}")
 	public ResponseEntity<StatusResponse> disconnectChat(@PathVariable("roomId") Long roomId,
 		@RequestParam("email") String email) {
 		chatRoomService.disconnectChatRoom(roomId, email);
