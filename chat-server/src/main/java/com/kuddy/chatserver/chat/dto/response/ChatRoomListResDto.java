@@ -37,7 +37,7 @@ public class ChatRoomListResDto {
 		this.chatRoomId = chatRoomId;
 		this.createMember = createMember;
 		this.joinMember = joinMember;
-		this.regDate = regDate.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+		this.regDate = regDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
 		this.participant= participant;
 	}
 
@@ -62,7 +62,7 @@ public class ChatRoomListResDto {
 		@Builder
 		public LatestMessage(String context, LocalDateTime sendAt) {
 			this.context = context;
-			this.sendAt = sendAt.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+			this.sendAt = sendAt.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
 		}
 	}
 }

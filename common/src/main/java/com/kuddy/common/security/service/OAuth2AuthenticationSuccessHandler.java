@@ -56,9 +56,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 authToken.getName());
 
         String oauthAccessToken = auth2AuthorizedClient.getAccessToken().getTokenValue();
-        log.info("google access token:" + oauthAccessToken);
+        log.info("oauth access token:" + oauthAccessToken);
 
         OAuth2RefreshToken refreshToken = auth2AuthorizedClient.getRefreshToken();
+        log.info("oauth refresh token: " + refreshToken);
 
         ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
 
@@ -70,18 +71,18 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             log.info("kakao");
             oauthRefreshToken = refreshToken != null
                     ? refreshToken.getTokenValue()
-                    : redisService.getData("GoogleRefreshToken:" + email);
-            redisService.setData("KakaoAccessToken:" + email, oauthAccessToken, googleAccessTokenValidationMs);
-            redisService.setData("KakaoRefreshToken:" + email, oauthRefreshToken, googleRefreshTokenValidationMs);
+                    : redisService.getData("KakaoRefreshToken:" + email);
+            redisService.setData("KakaoAccessToken:" + email, oauthAccessToken, kakaoAccessTokenValidationMs);
+            redisService.setData("KakaoRefreshToken:" + email, oauthRefreshToken, kakaoRefreshTokenValidationMs);
         } else if (providerType.equals(ProviderType.GOOGLE)) {
             GoogleUserInfo googleUserInfo = new GoogleUserInfo(attributes);
             email = googleUserInfo.getEmail();
             log.info("google");
             oauthRefreshToken = refreshToken != null
                     ? refreshToken.getTokenValue()
-                    : redisService.getData("KakaoRefreshToken:" + email);
-            redisService.setData("GoogleAccessToken:" + email, oauthAccessToken, kakaoAccessTokenValidationMs);
-            redisService.setData("GoogleRefreshToken:" + email, oauthRefreshToken, kakaoRefreshTokenValidationMs);
+                    : redisService.getData("GoogleRefreshToken:" + email);
+            redisService.setData("GoogleAccessToken:" + email, oauthAccessToken, googleAccessTokenValidationMs);
+            redisService.setData("GoogleRefreshToken:" + email, oauthRefreshToken, googleRefreshTokenValidationMs);
         } else {
             Map<String, Object> providerData = (Map<String, Object>) attributes.get(providerType.name().toLowerCase());
             if (providerData != null) {
