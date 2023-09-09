@@ -1,5 +1,6 @@
 package com.kuddy.chatserver.chat.controller;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -100,7 +101,7 @@ public class ChatController {
 	}
 
 	@MessageMapping("/updateMessage")
-	public void updateMessage(@Valid Message updatedMessage, @Header("Authorization") final String accessToken) {
+	public void updateMessage(@Valid Message updatedMessage, @Header("Authorization") final String accessToken) throws IOException {
 		// 데이터베이스 상태 업데이트 또는 서비스 로직 실행
 		chatService.updateMessage(updatedMessage, accessToken);
 	}

@@ -17,6 +17,8 @@ import com.kuddy.common.community.exception.NoDistrictExistsException;
 import com.kuddy.common.community.exception.WrongImageFormatException;
 import com.kuddy.common.exception.custom.ApplicationException;
 import com.kuddy.common.meetup.exception.NotAdminException;
+import com.kuddy.common.notification.exception.GoogleCalendarAPIException;
+import com.kuddy.common.notification.exception.KakaoCalendarAPIException;
 import com.kuddy.common.profile.exception.DuplicateProfileException;
 import com.kuddy.common.review.exception.NoAuthorityToDeleteReview;
 import com.kuddy.common.review.exception.NotKuddyException;
@@ -85,7 +87,7 @@ public enum ExceptionType {
 	SPOT_NOT_FOUND_EXCEPTION("C4001", "해당 관광지 정보를 찾을 수 없습니다.",SpotNotFoundException.class),
 	HEART_NOT_FOUND_EXCEPTION("C4002", "해당 관광지에 대한 찜 정보를 찾을 수 없습니다.", HeartNotFoundException.class),
 	ALREADY_LIKED_EXCEPTION("C4003", "이미 찜한 관광지입니다.", AlreadyLikedException.class),
-        NO_SPOT_EXISTS_EXCEPTION("C4004", "존재하지 않는 spot id입니다.", NoSpotExists.class),
+	NO_SPOT_EXISTS_EXCEPTION("C4004", "존재하지 않는 spot id입니다.", NoSpotExists.class),
 
 	//회원 관련 - C2***
 	INVALID_NICKNAME_EXCEPTION("C2000", "유효하지 않은 닉네임입니다.", InvalidNicknameException.class),
@@ -135,7 +137,11 @@ public enum ExceptionType {
 
 	//티켓 관련 - C12***
 	TICKET_NOT_FOUNED_EXCEPTION("C12000", "티켓 정보를 찾을 수 없습니다.", TicketNotFoundException.class),
-	ONLY_TRAVELER_REQUEST_EXCEPTION("C12001", "Traveler만 가능한 요청입니다.", OnlyTravelerRequestException.class);
+	ONLY_TRAVELER_REQUEST_EXCEPTION("C12001", "Traveler만 가능한 요청입니다.", OnlyTravelerRequestException.class),
+
+	//알림 관련 - C13***
+	GOOGLE_CALENDAR_API_EXCEPTION("C13000", "Google Calendar API를 불러올 수 없습니다.", GoogleCalendarAPIException.class),
+	KAKAO_CALENDAR_API_EXCEPTION("C13001", "Kakao 톡캘린더 API를 불러올 수 없습니다.", KakaoCalendarAPIException.class);
 
 	private final String errorCode;
 	private final String message;
