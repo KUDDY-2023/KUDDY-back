@@ -15,7 +15,7 @@ public class ItineraryResDto {
     private String title;
     private String content;
     private List<Spot> spots;
-    private Long author_id;
+    private Long authorId;
     private LocalDateTime createdDate;
 
     public static ItineraryResDto of(Post post, List<Spot> spots) {
@@ -24,7 +24,7 @@ public class ItineraryResDto {
                 .title(post.getTitle())
                 .content(post.getContent().length() > 95 ? post.getContent().substring(0, 95) : post.getContent())
                 .spots(spots)
-                .author_id(post.getAuthor().getId())
+                .authorId(post.getAuthor().getId())
                 .createdDate(post.getCreatedDate())
                 .build();
     }
