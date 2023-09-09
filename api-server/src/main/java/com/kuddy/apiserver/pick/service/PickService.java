@@ -23,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PickService {
     private final PickRepository pickRepository;
+    private final PickQueryService pickQueryService;
 
     @Transactional(readOnly = true)
     public ResponseEntity<StatusResponse> findRandomThumbnailList() {
@@ -87,5 +88,11 @@ public class PickService {
                 .message(StatusEnum.OK.getCode())
                 .data(response)
                 .build());
+    }
+
+    public ResponseEntity<StatusResponse> searchPick(String keyword) {
+        String searchKeyword = keyword.replaceAll(" ", "");
+        List<Pick> pickList = pickQueryService.findPickByTitleContains(searchKeyword);
+        return changeThumbnailListToResponse(pickList);
     }
 }
