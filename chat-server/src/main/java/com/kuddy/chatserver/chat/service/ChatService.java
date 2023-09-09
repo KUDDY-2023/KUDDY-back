@@ -180,7 +180,7 @@ public class ChatService {
 
 	public void updateMessage(String email, Long chatRoomNo) {
 		Message message = Message.builder()
-			.contentType("notice")
+			.contentType("NOTI")
 			.roomId(chatRoomNo)
 			.content(email + " 님이 돌아오셨습니다.")
 			.build();
