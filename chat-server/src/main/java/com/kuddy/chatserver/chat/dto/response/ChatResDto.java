@@ -35,7 +35,7 @@ public class ChatResDto {
 		this.senderName = chat.getSenderName();
 		this.contentType = chat.getContentType();
 		this.content = chat.getContent();
-		this.sendDate = chat.getSendDate().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+		this.sendDate = chat.getSendDate().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
 		this.readCount = chat.getReadCount();
 		this.isMine = chat.getSenderName().equals(loginMemberNickname);
 		this.spotContentId = chat.getSpotContentId();
