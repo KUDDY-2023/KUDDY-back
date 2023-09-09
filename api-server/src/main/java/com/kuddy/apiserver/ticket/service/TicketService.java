@@ -11,6 +11,7 @@ import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.member.exception.MemberNotFoundException;
 import com.kuddy.common.member.repository.MemberRepository;
 import com.kuddy.common.profile.domain.Profile;
+import com.kuddy.common.profile.domain.TicketStatus;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
 import com.kuddy.common.profile.repository.ProfileRepository;
 import com.kuddy.common.ticket.domain.Ticket;
@@ -47,6 +48,7 @@ public class TicketService {
 		validateRoleTypeRequest(member);
 		Ticket ticket = findByMember(member);
 		ticket.updateTicketImageUrl(reqDto.getTicketImageUrl());
+		ticket.updateTicketStatus(TicketStatus.UNDER_REVIEW);
 		return ticket;
 	}
 
