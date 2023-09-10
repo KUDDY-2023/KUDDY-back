@@ -70,7 +70,7 @@ public class SpotController {
     }
 
     //장소 검색(키워드+카테고리+지역구 각각 필터 가능, 지역구는 다중선택)
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<StatusResponse> searchSpot(@RequestBody SpotSearchReqDto spotSearchReqDto, @RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
         //필터링 조건 없으면 전체 조회
         if (spotSearchReqDto.getKeyword().isEmpty() && spotSearchReqDto.getCategory().isEmpty() && spotSearchReqDto.getDistrict().isEmpty()) {
