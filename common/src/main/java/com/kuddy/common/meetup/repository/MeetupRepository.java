@@ -1,5 +1,6 @@
 package com.kuddy.common.meetup.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,9 @@ public interface MeetupRepository extends JpaRepository<Meetup, Long> {
 
 	@Query("SELECT m FROM Meetup m WHERE m.traveler.id = :travelerId AND m.meetupStatus NOT IN :excludedStatus ORDER BY m.appointment DESC")
 	List<Meetup> findAllByTravelerAndMeetupStatusNotOrderByDesc(@Param("travelerId") Long travelerId, @Param("excludedStatus") MeetupStatus excludedStatus);
+
+	@Query("SELECT e FROM Meetup e WHERE DATE(e.appointment) = DATE(:targetDate)")
+	List<Meetup> findByAppointment(@Param("targetDate")LocalDateTime targetDate);
 
 
 }
