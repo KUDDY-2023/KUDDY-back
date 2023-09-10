@@ -56,13 +56,12 @@ public class SpotController {
     }
 
     @GetMapping("/{contentId}")
-    public ResponseEntity<StatusResponse> getSpotDetail(@PathVariable Long contentId, @RequestParam(value = "x") double mapX, @RequestParam(value = "y") double mapY) {
+    public ResponseEntity<StatusResponse> getSpotDetail(@PathVariable Long contentId) {
         Spot spot = spotService.findSpotByContentId(contentId);
         Object commonDetail = tourApiService.getCommonDetail(spot);
         Object detailInfo = tourApiService.getDetailInfo(spot);
-        JSONObject nearbySpots = tourApiService.getLocationBasedApi(1, 5, mapX, mapY);
         JSONArray imageArr = tourApiService.getDetailImages(contentId);
-        return spotService.responseDetailInfo(commonDetail, detailInfo, nearbySpots, imageArr, spot);
+        return spotService.responseDetailInfo(commonDetail, detailInfo, imageArr, spot);
     }
 
     @GetMapping("/trend")

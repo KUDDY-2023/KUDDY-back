@@ -26,14 +26,12 @@ public class SpotDetailResDto {
     private String location;
     private String post;
     private Object additionalInfo;
-    private List<SpotResDto> nearbyPlace;
     private List<String> imageList;
     private List<MemberResDto> kuddyList;
     private List<MemberResDto> travelerList;
 
-    public static SpotDetailResDto of(Spot spot, String about, String phoneNum, String homepage, String location, String post, Object additionalInfo, List<SpotResDto> nearbyPlace, List<String> imageList, List<MemberResDto> kuddyList, List<MemberResDto> travelerList){
+    public static SpotDetailResDto of(Spot spot, String about, String phoneNum, String homepage, String location, String post, Object additionalInfo, List<String> imageList, List<MemberResDto> kuddyList, List<MemberResDto> travelerList){
         return SpotDetailResDto.builder()
-//                .id(spot.getId())
                 .name(spot.getName())
                 .contentId(spot.getContentId())
                 .district(spot.getDistrict().getArea())
@@ -45,7 +43,6 @@ public class SpotDetailResDto {
                 .location(location)
                 .post(post)
                 .additionalInfo(additionalInfo)
-                .nearbyPlace(nearbyPlace)
                 .imageList(imageList)
                 .kuddyList(kuddyList)
                 .travelerList(travelerList)
