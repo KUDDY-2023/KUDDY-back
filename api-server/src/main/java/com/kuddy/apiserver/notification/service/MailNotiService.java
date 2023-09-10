@@ -30,7 +30,7 @@ public class MailNotiService {
     private final SpringTemplateEngine templateEngine;
 
 
-    @Scheduled(cron = "0 26 14 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Seoul")
     public void sendReviewRequestEmail() throws MessagingException {
         LocalDateTime targetDate = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
                 .withHour(0)
