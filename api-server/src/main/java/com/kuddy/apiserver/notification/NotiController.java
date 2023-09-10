@@ -1,6 +1,7 @@
 package com.kuddy.apiserver.notification;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kuddy.apiserver.notification.service.MailNotiService;
 import com.kuddy.common.meetup.domain.Meetup;
 import com.kuddy.common.meetup.repository.MeetupRepository;
 import com.kuddy.common.member.domain.Member;
@@ -16,52 +17,59 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/notification")
+@RequestMapping("/api/v1/notification/test")
 @RequiredArgsConstructor
 public class NotiController {
     private final KakaoCalendarService kakaoCalendarService;
     private final MeetupRepository meetupRepository;
     private final CalendarRepository calendarRepository;
     private final GoogleCalendarService googleCalendarService;
+    private final MailNotiService mailNotiService;
 
-    @PostMapping("/{chatId}")
-    public void createEvent(@AuthUser Member member, @PathVariable String chatId) throws JsonProcessingException {
-        Meetup meetup = meetupRepository.findByChatId(chatId).get();
-        kakaoCalendarService.createKakaoEvent(member, meetup);
-    }
-
-    @DeleteMapping("/{chatId}")
-    public void deleteEvent(@AuthUser Member member, @PathVariable String chatId) throws JsonProcessingException {
-        Meetup meetup = meetupRepository.findByChatId(chatId).get();
-        List<Calendar> calendars = calendarRepository.findAllByMeetup_Id(meetup.getId());
-        log.info("number of events : " + String.valueOf(calendars.size()));
-        for(Calendar event : calendars){
-            member = event.getMember();
-            if(member.getProviderType().equals(ProviderType.KAKAO)){
-                kakaoCalendarService.deleteCalendarEvent(event);
-            }
-        }
-    }
-
-    @PostMapping("/google/{chatId}")
-    public void createGoogleEvent(@AuthUser Member member, @PathVariable String chatId) throws IOException {
-        Meetup meetup = meetupRepository.findByChatId(chatId).get();
-        googleCalendarService.createGoogleEvent(member, meetup);
-    }
-
-    @DeleteMapping("/google")
-    public void deleteGoogleEvent(@AuthUser Member member, @PathVariable String chatId) throws JsonProcessingException {
-        Meetup meetup = meetupRepository.findByChatId(chatId).get();
-        List<Calendar> calendars = calendarRepository.findAllByMeetup_Id(meetup.getId());
-        log.info("number of events : " + String.valueOf(calendars.size()));
-        for(Calendar event : calendars){
-            googleCalendarService.deleteCalendarEvent(event);
-        }
-    }
+//    @PostMapping("/{chatId}")
+//    public void createEvent(@AuthUser Member member, @PathVariable String chatId) throws JsonProcessingException {
+//        Meetup meetup = meetupRepository.findByChatId(chatId).get();
+//        kakaoCalendarService.createKakaoEvent(member, meetup);
+//    }
+//
+//    @DeleteMapping("/{chatId}")
+//    public void deleteEvent(@AuthUser Member member, @PathVariable String chatId) throws JsonProcessingException {
+//        Meetup meetup = meetupRepository.findByChatId(chatId).get();
+//        List<Calendar> calendars = calendarRepository.findAllByMeetup_Id(meetup.getId());
+//        log.info("number of events : " + String.valueOf(calendars.size()));
+//        for(Calendar event : calendars){
+//            member = event.getMember();
+//            if(member.getProviderType().equals(ProviderType.KAKAO)){
+//                kakaoCalendarService.deleteCalendarEvent(event);
+//            }
+//        }
+//    }
+//
+//    @PostMapping("/google/{chatId}")
+//    public void createGoogleEvent(@AuthUser Member member, @PathVariable String chatId) throws IOException {
+//        Meetup meetup = meetupRepository.findByChatId(chatId).get();
+//        googleCalendarService.createGoogleEvent(member, meetup);
+//    }
+//
+//    @DeleteMapping("/google")
+//    public void deleteGoogleEvent(@AuthUser Member member, @PathVariable String chatId) throws JsonProcessingException {
+//        Meetup meetup = meetupRepository.findByChatId(chatId).get();
+//        List<Calendar> calendars = calendarRepository.findAllByMeetup_Id(meetup.getId());
+//        log.info("number of events : " + String.valueOf(calendars.size()));
+//        for(Calendar event : calendars){
+//            googleCalendarService.deleteCalendarEvent(event);
+//        }
+//    }
+//
+//    @PostMapping("/email")
+//    public void sendMail() throws MessagingException {
+//        mailNotiService.sendReviewRequestEmail();
+//    }
 
 }
