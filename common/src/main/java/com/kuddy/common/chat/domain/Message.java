@@ -64,14 +64,13 @@ public class Message implements Serializable { //Kafka와 Stomp Client 설정
 			.roomId(roomId)
 			.contentType(contentType)
 			.content(content)
+			.spotName(spotName != null ? spotName : null)
+			.spotContentId(spotContentId != null ? spotContentId : null)
+			.appointmentTime(appointmentTime != null ? appointmentTime : null)
+			.meetStatus(meetStatus != null ? meetStatus : null)
+			.price(price != null ? price : null)
 			.sendDate(Instant.ofEpochMilli(sendTime).atZone(ZoneId.of("UTC")).toLocalDateTime())
 			.readCount(readCount)
-			.appointmentTime(appointmentTime)
-			.meetStatus(meetStatus)
-			.price(price)
-			.spotName(spotName)
-			.spotContentId(spotContentId)
-
 			.build();
 	}
 }
