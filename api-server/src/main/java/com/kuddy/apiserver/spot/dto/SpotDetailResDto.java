@@ -19,7 +19,8 @@ public class SpotDetailResDto {
     private String district;
     private String category;
     private Long heart;
-
+    private String mapX;
+    private String mapY;
     private String about;
     private String phoneNum;
     private String homepage;
@@ -37,6 +38,8 @@ public class SpotDetailResDto {
                 .district(spot.getDistrict().getArea())
                 .category(spot.getCategory().getType())
                 .heart(spot.getNumOfHearts())
+                .mapX(spot.getMapX())
+                .mapY(spot.getMapY())
                 .about(about)
                 .phoneNum(phoneNum)
                 .homepage(homepage)

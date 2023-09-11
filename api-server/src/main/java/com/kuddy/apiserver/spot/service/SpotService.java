@@ -66,6 +66,8 @@ public class SpotService {
                         .category(Category.valueOf(contentType))
                         .imageUrl((String) item.get("firstimage"))
                         .numOfHearts(0L)
+                        .mapX((String) item.get("mapx"))
+                        .mapY((String) item.get("mapy"))
                         .build());
             }
         }
