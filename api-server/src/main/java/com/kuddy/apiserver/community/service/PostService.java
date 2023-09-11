@@ -122,6 +122,24 @@ public class PostService {
             return ResponseEntity.ok(createStatusResponse(resDto));
         }
     }
+    @Transactional(readOnly = true)
+    public ResponseEntity<StatusResponse> getPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(NoPostExistException::new);
+        if(post.getPostType().equals(PostType.ITINERARY)){
+            List<Long> contentIdList = convertStringToList(post.getItinerarySpots());
+            List<Spot> spots = spotRepository.findAllByContentIdIn(contentIdList);
+            ItineraryResDto resDto = ItineraryResDto.of(post, spots);
+            return ResponseEntity.ok(createStatusResponse(resDto));
+        }else{
+            List<String> urlList = postImageRepository.findAllByPost(post)
+                    .stream()
+                    .map(PostImage::getFileUrl)
+                    .collect(Collectors.toList());
+
+            TalkingBoardResDto resDto =  TalkingBoardResDto.of(post, urlList);
+            return ResponseEntity.ok(createStatusResponse(resDto));
+        }
+    }
 
     @Transactional(readOnly = true)
     public ResponseEntity<StatusResponse> getMyPosts(Member member, int page, int size) {
@@ -239,4 +257,6 @@ public class PostService {
             throw new NoAuthorityPostRemove();
         }
     }
+
+
 }
