@@ -5,6 +5,7 @@ import com.kuddy.apiserver.community.dto.request.PostReqDto;
 import com.kuddy.apiserver.community.dto.response.*;
 import com.kuddy.apiserver.image.S3Upload;
 import com.kuddy.common.comment.exception.NoPostExistException;
+import com.kuddy.common.comment.repository.CommentRepository;
 import com.kuddy.common.community.domain.Post;
 import com.kuddy.common.community.domain.PostImage;
 import com.kuddy.common.community.domain.PostType;
@@ -47,6 +48,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
     private final SpotRepository spotRepository;
+    private final CommentRepository commentRepository;
 
     @Value("${image.prefix}")
     private String imagePath;
@@ -59,6 +61,7 @@ public class PostService {
         }
     }
 
+    // Itinerary Feedback 포스팅 저장
     private ResponseEntity<StatusResponse> saveItineraryPost(PostReqDto reqDto, Member member) {
         List<Spot> spots = validateItinerarySpots(reqDto.getSpots());
         String spotStr = changelistToStr(reqDto.getSpots());
@@ -69,6 +72,7 @@ public class PostService {
         return ResponseEntity.ok(createStatusResponse(itineraryResDto));
     }
 
+    // Talking Board 포스팅 저장
     private ResponseEntity<StatusResponse> saveTalkingboardPost(PostReqDto reqDto, Member member) {
         Post post;
         if ("joinus".equals(reqDto.getPostType())) {
@@ -111,14 +115,14 @@ public class PostService {
 
         if (type.equals("itinerary")) {
             posts = postRepository.findAllByPostTypeOrderByCreatedDateDesc(PostType.ITINERARY, pageRequest);
-            List<ItineraryResDto> itineraryResDtos = convertToItineraryResDto(posts);
-            ItineraryPageResDto resDto = new ItineraryPageResDto(itineraryResDtos, createPageInfo(posts));
+            List<ItineraryResSimpleDto> itineraryResSimpleDtos = convertToItineraryResDto(posts);
+            ItineraryPageResDto resDto = new ItineraryPageResDto(itineraryResSimpleDtos, createPageInfo(posts));
             return ResponseEntity.ok(createStatusResponse(resDto));
         } else {
             List<PostType> types = List.of(PostType.JOIN_US, PostType.OTHERS);
             posts = postRepository.findAllByPostTypeInOrderByCreatedDateDesc(types, pageRequest);
-            List<TalkingBoardResDto> talkingBoardResDtos = convertToTalkingBoardResDto(posts);
-            TalkingBoardPageResDto resDto = new TalkingBoardPageResDto(talkingBoardResDtos, createPageInfo(posts));
+            List<TalkingBoardSimpleDto> talkingBoardSimpleDtos = convertToTalkingBoardResDto(posts);
+            TalkingBoardPageResDto resDto = new TalkingBoardPageResDto(talkingBoardSimpleDtos, createPageInfo(posts));
             return ResponseEntity.ok(createStatusResponse(resDto));
         }
     }
@@ -187,26 +191,28 @@ public class PostService {
         return imageUrls;
     }
 
-    private List<ItineraryResDto> convertToItineraryResDto(Page<Post> posts) {
-        List<ItineraryResDto> resDtos = new ArrayList<>();
+    private List<ItineraryResSimpleDto> convertToItineraryResDto(Page<Post> posts) {
+        List<ItineraryResSimpleDto> resDtos = new ArrayList<>();
         for (Post post : posts) {
+            Integer commentNo = commentRepository.countAllByPostId(post.getId());
             List<Long> contentIdList = convertStringToList(post.getItinerarySpots());
             List<Spot> spots = spotRepository.findAllByContentIdIn(contentIdList);
-            resDtos.add(ItineraryResDto.of(post, spots));
+            resDtos.add(ItineraryResSimpleDto.of(post, spots, commentNo));
         }
 
         return resDtos;
     }
 
-    private List<TalkingBoardResDto> convertToTalkingBoardResDto(Page<Post> posts) {
-        List<TalkingBoardResDto> resDtos = new ArrayList<>();
+    private List<TalkingBoardSimpleDto> convertToTalkingBoardResDto(Page<Post> posts) {
+        List<TalkingBoardSimpleDto> resDtos = new ArrayList<>();
         for (Post post : posts) {
+            Integer commentNo = commentRepository.countAllByPostId(post.getId());
             List<String> urlList = postImageRepository.findAllByPost(post)
                     .stream()
                     .map(PostImage::getFileUrl)
                     .collect(Collectors.toList());
 
-            resDtos.add(TalkingBoardResDto.of(post, urlList));
+            resDtos.add(TalkingBoardSimpleDto.of(post, urlList, commentNo));
         }
         return resDtos;
     }

@@ -30,7 +30,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<StatusResponse> getPosts(@PathVariable Long postId){
+    public ResponseEntity<StatusResponse> getPost(@PathVariable Long postId){
         return postService.getPost(postId);
     }
 
