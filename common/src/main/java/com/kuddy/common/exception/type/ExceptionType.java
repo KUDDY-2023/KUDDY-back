@@ -47,6 +47,7 @@ import com.kuddy.common.security.exception.InvalidRefreshTokenException;
 import com.kuddy.common.security.exception.InvalidTokenException;
 import com.kuddy.common.security.exception.InvalidTokenTypeException;
 import com.kuddy.common.security.exception.UnAuthorizedTokenException;
+import com.kuddy.common.spot.exception.NoSpotNearbyException;
 import com.kuddy.common.spot.exception.SpotNotFoundException;
 import com.kuddy.common.spot.exception.TourApiExeption;
 import com.kuddy.common.ticket.exception.OnlyTravelerRequestException;
@@ -89,6 +90,7 @@ public enum ExceptionType {
 	HEART_NOT_FOUND_EXCEPTION("C4002", "해당 관광지에 대한 찜 정보를 찾을 수 없습니다.", HeartNotFoundException.class),
 	ALREADY_LIKED_EXCEPTION("C4003", "이미 찜한 관광지입니다.", AlreadyLikedException.class),
 	NO_SPOT_EXISTS_EXCEPTION("C4004", "존재하지 않는 spot id입니다.", NoSpotExists.class),
+	NO_SPOT_NEARBY_EXCEPTION("C4005", "주변에 관광지가 없습니다.", NoSpotNearbyException.class),
 
 	//회원 관련 - C2***
 	INVALID_NICKNAME_EXCEPTION("C2000", "유효하지 않은 닉네임입니다.", InvalidNicknameException.class),

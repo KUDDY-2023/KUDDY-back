@@ -14,6 +14,7 @@ import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.spot.domain.Category;
 import com.kuddy.common.spot.domain.District;
 import com.kuddy.common.spot.domain.Spot;
+import com.kuddy.common.spot.exception.NoSpotNearbyException;
 import com.kuddy.common.spot.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -185,6 +186,8 @@ public class SpotService {
 
     //JSONObject에서 필요한 정보만 담아 List로 반환하는 반복적인 코드
     public List<SpotResDto> changeJsonBodyToList(JSONObject body) {
+        if(((String) body.get("items")).isEmpty())
+            throw new NoSpotNearbyException();
         JSONObject items = (JSONObject) body.get("items");
         JSONArray spotArr = (JSONArray) items.get("item");
 
