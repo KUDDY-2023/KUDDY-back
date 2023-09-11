@@ -27,7 +27,7 @@ public class Chatting { //MongoDB에서 메시지 저장에 사용할 도메인 
 	private String senderName;
 	private String contentType;
 	private String content;
-	private LocalDateTime sendDate;
+	private LocalDateTime sendTime;
 	private long readCount;
 
 	//동행 요청일 경우 범위 시작

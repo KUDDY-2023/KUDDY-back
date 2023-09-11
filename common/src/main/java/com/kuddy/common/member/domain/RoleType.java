@@ -8,13 +8,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RoleType {
-	MEMBER("ROLE_USER", "member"),
-	KUDDY("ROLE_KUDDY", "k-buddy"),
-	READY_TO_BE_KUDDY("ROLE_READY_TO_BE_KUDDY", "ready to be k-buddy"),
-	TRAVELER("ROLE_TRAVELER", "traveler"),
+	MEMBER("ROLE_USER", "MEMBER"),
+	KUDDY("ROLE_KUDDY", "KUDDY"),
+	READY_TO_BE_KUDDY("ROLE_READY_TO_BE_KUDDY", "READY_TO_BE_KUDDY"),
+	TRAVELER("ROLE_TRAVELER", "TRAVELER"),
 
-	ADMIN("ROLE_ADMIN", "admin"),
-	GUEST("GUEST", "guest");
+	ADMIN("ROLE_ADMIN", "ADMIN"),
+	GUEST("GUEST", "GUEST");
 
 	private final String code;
 	private final String displayName;

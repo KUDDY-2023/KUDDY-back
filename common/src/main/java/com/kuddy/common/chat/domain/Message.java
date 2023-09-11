@@ -69,7 +69,7 @@ public class Message implements Serializable { //Kafka와 Stomp Client 설정
 			.appointmentTime(appointmentTime != null ? appointmentTime : null)
 			.meetStatus(meetStatus != null ? meetStatus : null)
 			.price(price != null ? price : null)
-			.sendDate(Instant.ofEpochMilli(sendTime).atZone(ZoneId.of("UTC")).toLocalDateTime())
+			.sendTime(Instant.ofEpochMilli(sendTime).atZone(ZoneId.of("UTC")).toLocalDateTime())
 			.readCount(readCount)
 			.build();
 	}
