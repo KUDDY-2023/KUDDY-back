@@ -44,7 +44,7 @@ public class StompHandler implements ChannelInterceptor {
 		return message;
 	}
 
-	private void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String email) {
+	public void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String email) {
 		switch (stompCommand) {
 
 			case CONNECT:
@@ -76,7 +76,7 @@ public class StompHandler implements ChannelInterceptor {
 		return token;
 	}
 
-	private void connectToChatRoom(StompHeaderAccessor accessor, String email) {
+	public void connectToChatRoom(StompHeaderAccessor accessor, String email) {
 		// 채팅방 번호를 가져온다.
 		Long chatRoomNo = getChatRoomNo(accessor);
 

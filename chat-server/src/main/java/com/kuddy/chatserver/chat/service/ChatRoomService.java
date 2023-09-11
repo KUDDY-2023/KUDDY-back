@@ -37,7 +37,6 @@ public class ChatRoomService {
 	private String buildRedisKey(Long chatRoomId, String email) {
 		return CHAT_ROOM_PREFIX + chatRoomId + ":" + email;
 	}
-	@Transactional(readOnly = true)
 	public boolean isAllConnected(Long chatRoomId) {
 		Room room = findRoomById(chatRoomId);
 		String cerateMemberKey = buildRedisKey(room.getId(), room.getCreateMember().getEmail());
@@ -47,7 +46,6 @@ public class ChatRoomService {
 		boolean isJoinMemberConnected = isMemberConnected(updateMemberKey, roomId);
 		return isCreateMemberConnected && isJoinMemberConnected;
 	}
-	@Transactional(readOnly = true)
 	public boolean isConnected(Long chatRoomId) {
 		Room room = findRoomById(chatRoomId);
 		String cerateMemberKey = buildRedisKey(room.getId(), room.getCreateMember().getEmail());
@@ -62,6 +60,7 @@ public class ChatRoomService {
 	public Room findRoomById(Long chatRoomId) {
 		return roomRepository.findById(chatRoomId).orElseThrow(RoomNotFoundException::new);
 	}
+
 
 	private boolean isMemberConnected(String key, String roomIdString) {
 		return redisService.existsMember(key, roomIdString);

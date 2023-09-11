@@ -20,18 +20,13 @@ public class RedisService {
 
 	public void setData(String key, String value){
 		redisTemplate.opsForValue().set(key, value);
-			// 로깅 또는 디버깅 포인트를 추가하여 성공적으로 설정되었는지 확인
 	}
 	public String getData(String key){
 		return (String) redisTemplate.opsForValue().get(key);
 	}
 	public boolean existsMember(String key, String roomId){
 		String currentValue = getData(key);
-		if(roomId.equals(currentValue)){
-			redisTemplate.delete(key);
-			return true;  // 삭제 성공
-		}
-		return false;
+		return roomId.equals(currentValue);
 	}
 
 	public void deleteData(String key){
