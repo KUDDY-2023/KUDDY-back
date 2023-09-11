@@ -11,6 +11,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class TalkingBoardPageResDto {
-    private List<TalkingBoardResDto> posts;
+    private List<TalkingBoardSimpleDto> posts;
     private PageInfo pageInfo;
 }

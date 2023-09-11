@@ -22,7 +22,7 @@ public class ItineraryResDto {
         return ItineraryResDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
-                .content(post.getContent().length() > 95 ? post.getContent().substring(0, 95) : post.getContent())
+                .content(post.getContent())
                 .spots(spots)
                 .authorId(post.getAuthor().getId())
                 .createdDate(post.getCreatedDate())
