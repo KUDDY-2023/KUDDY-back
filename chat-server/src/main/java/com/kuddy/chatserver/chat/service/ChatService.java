@@ -84,13 +84,13 @@ public class ChatService {
 
 				// 채팅방별로 마지막 채팅내용과 시간을 셋팅
 				Page<Chatting> chatting =
-					mongoChatRepository.findByRoomIdOrderBySendDateDesc(chatRoomDto.getChatRoomId(),
+					mongoChatRepository.findByRoomIdOrderBySendTimeDesc(chatRoomDto.getChatRoomId(),
 						PageRequest.of(0, 1));
 				if (chatting.hasContent()) {
 					Chatting chat = chatting.getContent().get(0);
 					ChatRoomListResDto.LatestMessage latestMessage = ChatRoomListResDto.LatestMessage.builder()
 						.context(chat.getContent())
-						.sendAt(chat.getSendDate())
+						.sendTime(chat.getSendTime())
 						.build();
 					chatRoomDto.setLatestMessage(latestMessage);
 				}
