@@ -27,6 +27,8 @@ public class SpotResDto {
                 .district(spot.getDistrict().getArea())
                 .category(spot.getCategory().getType())
                 .imageUrl(spot.getImageUrl())
+                .mapX(spot.getMapX())
+                .mapY(spot.getMapY())
                 .build();
     }
 }
