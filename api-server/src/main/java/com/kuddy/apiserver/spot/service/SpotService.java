@@ -15,6 +15,7 @@ import com.kuddy.common.spot.domain.Category;
 import com.kuddy.common.spot.domain.District;
 import com.kuddy.common.spot.domain.Spot;
 import com.kuddy.common.spot.exception.NoSpotNearbyException;
+import com.kuddy.common.spot.exception.SpotNotFoundException;
 import com.kuddy.common.spot.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -94,7 +95,10 @@ public class SpotService {
 
     @Transactional(readOnly = true)
     public Spot findSpotByContentId(Long contentId) {
-        return spotRepository.findByContentId(contentId);
+        Spot spot = spotRepository.findByContentId(contentId);
+        if(spot == (null))
+            throw new SpotNotFoundException(contentId);
+        return spot;
     }
 
     @Transactional(readOnly = true)
