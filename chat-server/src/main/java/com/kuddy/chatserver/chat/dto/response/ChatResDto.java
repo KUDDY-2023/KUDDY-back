@@ -25,7 +25,7 @@ public class ChatResDto {
 	private String price; //
 	//동행일 경우 범위끝
 	private String content;
-	private long sendDate;
+	private long sendTime;
 	private long readCount;
 	private boolean isMine;
 
@@ -35,7 +35,7 @@ public class ChatResDto {
 		this.senderName = chat.getSenderName();
 		this.contentType = chat.getContentType();
 		this.content = chat.getContent();
-		this.sendDate = chat.getSendDate().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+		this.sendTime = chat.getSendTime().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
 		this.readCount = chat.getReadCount();
 		this.isMine = chat.getSenderName().equals(loginMemberNickname);
 		this.spotContentId = chat.getSpotContentId();

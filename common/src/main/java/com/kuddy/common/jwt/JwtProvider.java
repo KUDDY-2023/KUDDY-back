@@ -45,6 +45,7 @@ public class JwtProvider {
 
 	//private static final Long accessTokenValidationMs = 30 * 60 * 1000L;
 	private static final Long accessTokenValidationMs =  24*60 * 60 * 1000L;
+
 	private static final Long refreshTokenValidationMs = 15 * 24 * 60 * 60 * 1000L;
 	private static final String BEARER_PREFIX = "Bearer ";
 

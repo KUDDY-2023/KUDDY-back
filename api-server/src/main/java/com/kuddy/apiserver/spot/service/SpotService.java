@@ -14,6 +14,7 @@ import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.spot.domain.Category;
 import com.kuddy.common.spot.domain.District;
 import com.kuddy.common.spot.domain.Spot;
+import com.kuddy.common.spot.exception.NoSpotNearbyException;
 import com.kuddy.common.spot.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -66,6 +67,8 @@ public class SpotService {
                         .category(Category.valueOf(contentType))
                         .imageUrl((String) item.get("firstimage"))
                         .numOfHearts(0L)
+                        .mapX((String) item.get("mapx"))
+                        .mapY((String) item.get("mapy"))
                         .build());
             }
         }
@@ -135,10 +138,7 @@ public class SpotService {
     }
 
     //각 관광지 상세 정보 조회(사진 여러장 + 찜한 멤버들 + 위치기반추천)
-    public ResponseEntity<StatusResponse> responseDetailInfo(Object commonDetail, Object detailInfo, JSONObject nearbySpots, JSONArray imageArr, Spot spot) {
-
-        //위치 기반 관광지 추천(5개)
-        List<SpotResDto> recommendationList = changeJsonBodyToList(nearbySpots);
+    public ResponseEntity<StatusResponse> responseDetailInfo(Object commonDetail, Object detailInfo, JSONArray imageArr, Spot spot) {
 
         //찜한 멤버들
         List<MemberResDto> kuddyList = new ArrayList<>();
@@ -171,7 +171,7 @@ public class SpotService {
         JSONObject item = (JSONObject) commonDetail;
         SpotDetailResDto spotDetailResDto = SpotDetailResDto.of(spot, (String) item.get("overview"), (String) item.get("tel"),
                 (String) item.get("homepage"), (String) item.get("addr1"), (String) item.get("zipcode"), (Object) additionalInfo,
-                recommendationList, imageList, kuddyList, travelerList);
+                imageList, kuddyList, travelerList);
 
         return returnStatusResponse(spotDetailResDto);
     }
@@ -186,6 +186,8 @@ public class SpotService {
 
     //JSONObject에서 필요한 정보만 담아 List로 반환하는 반복적인 코드
     public List<SpotResDto> changeJsonBodyToList(JSONObject body) {
+        if(body.get("items").equals(""))
+            throw new NoSpotNearbyException();
         JSONObject items = (JSONObject) body.get("items");
         JSONArray spotArr = (JSONArray) items.get("item");
 

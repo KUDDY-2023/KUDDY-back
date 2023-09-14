@@ -50,7 +50,7 @@ public class Message implements Serializable { //Kafka와 Stomp Client 설정
 
 	public void setSendTimeAndSender(LocalDateTime sendTime,String senderName, Integer readCount) {
 		this.senderName = senderName;
-		this.sendTime = sendTime.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+		this.sendTime = sendTime.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
 		this.readCount = readCount;
 	}
 
@@ -64,14 +64,13 @@ public class Message implements Serializable { //Kafka와 Stomp Client 설정
 			.roomId(roomId)
 			.contentType(contentType)
 			.content(content)
-			.sendDate(Instant.ofEpochMilli(sendTime).atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime())
+			.spotName(spotName != null ? spotName : null)
+			.spotContentId(spotContentId != null ? spotContentId : null)
+			.appointmentTime(appointmentTime != null ? appointmentTime : null)
+			.meetStatus(meetStatus != null ? meetStatus : null)
+			.price(price != null ? price : null)
+			.sendTime(Instant.ofEpochMilli(sendTime).atZone(ZoneId.of("UTC")).toLocalDateTime())
 			.readCount(readCount)
-			.appointmentTime(appointmentTime)
-			.meetStatus(meetStatus)
-			.price(price)
-			.spotName(spotName)
-			.spotContentId(spotContentId)
-
 			.build();
 	}
 }

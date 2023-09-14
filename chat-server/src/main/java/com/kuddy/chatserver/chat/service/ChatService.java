@@ -79,18 +79,18 @@ public class ChatService {
 		chatRoomList
 			.forEach(chatRoomDto -> {
 				// 채팅방별로 읽지 않은 메시지 개수를 셋팅
-				long unReadCount = countUnReadMessages(chatRoomDto.getChatRoomId(), member.getId());
+				long unReadCount = countUnReadMessages(chatRoomDto.getChatRoomId(), member.getNickname());
 				chatRoomDto.setUnReadCount(unReadCount);
 
 				// 채팅방별로 마지막 채팅내용과 시간을 셋팅
 				Page<Chatting> chatting =
-					mongoChatRepository.findByRoomIdOrderBySendDateDesc(chatRoomDto.getChatRoomId(),
+					mongoChatRepository.findByRoomIdOrderBySendTimeDesc(chatRoomDto.getChatRoomId(),
 						PageRequest.of(0, 1));
 				if (chatting.hasContent()) {
 					Chatting chat = chatting.getContent().get(0);
 					ChatRoomListResDto.LatestMessage latestMessage = ChatRoomListResDto.LatestMessage.builder()
 						.context(chat.getContent())
-						.sendAt(chat.getSendDate())
+						.sendTime(chat.getSendTime())
 						.build();
 					chatRoomDto.setLatestMessage(latestMessage);
 				}
@@ -180,7 +180,7 @@ public class ChatService {
 
 	public void updateMessage(String email, Long chatRoomNo) {
 		Message message = Message.builder()
-			.contentType("notice")
+			.contentType("NOTI")
 			.roomId(chatRoomNo)
 			.content(email + " 님이 돌아오셨습니다.")
 			.build();
@@ -198,10 +198,10 @@ public class ChatService {
 	}
 
 	// 읽지 않은 메시지 카운트
-	long countUnReadMessages(Long chatRoomNo, Long senderNo) {
-		Query query = new Query(Criteria.where("chatRoomNo").is(chatRoomNo)
+	long countUnReadMessages(Long roomId, String senderNickname) {
+		Query query = new Query(Criteria.where("roomId").is(roomId)
 			.and("readCount").is(1)
-			.and("senderNo").ne(senderNo));
+			.and("senderName").ne(senderNickname));
 
 		return mongoTemplate.count(query, Chatting.class);
 	}

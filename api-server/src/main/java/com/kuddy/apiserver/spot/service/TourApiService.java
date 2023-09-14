@@ -47,7 +47,7 @@ public class TourApiService {
     }
 
     //현재 위치 기반으로 2km 반경 관광지 20개씩 조회
-    public JSONObject getLocationBasedApi(int page, int size, double mapX, double mapY) {
+    public JSONObject getLocationBasedApi(int page, int size, String mapX, String mapY) {
 
         try {
             URL url = new URL(BASE_URL + "locationBasedList1?numOfRows=" +
