@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.kuddy.apiserver.member.dto.MemberResDto;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.profile.domain.GenderType;
@@ -24,11 +25,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileSearchResDto {
-	private Long memberId;
+	private MemberResDto memberInfo;
 	private String role;
 	private String introduce;
-	private String nickname;
-	private String profileImage;
 	private GenderType gender;
 	private Integer age;
 	private String temperament;
@@ -69,10 +68,8 @@ public class ProfileSearchResDto {
 		}
 
 		return ProfileSearchResDto.builder()
-			.memberId(member.getId())
+			.memberInfo(MemberResDto.of(member))
 			.role(member.getRoleType().getDisplayName())
-			.nickname(member.getNickname())
-			.profileImage(member.getProfileImageUrl())
 			.introduce(profile.getIntroduce())
 			.age(profile.getAge())
 			.gender(profile.getGenderType())
