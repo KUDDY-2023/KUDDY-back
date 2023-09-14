@@ -76,7 +76,7 @@ public class ReviewService {
     }
 
     public ResponseEntity<StatusResponse> findReviewOfKuudy(Long kuddyId) {
-        Member member = memberRepository.findById(kuddyId).orElseThrow(MemberNotFoundException::new);;
+        Member member = memberRepository.findById(kuddyId).orElseThrow(MemberNotFoundException::new);
         if(!member.getRoleType().equals(RoleType.KUDDY))
             throw new NotKuddyException();
 
@@ -97,7 +97,7 @@ public class ReviewService {
     }
 
     public ResponseEntity<StatusResponse> findReviewOfTraveler(Long travelerId) {
-        Member member = memberRepository.findById(travelerId).orElseThrow(MemberNotFoundException::new);;
+        Member member = memberRepository.findById(travelerId).orElseThrow(MemberNotFoundException::new);
         if(!member.getRoleType().equals(RoleType.TRAVELER))
             throw new NotTravelerException();
 

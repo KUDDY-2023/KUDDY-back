@@ -27,5 +27,7 @@ public interface MeetupRepository extends JpaRepository<Meetup, Long> {
 	@Query("SELECT e FROM Meetup e WHERE DATE(e.appointment) = DATE(:targetDate)")
 	List<Meetup> findByAppointment(@Param("targetDate")LocalDateTime targetDate);
 
+	@Query("SELECT m FROM Meetup m WHERE m.appointment >= :threeDaysAgo AND m.appointment < :currentTime AND m.traveler.id = :travelerId AND m.isReviewed = :isReviewed AND m.meetupStatus = :meetupStatus ORDER BY m.appointment DESC")
+	List<Meetup> findAllByNotReviewed(LocalDateTime threeDaysAgo, LocalDateTime currentTime, Long travelerId, Boolean isReviewed, MeetupStatus meetupStatus);
 
 }
