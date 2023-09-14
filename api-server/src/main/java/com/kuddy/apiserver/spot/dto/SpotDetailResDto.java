@@ -1,6 +1,6 @@
 package com.kuddy.apiserver.spot.dto;
 
-import com.kuddy.apiserver.member.dto.MemberResDto;
+import com.kuddy.apiserver.member.dto.PickMemberResDto;
 import com.kuddy.common.spot.domain.Spot;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +28,10 @@ public class SpotDetailResDto {
     private String post;
     private Object additionalInfo;
     private List<String> imageList;
-    private List<MemberResDto> kuddyList;
-    private List<MemberResDto> travelerList;
+    private List<PickMemberResDto> kuddyList;
+    private List<PickMemberResDto> travelerList;
 
-    public static SpotDetailResDto of(Spot spot, String about, String phoneNum, String homepage, String location, String post, Object additionalInfo, List<String> imageList, List<MemberResDto> kuddyList, List<MemberResDto> travelerList){
+    public static SpotDetailResDto of(Spot spot, String about, String phoneNum, String homepage, String location, String post, Object additionalInfo, List<String> imageList, List<PickMemberResDto> kuddyList, List<PickMemberResDto> travelerList){
         return SpotDetailResDto.builder()
                 .name(spot.getName())
                 .contentId(spot.getContentId())
