@@ -55,6 +55,7 @@ public class ProfileReqDto {
 				.nationality(nationality)
 				.temperament(temperament)
 				.decisionMaking(decisionMaking)
+				.introduce("")
 				.build();
 		}
 	}
