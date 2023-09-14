@@ -3,26 +3,19 @@ package com.kuddy.chatserver.chat.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.kuddy.common.chat.exception.NotChatRoomOwnerException;
-import com.kuddy.common.chat.exception.NotMatchLoginMemberEmailException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.kuddy.chatserver.chat.dto.response.ReceiverInfoResDto;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kuddy.common.chat.domain.Message;
 import com.kuddy.common.chat.domain.Room;
 import com.kuddy.common.chat.domain.mongo.Chatting;
-import com.kuddy.chatserver.chat.dto.request.ChatReqDto;
 import com.kuddy.chatserver.chat.dto.response.ChatHistoryResDto;
 import com.kuddy.chatserver.chat.dto.response.ChatResDto;
-import com.kuddy.chatserver.chat.dto.response.ChatRoomListResDto;
 import com.kuddy.common.chat.exception.ChatNotFoundException;
 import com.kuddy.common.chat.exception.RoomNotFoundException;
 import com.kuddy.common.chat.repository.MongoChatRepository;
@@ -43,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ChatService {
+public class ChattingService {
 	private final MongoTemplate mongoTemplate;
 	private final MongoChatRepository mongoChatRepository;
 	private final RoomRepository roomRepository;
@@ -52,64 +45,33 @@ public class ChatService {
 	private final MessageSender sender;
 	private final MemberRepository memberRepository;
 	private final MeetupService meetupService;
-	private final ChatRoomService chatRoomService;
+	private final ChatRoomConnectInfoService chatRoomConnectInfoService;
 	//private final NotificationService notificationService;
 	private final JwtProvider jwtProvider;
 	private static final String MEETUP_TYPE = "MEETUP";
 
-	public Long makeChatRoom(Member member, ChatReqDto requestDto) {
-		Member joinMember = memberRepository.findByNickname(requestDto.getCreateMemberNickname())
-			.orElseThrow(MemberNotFoundException::new);
-
-		Room room = Room.builder()
-			.createMember(member)
-			.joinMember(joinMember)
-			.build();
-
-		//todo: 이미 존재하는 방 예외 추가
-		Room savedRoom = roomRepository.save(room);
-
-		return savedRoom.getId();
-	}
-
-	@Transactional(readOnly = true)
-	public List<ChatRoomListResDto> getChatList(Member member) {
-		List<ChatRoomListResDto> chatRoomList = chatQueryService.getChattingList(member.getId());
-
-		chatRoomList
-			.forEach(chatRoomDto -> {
-				// 채팅방별로 읽지 않은 메시지 개수를 셋팅
-				long unReadCount = countUnReadMessages(chatRoomDto.getChatRoomId(), member.getNickname());
-				chatRoomDto.setUnReadCount(unReadCount);
-
-				// 채팅방별로 마지막 채팅내용과 시간을 셋팅
-				Page<Chatting> chatting =
-					mongoChatRepository.findByRoomIdOrderBySendTimeDesc(chatRoomDto.getChatRoomId(),
-						PageRequest.of(0, 1));
-				if (chatting.hasContent()) {
-					Chatting chat = chatting.getContent().get(0);
-					ChatRoomListResDto.LatestMessage latestMessage = ChatRoomListResDto.LatestMessage.builder()
-						.context(chat.getContent())
-						.sendTime(chat.getSendTime())
-						.build();
-					chatRoomDto.setLatestMessage(latestMessage);
-				}
-			});
-
-		return chatRoomList;
-	}
 
 	@Transactional(readOnly = true)
 	public ChatHistoryResDto getChattingList(Long chatRoomId, Member member) {
-		List<ChatResDto> chattingList = mongoChatRepository.findByRoomId(chatRoomId)
-			.stream()
-			.map(chat -> new ChatResDto(chat, member.getNickname()))
-			.collect(Collectors.toList());
+		List<ChatResDto> chattingList = getChatResDtos(chatRoomId, member.getNickname());
+		Room room = findByRoomId(chatRoomId);
+		Member receiver = findReceiver(room, member);
 
 		return ChatHistoryResDto.builder()
-			.chatList(chattingList)
-			.email(member.getEmail())
-			.build();
+				.chatList(chattingList)
+				.receiverInfo(ReceiverInfoResDto.of(receiver))
+				.build();
+	}
+	private List<ChatResDto> getChatResDtos(Long chatRoomId, String nickname) {
+		return mongoChatRepository.findByRoomId(chatRoomId)
+				.stream()
+				.map(chat -> new ChatResDto(chat, nickname))
+				.collect(Collectors.toList());
+	}
+	private Member findReceiver(Room room, Member member) {
+		return Optional.of(room)
+				.map(r -> r.getCreateMember().getId().equals(member.getId()) ? r.getJoinMember() : r.getCreateMember())
+				.orElse(null);  // Handle null case appropriately
 	}
 
 	@Transactional(readOnly = true)
@@ -117,7 +79,7 @@ public class ChatService {
 		String email = jwtProvider.tokenToEmail(authorization);
 		Member findMember = findByEmail(email);
 		// 채팅방에 모든 유저가 참여중인지 확인한다.
-		boolean isConnectedAll = chatRoomService.isAllConnected(message.getRoomId());
+		boolean isConnectedAll = chatRoomConnectInfoService.isAllConnected(message.getRoomId());
 		// 1:1 채팅이므로 2명 접속시 readCount 0, 한명 접속시 1
 		Integer readCount = isConnectedAll ? 0 : 1;
 		// message 객체에 보낸시간, 보낸사람 memberNo, 닉네임을 셋팅해준다.
@@ -188,50 +150,12 @@ public class ChatService {
 		sender.send(ConstantUtil.KAFKA_TOPIC, message);
 	}
 
-	// 읽지 않은 메시지 채팅장 입장시 읽음 처리
-	public void updateCountAllZero(Long chatRoomId, String email) {
-		Member findMember = findByEmail(email);
-		Update update = new Update().set("readCount", 0);
-		Query query = new Query(Criteria.where("roomId").is(chatRoomId)
-			.and("senderName").ne(findMember.getNickname()));
-		mongoTemplate.updateMulti(query, update, Chatting.class);
-	}
 
-	// 읽지 않은 메시지 카운트
-	long countUnReadMessages(Long roomId, String senderNickname) {
-		Query query = new Query(Criteria.where("roomId").is(roomId)
-			.and("readCount").is(1)
-			.and("senderName").ne(senderNickname));
-
-		return mongoTemplate.count(query, Chatting.class);
-	}
 
 
 	@Transactional(readOnly = true)
 	public Room findByRoomId(Long roomId){
 		return roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
-	}
-
-	public String checkRoomIdOwnerValidation(Member member, Long roomId) {
-		boolean isValid = roomRepository.existsByRoomIdAndAnyMember(roomId, member);
-		if(isValid){
-			return member.getEmail();
-		}
-		else{
-			throw new NotChatRoomOwnerException();
-		}
-	}
-
-	public void checkEmailValidation(String loginEmail, String email) {
-		if(!loginEmail.equals(email)){
-			throw new NotMatchLoginMemberEmailException();
-		}
-	}
-
-	@Transactional(readOnly = true)
-	public Room findByMembers(Member member, String email) {
-		Member targetMember = findByEmail(email);
-		return roomRepository.findRoomByMembers(member, targetMember);
 	}
 
 	@Transactional(readOnly = true)
