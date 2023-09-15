@@ -92,7 +92,7 @@ public class ReviewService {
         Double good = (double) reviewRepository.countByMeetupKuddyIdAndGrade(kuddyId, Grade.GOOD) / count * 100;
         Double disappoint = (double) reviewRepository.countByMeetupKuddyIdAndGrade(kuddyId, Grade.DISAPPOINT) / count * 100;
 
-        ReviewListResDto response = new ReviewListResDto(reviewResDtoList, count, String.format("%.1f%%", perfect), String.format("%.1f%%", good), String.format("%.1f%%", disappoint));
+        ReviewListResDto response = new ReviewListResDto(reviewResDtoList, count, meetupRepository.countByKuddy_Id(kuddyId), String.format("%.1f%%", perfect), String.format("%.1f%%", good), String.format("%.1f%%", disappoint));
         return returnStatusResponse(response);
     }
 
@@ -107,7 +107,7 @@ public class ReviewService {
             reviewResDtoList.add(ReviewResDto.of(review));
         }
 
-        ReviewListResDto response = ReviewListResDto.of(reviewResDtoList, reviewRepository.countByWriterId(travelerId));
+        ReviewListResDto response = ReviewListResDto.of(reviewResDtoList, reviewRepository.countByWriterId(travelerId), meetupRepository.countByTraveler_Id(travelerId));
         return returnStatusResponse(response);
     }
 

@@ -15,6 +15,9 @@ import com.kuddy.common.meetup.domain.MeetupStatus;
 public interface MeetupRepository extends JpaRepository<Meetup, Long> {
 
 	Optional<Meetup> findByChatId(String chatId);
+	Long countByTraveler_Id(Long travelerId);
+	Long countByKuddy_Id(Long kuddyId);
+
 	@Query("SELECT COUNT(m) FROM Meetup m WHERE m.kuddy.id = :kuddyId AND m.meetupStatus NOT IN :excludedStatuses")
 	Long countByKuddyIdAndMeetupStatusNotIn(@Param("kuddyId") Long kuddyId, @Param("excludedStatuses") List<MeetupStatus> excludedStatuses);
 
