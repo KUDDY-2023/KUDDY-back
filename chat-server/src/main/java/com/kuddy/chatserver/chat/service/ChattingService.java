@@ -82,8 +82,8 @@ public class ChattingService {
 		boolean isConnectedAll = chatRoomConnectInfoService.isAllConnected(message.getRoomId());
 		// 1:1 채팅이므로 2명 접속시 readCount 0, 한명 접속시 1
 		Integer readCount = isConnectedAll ? 0 : 1;
-		// message 객체에 보낸시간, 보낸사람 memberNo, 닉네임을 셋팅해준다.
-		message.setSendTimeAndSender(LocalDateTime.now(), findMember.getNickname(),
+		// message 객체에 보낸시간, 보낸 사람 정보를 세팅해준다.
+		message.setSendTimeAndSender(LocalDateTime.now(), findMember.getNickname(),findMember.getId(),
 			readCount);
 		// 메시지를 전송한다.
 		sender.send(ConstantUtil.KAFKA_TOPIC, message);

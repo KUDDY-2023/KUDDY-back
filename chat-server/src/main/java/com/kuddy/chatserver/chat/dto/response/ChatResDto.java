@@ -15,6 +15,7 @@ public class ChatResDto {
 	private Long roomId;
 
 	private String senderName;
+	private Long senderId;
 	private String contentType;
 
 	//동행 요청일 경우 범위 시작
@@ -33,6 +34,7 @@ public class ChatResDto {
 		this.id = chat.getId();
 		this.roomId = chat.getRoomId();
 		this.senderName = chat.getSenderName();
+		this.senderId = chat.getSenderId();
 		this.contentType = chat.getContentType();
 		this.content = chat.getContent();
 		this.sendTime = chat.getSendTime().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();

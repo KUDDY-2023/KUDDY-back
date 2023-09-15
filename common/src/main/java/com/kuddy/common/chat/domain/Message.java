@@ -23,13 +23,10 @@ import lombok.ToString;
 public class Message implements Serializable { //Kafka와 Stomp Client 설정
 	//Kafka에서 메시지 전달에 사용할 도메인 모델
 	private String id;
-
 	@NotNull
 	private Long roomId;
-
 	@NotNull
 	private String contentType;
-
 	@NotNull
 	private String content;
 
@@ -41,6 +38,7 @@ public class Message implements Serializable { //Kafka와 Stomp Client 설정
 	private String price; //
 	//동행일 경우 범위끝
 
+	private Long senderId;
 	private String senderName;
 	private Long sendTime;
 	private int readCount;
@@ -48,9 +46,10 @@ public class Message implements Serializable { //Kafka와 Stomp Client 설정
 	private String senderEmail;
 	private int isUpdated;
 
-	public void setSendTimeAndSender(LocalDateTime sendTime,String senderName, Integer readCount) {
+	public void setSendTimeAndSender(LocalDateTime sendTime,String senderName, Long senderId,Integer readCount) {
 		this.senderName = senderName;
 		this.sendTime = sendTime.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+		this.senderId = senderId;
 		this.readCount = readCount;
 	}
 
@@ -63,6 +62,7 @@ public class Message implements Serializable { //Kafka와 Stomp Client 설정
 			.senderName(senderName)
 			.roomId(roomId)
 			.contentType(contentType)
+			.senderId(senderId)
 			.content(content)
 			.spotName(spotName != null ? spotName : null)
 			.spotContentId(spotContentId != null ? spotContentId : null)

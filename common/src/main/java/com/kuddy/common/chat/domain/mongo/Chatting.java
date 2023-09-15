@@ -25,6 +25,7 @@ public class Chatting { //MongoDB에서 메시지 저장에 사용할 도메인 
 	private String id;
 	private Long roomId;
 	private String senderName;
+	private Long senderId;
 	private String contentType;
 	private String content;
 	private LocalDateTime sendTime;
