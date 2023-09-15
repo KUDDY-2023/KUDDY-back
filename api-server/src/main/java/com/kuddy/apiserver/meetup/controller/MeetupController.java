@@ -2,7 +2,7 @@ package com.kuddy.apiserver.meetup.controller;
 
 import java.util.List;
 
-import com.kuddy.apiserver.meetup.service.MeetupApiService;
+import com.kuddy.apiserver.meetup.service.MeetupReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MeetupController {
 	private final MeetupService meetupService;
-	private final MeetupApiService meetupApiService;
+	private final MeetupReviewService meetupReviewService;
 
 	@GetMapping
 	public ResponseEntity<StatusResponse> getMeetupList(@AuthUser Member member) {
@@ -42,7 +42,7 @@ public class MeetupController {
 	//리뷰 요청 모달 API
 	@GetMapping("/review")
     public ResponseEntity<StatusResponse> getNotReviewedMeetupList(@AuthUser Member member) {
-		return meetupApiService.checkReviewByMember(member);
+		return meetupReviewService.checkReviewByMember(member);
 	}
 
 }

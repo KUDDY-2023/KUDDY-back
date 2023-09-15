@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MeetupApiService {
+public class MeetupReviewService {
 
     private final MeetupRepository meetupRepository;
 
