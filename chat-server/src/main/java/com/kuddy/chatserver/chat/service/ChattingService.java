@@ -117,7 +117,7 @@ public class ChattingService {
 	}
 	public void updateMessage(Message message, String authorization) throws IOException {
 		String email = jwtProvider.tokenToEmail(authorization);
-		checkvalidateMember(email, message.getRoomId());
+		checkValidateMember(email, message.getRoomId());
 		if(message.getContentType().equals(MEETUP_TYPE)){
 			Chatting chatting = mongoChatRepository.findById(message.getId()).orElseThrow(ChatNotFoundException::new);
 			chatting.setAppointmentTime(message.getAppointmentTime());
@@ -130,7 +130,7 @@ public class ChattingService {
 			sender.send(ConstantUtil.KAFKA_TOPIC, message);
 		}
 	}
-	private void checkvalidateMember(String email, Long roomId){
+	private void checkValidateMember(String email, Long roomId){
 		Room room = findByRoomId(roomId);
 		String senderEmail = room.getCreateMember().getEmail();
 		String joinEmail = room.getJoinMember().getEmail();
