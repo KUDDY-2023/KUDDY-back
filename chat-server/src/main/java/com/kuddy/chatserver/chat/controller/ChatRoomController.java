@@ -115,7 +115,7 @@ public class ChatRoomController {
 
 
 	// 메시지 전송 후 callback
-	@PostMapping("/chatrooms/callback")
+	@PostMapping("/callback")
 	public ResponseEntity<StatusResponse> sendNotification(@Valid @RequestBody Message message) {
 		Message savedMessage = chattingService.sendNotificationAndSaveMessage(message);
 		return ResponseEntity.ok(StatusResponse.builder()
