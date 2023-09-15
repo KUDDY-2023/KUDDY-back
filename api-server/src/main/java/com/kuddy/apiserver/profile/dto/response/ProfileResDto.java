@@ -41,18 +41,26 @@ public class ProfileResDto {
 	private KuddyLevel kuddyLevel;
 	private String ticketStatus;
 
-	public static ProfileResDto from(Member member, Profile profile) {
+	private static List<MemberLanguageDto> buildLanguages(List<ProfileLanguage> availableLanguages) {
 		List<MemberLanguageDto> languageList = new ArrayList<>();
-		for(ProfileLanguage pl : profile.getAvailableLanguages()) {
+		for (ProfileLanguage pl : availableLanguages) {
 			MemberLanguageDto language = new MemberLanguageDto(pl.getLanguage().getType(), pl.getLaguageLevel());
 			languageList.add(language);
 		}
+		return languageList;
+	}
 
+	private static List<MemberAreaDto> buildAreas(List<ProfileArea> districts) {
 		List<MemberAreaDto> areaList = new ArrayList<>();
-		for(ProfileArea pa : profile.getDistricts()){
+		for (ProfileArea pa : districts) {
 			MemberAreaDto area = new MemberAreaDto(pa.getArea().getDistrict());
 			areaList.add(area);
 		}
+		return areaList;
+	}
+
+
+	public static ProfileResDto from(Member member, Profile profile) {
 		KuddyLevel kuddyLevel = null;
 		String ticketStatus = null;
 		if(member.getRoleType().equals(RoleType.KUDDY)){
@@ -63,17 +71,18 @@ public class ProfileResDto {
 		}
 
 		return ProfileResDto.builder()
-			.role(member.getRoleType().getDisplayName())
 			.memberInfo(MemberResDto.of(member))
+			.role(member.getRoleType().getDisplayName())
 			.introduce(profile.getIntroduce())
 			.age(profile.getAge())
 			.gender(profile.getGenderType())
+			.job(profile.getJob())
 			.temperament(profile.getTemperament().getName())
 			.decisionMaking(profile.getDecisionMaking().getName())
 			.interests(InterestsDto.of(profile))
 			.nationality(profile.getNationality())
-			.languages(languageList)
-			.areas(areaList)
+			.languages(buildLanguages(profile.getAvailableLanguages()))
+			.areas(buildAreas(profile.getDistricts()))
 			.ticketStatus(ticketStatus)
 			.kuddyLevel(kuddyLevel)
 			.build();
