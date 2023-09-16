@@ -70,7 +70,7 @@ public class MeetupService {
 		meetup.updatePrice(new BigDecimal(message.getPrice()));
 		boolean isMeetupStatusUpdated = meetup.updateMeetupStatus(message.getMeetStatus());
 		if(isMeetupStatusUpdated){
-			createCalanderEvent(meetup, message);
+			//createCalanderEvent(meetup, message);
 		}
 	}
 
