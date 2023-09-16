@@ -22,6 +22,6 @@ public interface SpotRepository extends JpaRepository<Spot, Long>, JpaSpecificat
     List<Spot> findAllByContentIdIn(List<Long> contentIds);
 
     String HAVERSINE_FORMULA = "(6371 * acos(cos(radians(:mapY)) * cos(radians(s.mapY)) * cos(radians(s.mapX) - radians(:mapX)) + sin(radians(:mapY)) * sin(radians(s.mapY))))";
-    @Query("SELECT s FROM Spot s WHERE " + HAVERSINE_FORMULA + " <= 2 ORDER BY "+ HAVERSINE_FORMULA + " ASC")
+    @Query("SELECT s FROM Spot s WHERE " + HAVERSINE_FORMULA + " <= 2 AND (s.category = 'Attraction' OR s.category = 'Culture' OR s.category = 'Restaurant'  OR s.category = 'Festival') ORDER BY "+ HAVERSINE_FORMULA + " ASC")
     List<Spot> findAllByDistance(String mapX, String mapY);
 }
