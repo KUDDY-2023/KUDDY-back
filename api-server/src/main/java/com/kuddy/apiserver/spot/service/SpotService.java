@@ -102,39 +102,48 @@ public class SpotService {
     @Transactional(readOnly = true)
     public ResponseEntity<StatusResponse> getTrendMagazine() {
         List<Spot> spotList = spotRepository.findTop5ByOrderByNumOfHeartsDesc();
-        List<SpotResDto> response = new ArrayList<>();
-        for (Spot spot : spotList) {
-            SpotResDto spotResDto = SpotResDto.of(spot);
-            response.add(spotResDto);
-        }
-        return returnStatusResponse(response);
+        return returnStatusResponse(changeListToDto(spotList));
     }
 
 
-    public ResponseEntity<StatusResponse> getSpotsByDistance(int page, String mapX, String mapY) {
+    public Page<Spot> getSpotsByDistance(int page, String mapX, String mapY) {
         List<Spot> spotList = spotRepository.findAllByDistance(mapX, mapY);
+        if(spotList.isEmpty())
+            throw new NoSpotNearbyException();
         PageRequest pageRequest = PageRequest.of(page, 20);
 
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), spotList.size());
         Page<Spot> spotPage = new PageImpl<>(spotList.subList(start, end), pageRequest, spotList.size());
+        return spotPage;
+    }
 
-        return changePageToResponse(spotPage, page + 1);
+    //위치 기반 spot 5개만 조회
+    public ResponseEntity<StatusResponse> getFiveSpotsByDistance(Long contentId, String mapX, String mapY) {
+        List<Spot> spotList = spotRepository.findTop5ByDistance(contentId, mapX, mapY);
+        if(spotList.isEmpty())
+            throw new NoSpotNearbyException();
+        return returnStatusResponse(changeListToDto(spotList));
     }
 
     //조회한 spot 리스트와 페이지 정보를 공통응답형식으로 반환하도록 변환하는 메소드
     public ResponseEntity<StatusResponse> changePageToResponse(Page<Spot> spotPage, int page) {
         List<Spot> spotList = spotPage.getContent();
-        List<SpotResDto> response = new ArrayList<>();
-        for (Spot spot : spotList) {
-            SpotResDto spotResDto = SpotResDto.of(spot);
-            response.add(spotResDto);
-        }
+        List<SpotResDto> response = changeListToDto(spotList);
 
         PageInfo pageInfo = new PageInfo(page, spotPage.getNumberOfElements(), spotPage.getTotalElements(), spotPage.getTotalPages());
         SpotPageResDto spotPageResDto = new SpotPageResDto(response, pageInfo);
 
         return returnStatusResponse(spotPageResDto);
+    }
+
+    public List<SpotResDto> changeListToDto(List<Spot> spotList) {
+        List<SpotResDto> spotResDtoList = new ArrayList<>();
+        for (Spot spot : spotList) {
+            SpotResDto spotResDto = SpotResDto.of(spot);
+            spotResDtoList.add(spotResDto);
+        }
+        return spotResDtoList;
     }
 
     //각 관광지 상세 정보 조회(사진 여러장 + 찜한 멤버들 + 위치기반추천)
@@ -184,41 +193,6 @@ public class SpotService {
                 .message(StatusEnum.OK.getCode())
                 .data(data)
                 .build());
-    }
-
-    //JSONObject에서 필요한 정보만 담아 List로 반환하는 반복적인 코드
-    public List<SpotResDto> changeJsonBodyToList(JSONObject body) {
-        if(body.get("items").equals(""))
-            throw new NoSpotNearbyException();
-        JSONObject items = (JSONObject) body.get("items");
-        JSONArray spotArr = (JSONArray) items.get("item");
-
-        List<SpotResDto> response = new ArrayList<>();
-        for (Object o : spotArr) {
-            JSONObject item = (JSONObject) o;
-            String contentType = "";
-            String areaCode = "";
-            for (Category category : Category.values()) {
-                if (item.get("contenttypeid").equals(category.getCode()))
-                    contentType = category.getType();
-            }
-            for (District district : District.values()) {
-                if (item.get("sigungucode").equals(district.getCode()))
-                    areaCode = district.getArea();
-            }
-
-            SpotResDto spotResDto = SpotResDto.builder()
-                    .name((String) item.get("title"))
-                    .contentId(Long.valueOf((String) item.get("contentid")))
-                    .district(areaCode)
-                    .category(contentType)
-                    .imageUrl((String) item.get("firstimage"))
-                    .mapX(String.valueOf(item.get("mapx")))
-                    .mapY(String.valueOf(item.get("mapy")))
-                    .build();
-            response.add(spotResDto);
-        }
-        return response;
     }
 
     public Page<Spot> getSpotListBySearch(SpotSearchReqDto spotSearchReqDto, int page, int size) {
