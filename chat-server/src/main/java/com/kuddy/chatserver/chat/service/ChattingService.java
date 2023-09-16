@@ -126,6 +126,7 @@ public class ChattingService {
 			chatting.setMeetStatus(message.getMeetStatus());
 			chatting.setPrice(message.getPrice());
 			chatting.setReadCount(message.getReadCount());
+			mongoChatRepository.save(chatting);
 			meetupService.update(message);
 			sender.send(ConstantUtil.KAFKA_TOPIC, message);
 		}
