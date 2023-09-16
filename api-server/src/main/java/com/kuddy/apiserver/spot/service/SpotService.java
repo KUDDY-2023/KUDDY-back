@@ -21,10 +21,7 @@ import com.kuddy.common.spot.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -113,6 +110,18 @@ public class SpotService {
         return returnStatusResponse(response);
     }
 
+
+    public ResponseEntity<StatusResponse> getSpotsByDistance(int page, String mapX, String mapY) {
+        List<Spot> spotList = spotRepository.findAllByDistance(mapX, mapY);
+        PageRequest pageRequest = PageRequest.of(page, 20);
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), spotList.size());
+        Page<Spot> spotPage = new PageImpl<>(spotList.subList(start, end), pageRequest, spotList.size());
+
+        return changePageToResponse(spotPage, page + 1);
+    }
+
     //조회한 spot 리스트와 페이지 정보를 공통응답형식으로 반환하도록 변환하는 메소드
     public ResponseEntity<StatusResponse> changePageToResponse(Page<Spot> spotPage, int page) {
         List<Spot> spotList = spotPage.getContent();
@@ -123,20 +132,6 @@ public class SpotService {
         }
 
         PageInfo pageInfo = new PageInfo(page, spotPage.getNumberOfElements(), spotPage.getTotalElements(), spotPage.getTotalPages());
-        SpotPageResDto spotPageResDto = new SpotPageResDto(response, pageInfo);
-
-        return returnStatusResponse(spotPageResDto);
-    }
-
-
-    //Tour Api에서 조회한 정보를 db에 저장하지 않고 공통응답형식으로 반환하도록 변환하는 메소드(위치 기반 추천)
-    public ResponseEntity<StatusResponse> changeJsonToResponse(JSONObject body) {
-        int numOfRows = Integer.parseInt(String.valueOf(body.get("numOfRows")));
-        int pageNo = Integer.parseInt(String.valueOf(body.get("pageNo")));
-        long totalCount = (long) body.get("totalCount");
-
-        List<SpotResDto> response = changeJsonBodyToList(body);
-        PageInfo pageInfo = new PageInfo(pageNo, numOfRows, totalCount, (int) (totalCount / 20 + 1));
         SpotPageResDto spotPageResDto = new SpotPageResDto(response, pageInfo);
 
         return returnStatusResponse(spotPageResDto);

@@ -51,7 +51,7 @@ public class SpotController {
 
     @GetMapping("/recommendation")
     public ResponseEntity<StatusResponse> recommendSpot(@RequestParam(value = "page") int page, @RequestParam(value = "x") String mapX, @RequestParam(value = "y") String mapY) {
-        return spotService.changeJsonToResponse(tourApiService.getLocationBasedApi(page, 20, mapX, mapY));
+        return spotService.getSpotsByDistance(page - 1, mapX, mapY);
     }
 
     @GetMapping("/{contentId}")
