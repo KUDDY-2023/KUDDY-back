@@ -40,6 +40,7 @@ public class ProfileSearchController {
 	public ResponseEntity<StatusResponse> readProfile(@RequestParam final String nickname) {
 		Member findMember = memberService.findByNickname(nickname);
 		Profile profile = profileService.findByMember(findMember);
+		profileService.validateProfile(profile);
 		ProfileResDto response = ProfileResDto.from(findMember, profile);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
@@ -72,7 +73,7 @@ public class ProfileSearchController {
 	}
 
 	@PostMapping("/search")
-	public ResponseEntity<StatusResponse> searchNickname(
+	public ResponseEntity<StatusResponse> searchProfileInfo(
 		@RequestBody final ProfileSearchReqDto reqDto) {
 		List<Profile> profileList = profileQueryService.findProfilesBySearchCriteria(reqDto);
 		ProfileSearchListResDto response = ProfileSearchListResDto.from(profileList, reqDto.getInterestContent());
