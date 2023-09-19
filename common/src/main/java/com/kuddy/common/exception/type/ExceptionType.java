@@ -4,9 +4,7 @@ package com.kuddy.common.exception.type;
 import java.util.Arrays;
 import java.util.Objects;
 
-import com.kuddy.common.chat.exception.ChatNotFoundException;
-import com.kuddy.common.chat.exception.ChatRoomNotFoundException;
-import com.kuddy.common.chat.exception.RoomNotFoundException;
+import com.kuddy.common.chat.exception.*;
 
 import com.kuddy.common.comment.exception.NoAuthorityCommentRemove;
 import com.kuddy.common.comment.exception.NoCommentExistsException;
@@ -19,6 +17,9 @@ import com.kuddy.common.community.exception.NoDistrictExistsException;
 import com.kuddy.common.community.exception.WrongImageFormatException;
 import com.kuddy.common.exception.custom.ApplicationException;
 import com.kuddy.common.meetup.exception.NotAdminException;
+import com.kuddy.common.notification.exception.GoogleCalendarAPIException;
+import com.kuddy.common.notification.exception.KakaoCalendarAPIException;
+import com.kuddy.common.notification.exception.NotificationNotFoundException;
 import com.kuddy.common.profile.exception.DuplicateProfileException;
 import com.kuddy.common.review.exception.NoAuthorityToDeleteReview;
 import com.kuddy.common.review.exception.NotKuddyException;
@@ -46,6 +47,7 @@ import com.kuddy.common.security.exception.InvalidRefreshTokenException;
 import com.kuddy.common.security.exception.InvalidTokenException;
 import com.kuddy.common.security.exception.InvalidTokenTypeException;
 import com.kuddy.common.security.exception.UnAuthorizedTokenException;
+import com.kuddy.common.spot.exception.NoSpotNearbyException;
 import com.kuddy.common.spot.exception.SpotNotFoundException;
 import com.kuddy.common.spot.exception.TourApiExeption;
 import com.kuddy.common.ticket.exception.OnlyTravelerRequestException;
@@ -64,7 +66,7 @@ public enum ExceptionType {
 
 	//권한 관련 - C1***
   
-	EMPTY_TOKEN_EXCEPTION("C1003", "토큰이 존재하지 않습니다.", EmptyTokenException .class),
+	EMPTY_TOKEN_EXCEPTION("C1003", "토큰이 존재하지 않습니다.", EmptyTokenException.class),
 	INVALID_TOKEN_TYPE_EXCEPTION("C1004", "토큰 타입이 올바르지 않습니다.", InvalidTokenTypeException .class),
 	EXPIRED_TOKEN_EXCEPTION("C1005", "토큰이 유효하지 않습니다.", ExpiredTokenException.class),
 	NOT_AUTHOR_EXCEPTION("C1007", "작성자가 아니므로 권한이 없습니다.", NotAuthorException.class),
@@ -87,7 +89,8 @@ public enum ExceptionType {
 	SPOT_NOT_FOUND_EXCEPTION("C4001", "해당 관광지 정보를 찾을 수 없습니다.",SpotNotFoundException.class),
 	HEART_NOT_FOUND_EXCEPTION("C4002", "해당 관광지에 대한 찜 정보를 찾을 수 없습니다.", HeartNotFoundException.class),
 	ALREADY_LIKED_EXCEPTION("C4003", "이미 찜한 관광지입니다.", AlreadyLikedException.class),
-        NO_SPOT_EXISTS_EXCEPTION("C4004", "존재하지 않는 spot id입니다.", NoSpotExists.class),
+	NO_SPOT_EXISTS_EXCEPTION("C4004", "존재하지 않는 spot id입니다.", NoSpotExists.class),
+	NO_SPOT_NEARBY_EXCEPTION("C4005", "주변에 관광지가 없습니다.", NoSpotNearbyException.class),
 
 	//회원 관련 - C2***
 	INVALID_NICKNAME_EXCEPTION("C2000", "유효하지 않은 닉네임입니다.", InvalidNicknameException.class),
@@ -114,6 +117,8 @@ public enum ExceptionType {
 	CHAT_ROOM_NOT_FOUND_EXCEPTION("C7000", "해당 접속한 채팅방을 찾을 수 없습니다.", ChatRoomNotFoundException.class),
 	ROOM_NOT_FOUND_EXCEPTION("C7001", "해당 채팅방을 찾을 수 없습니다.", RoomNotFoundException.class),
 	CHAT_NOT_FOUND_EXCEPTION("C7002", "해당 채팅을 찾을 수 없습니다.", ChatNotFoundException.class),
+	NOT_CHATROOM_OWNER_EXCEPTION("C7003", "해당 roomId의 주인이 아니므로 권한이 없습니다.", NotChatRoomOwnerException.class),
+	NOT_MATCH_LOGINMEMBER_EXCEPTION("C7004", "해당 email과 로그인한 유저의 email이 일치하지 않습니다.", NotMatchLoginMemberEmailException.class),
 
 	//신고 관련 - C9***
 	REPORT_NOT_FOUND_EXCEPTION("C9000", "해당 신고 기록을 찾을 수 없습니다.", ReportNotFoundException.class),
@@ -135,7 +140,12 @@ public enum ExceptionType {
 
 	//티켓 관련 - C12***
 	TICKET_NOT_FOUNED_EXCEPTION("C12000", "티켓 정보를 찾을 수 없습니다.", TicketNotFoundException.class),
-	ONLY_TRAVELER_REQUEST_EXCEPTION("C12001", "Traveler만 가능한 요청입니다.", OnlyTravelerRequestException.class);
+	ONLY_TRAVELER_REQUEST_EXCEPTION("C12001", "Traveler만 가능한 요청입니다.", OnlyTravelerRequestException.class),
+
+	//알림 관련 - C13***
+	GOOGLE_CALENDAR_API_EXCEPTION("C13000", "Google Calendar API를 불러올 수 없습니다.", GoogleCalendarAPIException.class),
+	KAKAO_CALENDAR_API_EXCEPTION("C13001", "Kakao 톡캘린더 API를 불러올 수 없습니다.", KakaoCalendarAPIException.class),
+	NOTIFICATION_NOT_FOUND_EXCEPTION("C13002", "해당 알림을 찾을 수 없습니다.", NotificationNotFoundException.class);
 
 	private final String errorCode;
 	private final String message;

@@ -26,20 +26,14 @@ jobs:
       - name: Grant execute permission for gradlew # gradlew에 실행권한
         run: chmod +x ./gradlew
         shell: bash
-      - name: Make application.yml for api-server
-        run: |
-          cd ./api-server/src/main/resources
-          echo "${{ secrets.API_APPLICATION }}" > ./application.yml
+      - name: Decode application.yml for api-server
+        run: echo "${{ secrets.API_APPLICATION }}" | base64 -d > ./api-server/src/main/resources/application.yml
 
-      - name: Make application.yml for chat-server
-        run: |
-          cd ./chat-server/src/main/resources
-          echo "${{ secrets.CHAT_APPLICATION }}" > ./application.yml
+      - name: Decode application.yml for chat-server
+        run: echo "${{ secrets.CHAT_APPLICATION }}" | base64 -d > ./chat-server/src/main/resources/application.yml
 
-      - name: Make application.yml for noti-server
-        run: |
-          cd ./noti-server/src/main/resources
-          echo "${{ secrets.NOTI_APPLICATION }}" > ./application.yml
+      - name: Decode application.yml for noti-server
+        run: echo "${{ secrets.NOTI_APPLICATION }}" | base64 -d > ./noti-server/src/main/resources/application.yml
 
 
       - name: Build with Gradle # 프로젝트 build

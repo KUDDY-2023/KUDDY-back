@@ -137,7 +137,7 @@ public class Profile extends BaseTimeEntity {
 	@Builder
 	public Profile(String job, Integer age, String nationality,
 		DecisionMaking decisionMaking,
-		Temperament temperament, GenderType genderType, Member member) {
+		Temperament temperament, GenderType genderType, Member member, String introduce) {
 		this.job = job;
 		this.age = age;
 		this.kuddyLevel = KuddyLevel.NOT_KUDDY;
@@ -147,6 +147,7 @@ public class Profile extends BaseTimeEntity {
 		this.genderType = genderType;
 		this.member = member;
 		this.ticketStatus = TicketStatus.NOT_SUBMITTED;
+		this.introduce = introduce;
 	}
 
 	public void changeJob(String newJob) {

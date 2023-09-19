@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.kuddy.apiserver.member.service.MemberService;
-import com.kuddy.apiserver.profile.dto.ProfileReqDto;
-import com.kuddy.apiserver.profile.dto.ProfileResDto;
+import com.kuddy.apiserver.profile.dto.request.ProfileReqDto;
+import com.kuddy.apiserver.profile.dto.response.ProfileResDto;
+import com.kuddy.apiserver.profile.dto.response.ProfileSearchResDto;
 import com.kuddy.apiserver.profile.service.ProfileService;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.profile.domain.Profile;
@@ -41,6 +43,18 @@ public class MemberProfileController {
 	public ResponseEntity<StatusResponse> readMyProfile(@AuthUser Member member) {
 		Profile profile = profileService.findByMember(member);
 		ProfileResDto response = ProfileResDto.from(member, profile);
+		return ResponseEntity.ok(StatusResponse.builder()
+			.status(StatusEnum.OK.getStatusCode())
+			.message(StatusEnum.OK.getCode())
+			.data(response)
+			.build());
+	}
+
+	@GetMapping("/{profileId}")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<StatusResponse> readProfile(@AuthUser Member member, @PathVariable Long profileId) {
+		Profile profile = profileService.findById(profileId);
+		ProfileSearchResDto response = ProfileSearchResDto.from(profile.getMember(), profile);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
 			.message(StatusEnum.OK.getCode())

@@ -2,6 +2,7 @@ package com.kuddy.chatserver.chat.interceptor;
 
 import java.util.Objects;
 
+import com.kuddy.chatserver.chat.service.ChatRoomService;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
@@ -12,8 +13,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import com.kuddy.chatserver.chat.service.ChatRoomService;
-import com.kuddy.chatserver.chat.service.ChatService;
+import com.kuddy.chatserver.chat.service.ChatRoomConnectInfoService;
+import com.kuddy.chatserver.chat.service.ChattingService;
 import com.kuddy.common.jwt.JwtProvider;
 
 import io.jsonwebtoken.Claims;
@@ -26,8 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StompHandler implements ChannelInterceptor {
 	private final JwtProvider jwtProvider;
+	private final ChatRoomConnectInfoService chatRoomConnectInfoService;
+	private final ChattingService chattingService;
 	private final ChatRoomService chatRoomService;
-	private final ChatService chatService;
 	private static final String BEARER_PREFIX = "Bearer ";
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -44,7 +46,7 @@ public class StompHandler implements ChannelInterceptor {
 		return message;
 	}
 
-	private void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String email) {
+	public void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String email) {
 		switch (stompCommand) {
 
 			case CONNECT:
@@ -76,19 +78,19 @@ public class StompHandler implements ChannelInterceptor {
 		return token;
 	}
 
-	private void connectToChatRoom(StompHeaderAccessor accessor, String email) {
+	public void connectToChatRoom(StompHeaderAccessor accessor, String email) {
 		// 채팅방 번호를 가져온다.
 		Long chatRoomNo = getChatRoomNo(accessor);
 
 		// 채팅방 입장 처리 -> Redis에 입장 내역 저장
-		chatRoomService.connectChatRoom(chatRoomNo, email);
+		chatRoomConnectInfoService.connectChatRoom(chatRoomNo, email);
 		// 읽지 않은 채팅을 전부 읽음 처리
-		chatService.updateCountAllZero(chatRoomNo, email);
+		chatRoomService.updateCountAllZero(chatRoomNo, email);
 		// 현재 채팅방에 접속중인 인원이 있는지 확인한다.
-		boolean isConnected = chatRoomService.isConnected(chatRoomNo);
+		boolean isConnected = chatRoomConnectInfoService.isConnected(chatRoomNo);
 
 		if (isConnected) {
-			chatService.updateMessage(email, chatRoomNo);
+			chattingService.updateMessage(email, chatRoomNo);
 		}
 	}
 

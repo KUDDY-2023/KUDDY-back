@@ -1,4 +1,4 @@
-package com.kuddy.apiserver.profile.dto;
+package com.kuddy.apiserver.profile.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberAreaDto {
-	private String areaName;
+public class MemberLanguageDto {
+	private String languageType;
+	private Integer languageLevel;
 }

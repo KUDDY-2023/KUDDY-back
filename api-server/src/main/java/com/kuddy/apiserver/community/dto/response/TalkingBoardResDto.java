@@ -20,7 +20,7 @@ public class TalkingBoardResDto {
     private LocalDate date;
     private String district;
     private List<String> fileUrls;
-    private Long author_id;
+    private Long authorId;
     private String subject;
     private LocalDateTime createdDate;
 
@@ -35,7 +35,7 @@ public class TalkingBoardResDto {
                     .date(post.getDate())
                     .district(post.getDistrict().getArea())
                     .fileUrls(imgUrlList)
-                    .author_id(post.getAuthor().getId())
+                    .authorId(post.getAuthor().getId())
                     .createdDate(post.getCreatedDate())
                     .build();
         }
@@ -45,7 +45,7 @@ public class TalkingBoardResDto {
                 .title(post.getTitle())
                 .content(post.getContent().length() > 95 ? post.getContent().substring(0, 95) : post.getContent())
                 .fileUrls(imgUrlList)
-                .author_id(post.getAuthor().getId())
+                .authorId(post.getAuthor().getId())
                 .subject(post.getSubject().getType())
                 .createdDate(post.getCreatedDate())
                 .build();

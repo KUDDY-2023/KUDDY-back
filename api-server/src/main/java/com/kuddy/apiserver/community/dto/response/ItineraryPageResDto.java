@@ -11,6 +11,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class ItineraryPageResDto {
-    private List<ItineraryResDto> posts;
+    private List<ItineraryResSimpleDto> posts;
     private PageInfo pageInfo;
 }

@@ -24,7 +24,7 @@ public enum District {
     GWANAK("5", "Gwanak"),
     GWANGJIN("6", "Gwangjin"),
     JONGNO("23", "Jongno"),
-    JUNG("24", "Junggu"),
+    JUNGGU("24", "Junggu"),
     JUNGNANG("25", "Jungnang"),
     MAPO("13", "Mapo"),
     NOWON("9", "Nowon"),

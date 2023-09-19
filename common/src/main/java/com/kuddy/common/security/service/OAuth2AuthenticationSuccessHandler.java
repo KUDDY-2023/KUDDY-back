@@ -1,132 +1,155 @@
 package com.kuddy.common.security.service;
 
-import static com.kuddy.common.security.repository.CookieAuthorizationRequestRepository.*;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.kuddy.common.jwt.JwtProvider;
+import com.kuddy.common.member.domain.ProviderType;
+import com.kuddy.common.redis.RedisService;
+import com.kuddy.common.security.repository.CookieAuthorizationRequestRepository;
+import com.kuddy.common.security.user.GoogleUserInfo;
+import com.kuddy.common.security.user.KakaoUserInfo;
+import com.kuddy.common.util.CookieUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.kuddy.common.jwt.JwtProvider;
-import com.kuddy.common.member.domain.ProviderType;
-import com.kuddy.common.redis.RedisService;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
-import com.kuddy.common.security.repository.CookieAuthorizationRequestRepository;
-import com.kuddy.common.security.user.GoogleUserInfo;
-import com.kuddy.common.security.user.KakaoUserInfo;
-import com.kuddy.common.util.CookieUtils;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static com.kuddy.common.security.repository.CookieAuthorizationRequestRepository.REDIRECT_URL_PARAM_COOKIE_KEY;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-	private final JwtProvider jwtProvider;
-	private final RedisService redisService;
-	private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
+    private final JwtProvider jwtProvider;
+    private final RedisService redisService;
+    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
+    private final OAuth2AuthorizedClientService authorizedClientService;
 
-	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-		Authentication authentication) throws IOException {
-		OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-		Map<String, Object> attributes = oAuth2User.getAttributes();
-		OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken)authentication;
-
-		ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
-
-		String email = "null";
-		if (providerType.equals(ProviderType.KAKAO)) {
-			KakaoUserInfo kakaoUserInfo = new KakaoUserInfo(attributes);
-			email = kakaoUserInfo.getEmail();
-			log.info("kakao");
-		}
-		else if(providerType.equals(ProviderType.GOOGLE)){
-			GoogleUserInfo googleUserInfo = new GoogleUserInfo(attributes);
-			email = googleUserInfo.getEmail();
-			log.info("google");
-		}
-		else {
-			Map<String, Object> providerData = (Map<String, Object>) attributes.get(providerType.name().toLowerCase());
-			if (providerData != null) {
-				email = providerData.get("email").toString();
-			} else {
-				// Handle the case where providerData is null
-			}
-		}
+    private static final Long kakaoAccessTokenValidationMs = 1000 * 60 * 60 * 6L;
+    private static final Long kakaoRefreshTokenValidationMs = 1000 * 60 * 60 * 24 * 30L;
+    private static final Long googleAccessTokenValidationMs = 1000 * 60 * 60L;
+    private static final Long googleRefreshTokenValidationMs = 15552000000L;
 
 
-		String targetUrl = determineTargetUrl(request, response, authentication);
-		log.info("targetUrl = " + targetUrl);
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
+        OAuth2AuthorizedClient auth2AuthorizedClient = authorizedClientService.loadAuthorizedClient(
+                authToken.getAuthorizedClientRegistrationId(),
+                authToken.getName());
 
-		String url = makeRedirectUrl(email, targetUrl);
+        String oauthAccessToken = auth2AuthorizedClient.getAccessToken().getTokenValue();
+        log.info("oauth access token:" + oauthAccessToken);
 
-		ResponseCookie responseCookie = generateRefreshTokenCookie(email);
-		response.setHeader("Set-Cookie", responseCookie.toString());
-		response.getWriter().write(url);
+        OAuth2RefreshToken refreshToken = auth2AuthorizedClient.getRefreshToken();
+        log.info("oauth refresh token: " + refreshToken);
+
+        ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
+
+        String email = null;
+        String oauthRefreshToken;
+        if (providerType.equals(ProviderType.KAKAO)) {
+            KakaoUserInfo kakaoUserInfo = new KakaoUserInfo(attributes);
+            email = kakaoUserInfo.getEmail();
+            log.info("kakao");
+            oauthRefreshToken = refreshToken != null
+                    ? refreshToken.getTokenValue()
+                    : redisService.getData("KakaoRefreshToken:" + email);
+            redisService.setData("KakaoAccessToken:" + email, oauthAccessToken, kakaoAccessTokenValidationMs);
+            redisService.setData("KakaoRefreshToken:" + email, oauthRefreshToken, kakaoRefreshTokenValidationMs);
+        } else if (providerType.equals(ProviderType.GOOGLE)) {
+            GoogleUserInfo googleUserInfo = new GoogleUserInfo(attributes);
+            email = googleUserInfo.getEmail();
+            log.info("google");
+            oauthRefreshToken = refreshToken != null
+                    ? refreshToken.getTokenValue()
+                    : redisService.getData("GoogleRefreshToken:" + email);
+            redisService.setData("GoogleAccessToken:" + email, oauthAccessToken, googleAccessTokenValidationMs);
+            redisService.setData("GoogleRefreshToken:" + email, oauthRefreshToken, googleRefreshTokenValidationMs);
+        } else {
+            Map<String, Object> providerData = (Map<String, Object>) attributes.get(providerType.name().toLowerCase());
+            if (providerData != null) {
+                email = providerData.get("email").toString();
+            } else {
+                // Handle the case where providerData is null
+            }
+        }
+
+        String targetUrl = determineTargetUrl(request, response, authentication);
+        log.info("targetUrl = " + targetUrl);
+
+        String url = makeRedirectUrl(email, targetUrl);
+
+        ResponseCookie responseCookie = generateRefreshTokenCookie(email);
+        response.setHeader("Set-Cookie", responseCookie.toString());
+        response.getWriter().write(url);
 
 
-		if (response.isCommitted()) {
-			logger.info("응답이 이미 커밋된 상태입니다. " + url + "로 리다이렉트하도록 바꿀 수 없습니다.");
-			return;
-		}
-		clearAuthenticationAttributes(request, response);
-		getRedirectStrategy().sendRedirect(request, response, url);
-	}
+        if (response.isCommitted()) {
+            logger.info("응답이 이미 커밋된 상태입니다. " + url + "로 리다이렉트하도록 바꿀 수 없습니다.");
+            return;
+        }
+        clearAuthenticationAttributes(request, response);
+        getRedirectStrategy().sendRedirect(request, response, url);
+    }
 
 
-	private String makeRedirectUrl(String email, String redirectUrl) {
+    private String makeRedirectUrl(String email, String redirectUrl) {
 
-		if (redirectUrl.equals(getDefaultTargetUrl())) {
-			redirectUrl = "http://localhost:3000";
-		}
-		log.info(redirectUrl);
+        if (redirectUrl.equals(getDefaultTargetUrl())) {
+            redirectUrl = "http://localhost:3000";
+        }
+        log.info(redirectUrl);
 
-		String accessToken = jwtProvider.generateAccessToken(email);
-		log.info("access=" + accessToken);
+        String accessToken = jwtProvider.generateAccessToken(email);
+        log.info(accessToken);
 
-		return UriComponentsBuilder.fromHttpUrl(redirectUrl)
-			.path("/oauth2/redirect")
-			.queryParam("accessToken", accessToken)
-			.queryParam("redirectUrl", redirectUrl)
-			.build()
-			.encode()
-			.toUriString();
+        return UriComponentsBuilder.fromHttpUrl(redirectUrl)
+                .path("/oauth2/redirect")
+                .queryParam("accessToken", accessToken)
+                .queryParam("redirectUrl", redirectUrl)
+                .build()
+                .encode()
+                .toUriString();
 
 
-	}
+    }
 
-	@Override
-	protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-		Optional<String> redirectUrl = CookieUtils.getCookie(request, REDIRECT_URL_PARAM_COOKIE_KEY).map(Cookie::getValue);
-		String targetUrl = redirectUrl.orElse(getDefaultTargetUrl());
-		return UriComponentsBuilder.fromUriString(targetUrl)
-			.build().toUriString();
-	}
+    @Override
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        Optional<String> redirectUrl = CookieUtils.getCookie(request, REDIRECT_URL_PARAM_COOKIE_KEY).map(Cookie::getValue);
+        String targetUrl = redirectUrl.orElse(getDefaultTargetUrl());
+        return UriComponentsBuilder.fromUriString(targetUrl)
+                .build().toUriString();
+    }
 
-	protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
-		super.clearAuthenticationAttributes(request);
-		cookieAuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
-	}
+    protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
+        super.clearAuthenticationAttributes(request);
+        cookieAuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+    }
 
-	public ResponseCookie generateRefreshTokenCookie(String email) {
-		String refreshToken = jwtProvider.generateRefreshToken(email);
-		Long refreshTokenValidationMs = jwtProvider.getRefreshTokenValidationMs();
+    public ResponseCookie generateRefreshTokenCookie(String email) {
+        String refreshToken = jwtProvider.generateRefreshToken(email);
+        Long refreshTokenValidationMs = jwtProvider.getRefreshTokenValidationMs();
 
-		redisService.setData("RefreshToken:" + email, refreshToken, refreshTokenValidationMs);
+        redisService.setData("RefreshToken:" + email, refreshToken, refreshTokenValidationMs);
 		log.info("refresh:" + refreshToken);
 		return ResponseCookie.from("refreshToken", refreshToken)
 			.path("/") // 해당 경로 하위의 페이지에서만 쿠키 접근 허용. 모든 경로에서 접근 허용한다.
