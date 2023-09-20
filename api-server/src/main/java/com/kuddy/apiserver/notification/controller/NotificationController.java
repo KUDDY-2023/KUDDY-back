@@ -26,7 +26,7 @@ public class NotificationController {
     // 전체 알림 읽음 처리
     @PostMapping("/read/list")
     public ResponseEntity<StatusResponse> readAllNotification(@AuthUser Member member){
-        return notificationService.readAllNotification(member);
+        return notificationService.readAllCommentNotification(member);
     }
 
     // 단일 알림 읽음 처리
@@ -38,12 +38,12 @@ public class NotificationController {
     // 전체 알림 조회
     @GetMapping()
     public ResponseEntity<StatusResponse> getNotifications(@AuthUser Member member, @RequestParam int page, @RequestParam int size){
-        return notificationService.findAllNotification(member.getId(), page, size);
+        return notificationService.findAllCommentNotification(member.getId(), page, size);
     }
 
     //읽지 않은 알림 개수 조회
     @GetMapping("/count")
     public ResponseEntity<StatusResponse> countUnreadNotifications(@AuthUser Member member){
-        return notificationService.countUnreadNotifications(member);
+        return notificationService.countUnreadCommentNotifications(member);
     }
 }

@@ -39,7 +39,7 @@ public class ChatNotiService {
 			.notificationType(notificationType)
 			.content(content)
 			.contentId(contentId)
-			.isRead(false) //읽지 않음 상태로 초기 세팅
+			.isRead(true) //읽지 않음 상태로 초기 세팅
 			.build();
 	}
 	@Async

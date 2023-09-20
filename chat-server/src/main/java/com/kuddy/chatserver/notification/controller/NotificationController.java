@@ -1,6 +1,5 @@
 package com.kuddy.chatserver.notification.controller;
 
-import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,10 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kuddy.chatserver.chat.dto.response.ChatRoomListResDto;
 import com.kuddy.chatserver.chat.service.ChatRoomService;
 import com.kuddy.chatserver.notification.dto.ChatNotiResDto;
-import com.kuddy.chatserver.notification.service.ChatNotiService;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
@@ -28,7 +25,7 @@ public class NotificationController {
 
 	@GetMapping
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<StatusResponse> chatRoomList(@AuthUser Member member) {
+	public ResponseEntity<StatusResponse> getTotalUnreadMessages(@AuthUser Member member) {
 		Long totalUnreadMessages = chatRoomService.getTotalUnreadMessages(member);
 		ChatNotiResDto response = new ChatNotiResDto(totalUnreadMessages);
 		return ResponseEntity.ok(StatusResponse.builder()

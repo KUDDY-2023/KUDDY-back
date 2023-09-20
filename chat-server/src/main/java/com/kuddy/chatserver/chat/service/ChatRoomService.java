@@ -5,6 +5,7 @@ import com.kuddy.chatserver.chat.dto.response.ChatRoomListResDto;
 import com.kuddy.common.chat.domain.Room;
 import com.kuddy.common.chat.domain.mongo.Chatting;
 import com.kuddy.common.chat.exception.ChatRoomAlreadyExistsException;
+import com.kuddy.common.chat.exception.NoRoomExistsException;
 import com.kuddy.common.chat.exception.NotChatRoomOwnerException;
 import com.kuddy.common.chat.exception.NotMatchLoginMemberEmailException;
 import com.kuddy.common.chat.exception.RoomNotFoundException;
@@ -155,11 +156,13 @@ public class ChatRoomService {
             .orElseThrow(MemberNotFoundException::new);
 
         List<Room> rooms = roomRepository.findByCreateMemberOrJoinMember(member, member);
+        if (rooms == null || rooms.isEmpty()) {
+            throw new NoRoomExistsException();
+        }
 
-        List<Long> roomIds = rooms.stream()
+        return rooms.stream()
             .map(Room::getId)
             .collect(Collectors.toList());
 
-        return roomIds;
     }
 }
