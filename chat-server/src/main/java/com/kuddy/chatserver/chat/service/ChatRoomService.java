@@ -4,6 +4,8 @@ import com.kuddy.chatserver.chat.dto.request.ChatReqDto;
 import com.kuddy.chatserver.chat.dto.response.ChatRoomListResDto;
 import com.kuddy.common.chat.domain.Room;
 import com.kuddy.common.chat.domain.mongo.Chatting;
+import com.kuddy.common.chat.exception.ChatRoomAlreadyExistsException;
+import com.kuddy.common.chat.exception.NoRoomExistsException;
 import com.kuddy.common.chat.exception.NotChatRoomOwnerException;
 import com.kuddy.common.chat.exception.NotMatchLoginMemberEmailException;
 import com.kuddy.common.chat.exception.RoomNotFoundException;
@@ -24,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -64,6 +68,22 @@ public class ChatRoomService {
         return chatRoomList;
     }
 
+    @Transactional(readOnly = true)
+    public long getTotalUnreadMessages(Member member) {
+        // 1. 회원이 참여하고 있는 모든 채팅방의 ID 목록을 가져온다.
+        List<Long> chatRoomIdList = getChattingRoomIds(member.getId());
+
+        // 2. 각 채팅방에서 읽지 않은 메시지의 수를 계산한다.
+        long totalUnreadCount = 0;
+        for (Long chatRoomId : chatRoomIdList) {
+            long unReadCount = countUnReadMessages(chatRoomId, member.getNickname());
+            totalUnreadCount += unReadCount;
+        }
+
+        // 3. 총 읽지 않은 메시지의 수를 반환한다.
+        return totalUnreadCount;
+    }
+
 
     // 읽지 않은 메시지 카운트
     long countUnReadMessages(Long roomId, String senderNickname) {
@@ -82,19 +102,22 @@ public class ChatRoomService {
                 .and("senderName").ne(findMember.getNickname()));
         mongoTemplate.updateMulti(query, update, Chatting.class);
     }
-    public Long makeChatRoom(Member member, ChatReqDto requestDto) {
+    public Long makeChatRoom(Member createMember, ChatReqDto requestDto) {
         Member joinMember = memberRepository.findByNickname(requestDto.getCreateMemberNickname())
                 .orElseThrow(MemberNotFoundException::new);
+        Optional<Room> existingRoomOpt = Optional.ofNullable(findByMembers(createMember, joinMember.getEmail()));
 
-        Room room = Room.builder()
-                .createMember(member)
+        if (existingRoomOpt.isPresent()) {
+            throw new ChatRoomAlreadyExistsException("roomId: " + existingRoomOpt.get().getId());
+        } else {
+            Room newRoom = Room.builder()
+                .createMember(createMember)
                 .joinMember(joinMember)
                 .build();
+            return roomRepository.save(newRoom).getId();
+        }
 
-        //todo: 이미 존재하는 방 예외 추가
-        Room savedRoom = roomRepository.save(room);
 
-        return savedRoom.getId();
     }
 
     public String checkRoomIdOwnerValidation(Member member, Long roomId) {
@@ -126,5 +149,20 @@ public class ChatRoomService {
     public Room findByMembers(Member member, String email) {
         Member targetMember = findByEmail(email);
         return roomRepository.findRoomByMembers(member, targetMember);
+    }
+    @Transactional(readOnly = true)
+    public List<Long> getChattingRoomIds(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(MemberNotFoundException::new);
+
+        List<Room> rooms = roomRepository.findByCreateMemberOrJoinMember(member, member);
+        if (rooms == null || rooms.isEmpty()) {
+            throw new NoRoomExistsException();
+        }
+
+        return rooms.stream()
+            .map(Room::getId)
+            .collect(Collectors.toList());
+
     }
 }

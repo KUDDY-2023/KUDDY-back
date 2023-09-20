@@ -1,5 +1,6 @@
 package com.kuddy.common.chat.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.kuddy.common.member.domain.Member;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
 	Optional<Room> findById(Long roomId);
+	List<Room> findByCreateMemberOrJoinMember(Member createMember, Member joinMember);
 
 	@Query("SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END FROM Room r WHERE r.id = :roomId AND (r.createMember = :member OR r.joinMember = :member)")
 	boolean existsByRoomIdAndAnyMember(Long roomId, Member member);
