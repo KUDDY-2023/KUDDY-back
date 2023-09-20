@@ -1,4 +1,4 @@
-package com.kuddy.chatserver.chat.config;
+package com.kuddy.chatserver.kafka.config;
 
 import java.util.HashMap;
 import java.util.Map;

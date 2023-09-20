@@ -7,10 +7,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.kuddy.chatserver.chat.dto.response.ReceiverInfoResDto;
-import org.springframework.data.mongodb.core.MongoTemplate;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kuddy.chatserver.kafka.service.MessageSender;
 import com.kuddy.common.chat.domain.Message;
 import com.kuddy.common.chat.domain.Room;
 import com.kuddy.common.chat.domain.mongo.Chatting;
@@ -37,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @RequiredArgsConstructor
 public class ChattingService {
-	private final MongoTemplate mongoTemplate;
+
 	private final MongoChatRepository mongoChatRepository;
 	private final RoomRepository roomRepository;
 	private final ChatQueryService chatQueryService;

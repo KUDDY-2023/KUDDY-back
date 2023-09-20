@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 
 import com.kuddy.common.domain.BaseTimeEntity;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.member.domain.RoleType;
+import com.kuddy.common.member.exception.NotAuthorException;
 import com.kuddy.common.spot.domain.Spot;
 
 import lombok.AccessLevel;
@@ -97,6 +99,18 @@ public class Meetup extends BaseTimeEntity {
 			return true;
 		}
 		return false;
+	}
+	public MeetupStatus cancelMeetup(Member member){
+		if(member.getRoleType().equals(RoleType.KUDDY)){
+			this.meetupStatus = MeetupStatus.KUDDY_CANCEL;
+		}
+		else if(member.getRoleType().equals(RoleType.TRAVELER)){
+			this.meetupStatus = MeetupStatus.TRAVELER_CANCEL;
+		}
+		else{
+			throw new NotAuthorException();
+		}
+		return this.meetupStatus;
 	}
 
 	public void setKuddy(Member kuddy) {

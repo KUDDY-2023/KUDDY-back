@@ -1,4 +1,4 @@
-package com.kuddy.chatserver.chat.config;
+package com.kuddy.chatserver.kafka.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

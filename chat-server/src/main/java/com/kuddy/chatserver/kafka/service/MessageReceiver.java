@@ -1,4 +1,4 @@
-package com.kuddy.chatserver.chat.service;
+package com.kuddy.chatserver.kafka.service;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;

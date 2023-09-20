@@ -17,6 +17,7 @@ import java.io.IOException;
 public class ChattingController {
     private final ChattingService chattingService;
 
+
     @MessageMapping("/message")
     public void sendMessage(@Valid Message message, @Header("Authorization") final String accessToken) {
         chattingService.sendMessage(message, accessToken);

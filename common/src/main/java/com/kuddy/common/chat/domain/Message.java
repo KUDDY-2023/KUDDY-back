@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import javax.validation.constraints.NotNull;
 
 import com.kuddy.common.chat.domain.mongo.Chatting;
+import com.kuddy.common.member.domain.Member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -71,6 +72,30 @@ public class Message implements Serializable { //Kafka와 Stomp Client 설정
 			.price(price != null ? price : null)
 			.sendTime(Instant.ofEpochMilli(sendTime).atZone(ZoneId.of("UTC")).toLocalDateTime())
 			.readCount(readCount)
+			.build();
+	}
+
+
+	public static Message convertToMessage(Chatting chatting, Member sender) {
+		LocalDateTime sendTime = chatting.getSendTime();
+		long sendTimeMillis = sendTime.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+
+		return Message.builder()
+			.id(chatting.getId())
+			.roomId(chatting.getRoomId())
+			.contentType(chatting.getContentType())
+			.content(chatting.getContent())
+			.spotName(chatting.getSpotName())
+			.spotContentId(chatting.getSpotContentId())
+			.appointmentTime(chatting.getAppointmentTime())
+			.meetStatus(chatting.getMeetStatus())
+			.price(chatting.getPrice())
+			.senderId(sender.getId())
+			.senderName(sender.getNickname())
+			.sendTime(sendTimeMillis)
+			.readCount((int)chatting.getReadCount())
+			.senderEmail(sender.getEmail())
+			.isUpdated(1)
 			.build();
 	}
 }

@@ -72,11 +72,7 @@ public enum ExceptionType {
 	EXPIRED_TOKEN_EXCEPTION("C1005", "토큰이 유효하지 않습니다.", ExpiredTokenException.class),
 	NOT_AUTHOR_EXCEPTION("C1007", "작성자가 아니므로 권한이 없습니다.", NotAuthorException.class),
 	NOT_ADMIN_EXCEPTION("C1008", "관리자가 아니므로 권한이 없습니다.", NotAdminException.class),
-	/*HTTP_REQUEST_NULL_EXCEPTION("C1006", "인증할 수 있는 사용자 데이터가 없습니다.", HttpRequestNullException.class),
-	NOT_AUTHOR_EXCEPTION("C1007", "작성자가 아니므로 권한이 없습니다.", NotAuthorException.class),
-	NOT_MEMBER_EXCEPTION("C1008", "회원이 아니므로 권한이 없습니다.", NotMemberException.class),
 
-	 */
 	INVALID_REFRESH_TOKEN_EXCEPTION("C1009", "리프레시 토큰이 유효하지 않습니다.", InvalidRefreshTokenException.class),
 	UNAUTHORIZED_TOKEN_EXCEPTION("C1010", "권한이 없는 토큰입니다.", UnAuthorizedTokenException.class),
 	NO_MATCH_REFRESHTOKEN_EXCEPTION("C1011", "해당 유저의 저장된 리프레시 토큰과 일치하지 않습니다.",
@@ -98,7 +94,7 @@ public enum ExceptionType {
 	DUPLICATE_NICKNAME_EXCEPTION("C2001", "중복된 닉네임이 존재합니다.", DuplicateNicknameException.class),
 	//프로필 관련 - C3***
 	PROFILE_NOT_FOUND_EXCEPTION("C3000", "프로필을 찾을 수 없습니다.", ProfileNotFoundException.class),
-	LANGUEAGE_NOT_FOUND_EXCEPTION("C3001", "해당 언어를 찾을 수 없습니다.", LanguageNotFoundException.class),
+	LANGUAGE_NOT_FOUND_EXCEPTION("C3001", "해당 언어를 찾을 수 없습니다.", LanguageNotFoundException.class),
 	AREA_NOT_FOUND_EXCEPTION("C3002", "해당 지역을 찾을 수 없습니다.", AreaNotFoundException.class),
 	DUPLICATED_PROFILE_EXCEPTION("C3003", "이미 생성된 프로필이 존재하므로 다시 생성할 수 없습니다.", DuplicateProfileException.class),
 	WITHDRAW_MEMBER_PROFILE_EXCEPTION("C3004", "탈퇴한 회원의 프로필입니다.", WithdrawMemberProfileException.class),
@@ -133,7 +129,6 @@ public enum ExceptionType {
 
 	//meetup 관련 - C8***
 	MEETUP_NOT_FOUND_EXCEPTION("C8000", "해당 meetup을 찾을 수 없습니다.", MeetupNotFoundException.class),
-
 	//리뷰 관련 - C11***
 	REVIEW_NOT_FOUND_EXCEPTION("C11000", "해당 리뷰 정보를 찾을 수 없습니다.", ReviewNotFoundException.class),
 	NO_AUTHORITY_TO_DELETE_REVIEW("C11001", "본인이 작성한 리뷰만 삭제할 수 있습니다.", NoAuthorityToDeleteReview.class),
