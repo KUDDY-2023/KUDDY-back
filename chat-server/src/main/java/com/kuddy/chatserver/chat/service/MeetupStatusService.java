@@ -43,7 +43,7 @@ public class MeetupStatusService {
 		return meetup;
 	}
 	public void validateMember(Member member, Meetup meetup){
-		if(meetup.getKuddy().equals(member) || meetup.getTraveler().equals(member)){
+		if(!meetup.getKuddy().getId().equals(member.getId()) && !meetup.getTraveler().getId().equals(member.getId())){
 			throw new NotAuthorException();
 		}
 	}
