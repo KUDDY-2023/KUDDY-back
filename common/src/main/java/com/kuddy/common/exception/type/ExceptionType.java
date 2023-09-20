@@ -117,7 +117,7 @@ public enum ExceptionType {
 	CHAT_NOT_FOUND_EXCEPTION("C7002", "해당 채팅을 찾을 수 없습니다.", ChatNotFoundException.class),
 	NOT_CHATROOM_OWNER_EXCEPTION("C7003", "해당 roomId의 주인이 아니므로 권한이 없습니다.", NotChatRoomOwnerException.class),
 	NOT_MATCH_LOGINMEMBER_EXCEPTION("C7004", "해당 email과 로그인한 유저의 email이 일치하지 않습니다.", NotMatchLoginMemberEmailException.class),
-
+	CHATROOM_ALREADY_EXISTS_EXCEPTION("C7005", "이미 해당 회원과 만들어진 채팅방이 있습니다.", ChatRoomAlreadyExistsException.class),
 	//신고 관련 - C9***
 	REPORT_NOT_FOUND_EXCEPTION("C9000", "해당 신고 기록을 찾을 수 없습니다.", ReportNotFoundException.class),
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kuddy.chatserver.kafka.service.MessageSender;
+import com.kuddy.chatserver.notification.service.ChatNotiService;
 import com.kuddy.common.chat.domain.Message;
 import com.kuddy.common.chat.domain.Room;
 import com.kuddy.common.chat.domain.mongo.Chatting;
@@ -28,6 +29,7 @@ import com.kuddy.common.member.exception.MemberNotFoundException;
 import com.kuddy.common.member.exception.NotAuthorException;
 import com.kuddy.common.member.repository.MemberRepository;
 
+import com.kuddy.common.notification.comment.domain.Notificationtype.NotificationType;
 import com.kuddy.common.util.ConstantUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -47,7 +49,7 @@ public class ChattingService {
 	private final MemberRepository memberRepository;
 	private final MeetupService meetupService;
 	private final ChatRoomConnectInfoService chatRoomConnectInfoService;
-	//private final NotificationService notificationService;
+	private final ChatNotiService chatNotiService;
 	private final JwtProvider jwtProvider;
 	private static final String MEETUP_TYPE = "MEETUP";
 
@@ -97,8 +99,7 @@ public class ChattingService {
 		// 상대방이 읽지 않은 경우에만 알림 전송
 		if (message.getReadCount() == 1) {
 			// 알람 전송을 위해 메시지를 받는 사람을 조회한다.
-			// TODO : 알림을 전송한다.
-
+			chatNotiService.send(receiveMember, NotificationType.CHAT, message.getContent(),message.getRoomId());
 		}
 
 		// 보낸 사람일 경우에만 메시지를 저장 -> 중복 저장 방지
