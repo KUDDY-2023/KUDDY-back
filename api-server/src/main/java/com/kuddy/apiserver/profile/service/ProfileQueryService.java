@@ -6,6 +6,7 @@ import static com.kuddy.common.profile.domain.QProfileArea.*;
 
 import java.util.List;
 
+import com.kuddy.common.profile.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,19 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kuddy.apiserver.profile.dto.request.ProfileSearchReqDto;
 import com.kuddy.common.member.domain.Member;
-import com.kuddy.common.profile.domain.ActivitiesInvestmentTech;
-import com.kuddy.common.profile.domain.ArtBeauty;
-import com.kuddy.common.profile.domain.CareerMajor;
-import com.kuddy.common.profile.domain.Entertainment;
-import com.kuddy.common.profile.domain.Food;
-import com.kuddy.common.profile.domain.HobbiesInterests;
-import com.kuddy.common.profile.domain.KuddyLevel;
-import com.kuddy.common.profile.domain.Lifestyle;
-import com.kuddy.common.profile.domain.Profile;
-import com.kuddy.common.profile.domain.QProfile;
 
-import com.kuddy.common.profile.domain.Sports;
-import com.kuddy.common.profile.domain.Wellbeing;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -109,7 +98,7 @@ public class ProfileQueryService {
 
 		NumberExpression<Integer> lengthOrder = Expressions.numberTemplate(Integer.class, "LENGTH({0})", member.nickname);
 
-		List<Profile> profiles = queryFactory
+		return queryFactory
 			.select(profile)
 			.from(profile)
 			.join(profile.member, member)
@@ -121,7 +110,6 @@ public class ProfileQueryService {
 			)
 			.fetch();
 
-		return profiles;
 	}
 
 
@@ -129,30 +117,48 @@ public class ProfileQueryService {
 		BooleanBuilder builder = new BooleanBuilder();
 
 		// GenderType 검색 조건
-		if (searchCriteria.getGenderType() != null) {
-			builder.and(profile.genderType.eq(searchCriteria.getGenderType()));
+		if (!searchCriteria.getGenderType().isBlank()) {
+			builder.and(profile.genderType.eq(GenderType.fromString(searchCriteria.getGenderType())));
 		}
 
 		// Area 검색 조건 (district)
-		if (searchCriteria.getAreaName() != null) {
+		if (!searchCriteria.getAreaName().isBlank()) {
 			builder.and(profileArea.area.district.eq(searchCriteria.getAreaName()));
 		}
 
 		// Interest Group & Content 조건
-		if (searchCriteria.getInterestGroup() != null && searchCriteria.getInterestContent() != null) {
+		if (!searchCriteria.getInterestGroup().isBlank() && !searchCriteria.getInterestContent().isBlank()) {
 			BooleanExpression interestCondition = buildInterestCondition(
-				searchCriteria.getInterestGroup(), searchCriteria.getInterestContent()
+					searchCriteria.getInterestGroup(), searchCriteria.getInterestContent()
 			);
 			builder.and(interestCondition);
 		}
 
-		List<Profile> profiles = queryFactory
-			.selectFrom(profile)
-			.leftJoin(profile.districts, profileArea) // 이 부분은 실제 관계에 따라 조정해야 할 수 있습니다.
-			.where(builder)
-			.fetch();
+		// Nickname 검색 조건
+		if (!searchCriteria.getNickname().isBlank()) {
+			BooleanExpression predicate = member.nickname.likeIgnoreCase("%" + searchCriteria.getNickname() + "%")
+					.and(member.nickname.ne(Member.FORBIDDEN_WORD));
+			builder.and(predicate);
+		}
 
-		return profiles;
+		NumberExpression<Integer> caseOrder = Expressions.cases()
+				.when(member.nickname.equalsIgnoreCase(searchCriteria.getNickname())).then(0)
+				.otherwise(1);
+
+		NumberExpression<Integer> lengthOrder = Expressions.numberTemplate(Integer.class, "LENGTH({0})", member.nickname);
+
+		return queryFactory
+				.selectFrom(profile)
+				.leftJoin(profile.districts, profileArea)
+				.join(profile.member, member)  // Assumes a join with the member table
+				.where(builder)
+				.orderBy(
+						caseOrder.asc(),
+						lengthOrder.asc(),
+						profile.createdDate.desc()
+				)
+				.fetch();
+
 	}
 
 	private BooleanExpression buildInterestCondition(String interestGroup, String interestContent) {
