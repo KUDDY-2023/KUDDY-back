@@ -1,7 +1,9 @@
 package com.kuddy.apiserver.community.dto.response;
 
+import com.kuddy.apiserver.comment.dto.response.WriterInfoDto;
 import com.kuddy.common.community.domain.Post;
 import com.kuddy.common.community.domain.PostType;
+import com.kuddy.common.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,8 +25,11 @@ public class TalkingBoardResDto {
     private Long authorId;
     private String subject;
     private LocalDateTime createdDate;
+    private WriterInfoDto writerInfoDto;
 
     public static TalkingBoardResDto of(Post post, List<String> imgUrlList) {
+        Member member = post.getAuthor();
+        WriterInfoDto writerInfoDto = new WriterInfoDto(member.getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
         if (post.getPostType().equals(PostType.JOIN_US)) {
             return TalkingBoardResDto.builder()
                     .id(post.getId())
@@ -37,6 +42,7 @@ public class TalkingBoardResDto {
                     .fileUrls(imgUrlList)
                     .authorId(post.getAuthor().getId())
                     .createdDate(post.getCreatedDate())
+                    .writerInfoDto(writerInfoDto)
                     .build();
         }
         return TalkingBoardResDto.builder()
@@ -48,6 +54,7 @@ public class TalkingBoardResDto {
                 .authorId(post.getAuthor().getId())
                 .subject(post.getSubject().getType())
                 .createdDate(post.getCreatedDate())
+                .writerInfoDto(writerInfoDto)
                 .build();
 
     }

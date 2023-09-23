@@ -15,19 +15,19 @@ public class CommentResDto { //TODO: 유저 레벨 추가
     private String content;
     private Boolean isRemoved;
     private Boolean isAuthor; //글 작성자인지 여부
-    private CommentWriterInfoDto commentWriterInfoDto;
+    private WriterInfoDto writerInfoDto;
     private LocalDateTime createdDate;
     private List<ReplyResDto> replyList;
     private Long parentId;
 
     public static CommentResDto of(Comment comment, Member member, List<ReplyResDto> replyList) {
-        CommentWriterInfoDto commentWriterInfoDto = new CommentWriterInfoDto(comment.getWriter().getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
+        WriterInfoDto writerInfoDto = new WriterInfoDto(comment.getWriter().getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
         CommentResDtoBuilder builder = CommentResDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
                 .isRemoved(comment.isRemoved())
                 .isAuthor(comment.getWriter().getId().equals(comment.getPost().getId()))
-                .commentWriterInfoDto(commentWriterInfoDto)
+                .writerInfoDto(writerInfoDto)
                 .createdDate(comment.getCreatedDate());
 
         if (comment.getParent() != null) {
