@@ -90,8 +90,7 @@ public class MeetupService implements ApplicationEventPublisherAware{
 					break;
 				case KUDDY_CANCEL:
 				case TRAVELER_CANCEL:
-					List<Calendar> eventList = calendarRepository.findAllByMeetup_Id(meetup.getId());
-					deleteEvents(eventList);
+					eventPublisher.publishEvent(new MeetupCanceledEvent(meetup));
 					break;
 				default:
 					break;
@@ -107,17 +106,6 @@ public class MeetupService implements ApplicationEventPublisherAware{
 	public Long countMeetupsForKuddy(Long kuddyId) {
 		List<MeetupStatus> excludedStatuses = Arrays.asList(MeetupStatus.REFUSED, MeetupStatus.KUDDY_CANCEL, MeetupStatus.TRAVELER_CANCEL);
 		return meetupRepository.countByKuddyIdAndMeetupStatusNotIn(kuddyId, excludedStatuses);
-	}
-
-	private void deleteEvents(List<Calendar> eventList) throws JsonProcessingException {
-		for(Calendar event : eventList){
-			if (event.getMember().getProviderType().equals(ProviderType.KAKAO)) {
-				kakaoCalendarService.deleteCalendarEvent(event);
-			} else {
-				googleCalendarService.deleteCalendarEvent(event);
-			}
-		}
-
 	}
 
 	@Transactional(readOnly = true)
@@ -143,6 +131,15 @@ public class MeetupService implements ApplicationEventPublisherAware{
 			this.meetup = meetup;
 		}
 
+	}
+
+	public static class MeetupCanceledEvent{
+		@Getter
+		private Meetup meetup;
+
+		private MeetupCanceledEvent(@NonNull Meetup meetup){
+			this.meetup = meetup;
+		}
 
 	}
 
