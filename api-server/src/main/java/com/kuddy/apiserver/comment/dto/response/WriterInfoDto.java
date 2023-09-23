@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CommentWriterInfoDto {
+public class WriterInfoDto {
     private Long writerId;
     private String nickname;
     private String profileImageUrl;

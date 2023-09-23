@@ -15,18 +15,18 @@ public class ReplyResDto {
     private Long parenttId;
     private Boolean isRemoved;
     private Boolean isAuthor; //글 작성자인지 여부
-    private CommentWriterInfoDto commentWriterInfoDto;
+    private WriterInfoDto writerInfoDto;
     private LocalDateTime createdDate;
 
     public static ReplyResDto of(Comment child, Long postId, Member member) {
-        CommentWriterInfoDto commentWriterInfoDto = new CommentWriterInfoDto(child.getWriter().getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
+        WriterInfoDto writerInfoDto = new WriterInfoDto(child.getWriter().getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
         return ReplyResDto.builder()
                 .id(child.getId())
                 .content(child.getContent())
                 .parenttId(child.getParent().getId())
                 .isRemoved(child.isRemoved())
                 .isAuthor(child.getWriter().getId().equals(postId))
-                .commentWriterInfoDto(commentWriterInfoDto)
+                .writerInfoDto(writerInfoDto)
                 .createdDate(child.getCreatedDate())
                 .build();
 

@@ -35,8 +35,8 @@ public class PostController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<StatusResponse> getMyPosts(@AuthUser Member member, @RequestParam int page, @RequestParam int size) {
-        return postService.getMyPosts(member, page, size);
+    public ResponseEntity<StatusResponse> getMyPosts(@AuthUser Member member) {
+        return postService.getMyPosts(member);
     }
 
     @PostMapping("/images")

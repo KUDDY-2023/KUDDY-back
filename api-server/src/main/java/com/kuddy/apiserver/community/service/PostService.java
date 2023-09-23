@@ -146,9 +146,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<StatusResponse> getMyPosts(Member member, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Post> posts = postRepository.findAllByAuthorOrderByCreatedDateDesc(member, pageRequest);
+    public ResponseEntity<StatusResponse> getMyPosts(Member member) {
+        List<Post> posts = postRepository.findAllByAuthorOrderByCreatedDateDesc(member);
         List<MyPostResDto> myPostResDtos = new ArrayList<>();
 
         for (Post post : posts) {
@@ -160,9 +159,8 @@ public class PostService {
                     .build();
             myPostResDtos.add(myPostResDto);
         }
-        MyPostPageResDto resDto = new MyPostPageResDto(myPostResDtos, createPageInfo(posts));
 
-        return ResponseEntity.ok(createStatusResponse(resDto));
+        return ResponseEntity.ok(createStatusResponse(myPostResDtos));
     }
 
     public ResponseEntity<StatusResponse> deletePost(Member member, Long postId) {
