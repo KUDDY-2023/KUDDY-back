@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kuddy.common.member.domain.ProviderType;
@@ -69,30 +68,29 @@ public class MeetupService {
 		meetup.updateSpot(spot);
 		meetup.updateAppointment(dateTime);
 		meetup.updatePrice(new BigDecimal(message.getPrice()));
+		boolean isMeetupStatusUpdated = meetup.updateMeetupStatus(message.getMeetStatus());
+		if(isMeetupStatusUpdated){
+			//createCalanderEvent(meetup, message);
+		}
+	}
 
+	public void createCalanderEvent(Meetup meetup, Message message) throws IOException{
 		Member kuddy = meetup.getKuddy();
 		Member traveler = meetup.getTraveler();
-
-		boolean isMeetupStatusUpdated = Objects.equals(message.getMeetStatus(), meetup.getMeetupStatus());
-
-		if (isMeetupStatusUpdated) {
-			meetup.updateMeetupStatus(message.getMeetStatus());
-			MeetupStatus meetupStatus = MeetupStatus.fromString(message.getMeetStatus());
-
-			switch (meetupStatus){
-				case PAYED:
-					createEvent(kuddy, meetup);
-					createEvent(traveler, meetup);
-					break;
-				case KUDDY_CANCEL:
-				case TRAVELER_CANCEL:
-					List<Calendar> eventList = calendarRepository.findAllByMeetup_Id(meetup.getId());
-					deleteEvents(eventList);
-					break;
-				default:
-					break;
-				}
-		}
+		MeetupStatus meetupStatus = MeetupStatus.fromString(message.getMeetStatus());
+		switch (meetupStatus){
+			case PAYED:
+				createEvent(kuddy, meetup);
+				createEvent(traveler, meetup);
+				break;
+			case KUDDY_CANCEL:
+			case TRAVELER_CANCEL:
+				List<Calendar> eventList = calendarRepository.findAllByMeetup_Id(meetup.getId());
+				deleteEvents(eventList);
+				break;
+			default:
+				break;
+			}
 	}
 	@Transactional(readOnly = true)
 	public Spot findByContentId(Long contentId){

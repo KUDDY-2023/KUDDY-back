@@ -46,10 +46,10 @@ public class KakaoCalendarService {
         String kakaoAccessToken = redisService.getData("KakaoAccessToken:" + email);
         boolean isValidAccessToken = kakaoAuthService.validateKakaoAccessToken(kakaoAccessToken);
         if (!isValidAccessToken) {
-            String kakaoRefreshToken = redisService.getData("KakaoRefreshToken" + email);
+            String kakaoRefreshToken = redisService.getData("KakaoRefreshToken:" + email);
             Map<String, String> newTokens = kakaoAuthService.refreshKakaoTokens(kakaoRefreshToken);
             redisService.setData("KakaoAccessToken:" + email, newTokens.get("access_token"), kakaoAccessTokenValidationMs);
-            redisService.setData("KakaoRefreshToken" + email, newTokens.get("refresh_token"), kakaoRefreshTokenValidationMs);
+            redisService.setData("KakaoRefreshToken:" + email, newTokens.get("refresh_token"), kakaoRefreshTokenValidationMs);
 
             return newTokens.get("access_token");
         } else {

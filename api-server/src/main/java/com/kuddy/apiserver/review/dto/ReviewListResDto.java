@@ -15,16 +15,18 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReviewListResDto {
     private List<ReviewResDto> reviewResDto;
-    private Long count;
+    private Long reviewCount;
+    private Long meetupCount;
     private String  perfect;
     private String good;
     private String disappoint;
 
 
-    public static ReviewListResDto of(List<ReviewResDto> reviewResDto, Long count){
+    public static ReviewListResDto of(List<ReviewResDto> reviewResDto, Long reviewCount, Long meetupCount){
         return ReviewListResDto.builder()
                 .reviewResDto(reviewResDto)
-                .count(count)
+                .reviewCount(reviewCount)
+                .meetupCount(meetupCount)
                 .build();
     }
 }

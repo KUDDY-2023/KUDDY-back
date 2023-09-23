@@ -7,13 +7,21 @@ import java.util.stream.Stream;
 
 public enum Subject {
     FOOD(0, "food"),
-    VIEW(1, "view"),
-    KPOP(2, "k-pop");
+    NATURE(1, "nature"),
+    KPOP(2, "k-pop"),
+    ATTRACTION(3, "attraction"),
+    ENTERTAINMENT(4, "entertainment"),
+    SHOPPING(5, "shopping"),
+    LEISURE_SPORTS(6, "leisure sports"),
+    HEALTH_SAFETY(7, "health and safety"),
+    CONVENIENCE_FACILITIES(8, "convenience facilities"),
+    PUBLIC_TRANSPORTATION(9, "public transportation"),
+    TRAVEL_TIPS(10, "travel tips");
 
     private final int value;
     private final String type;
 
-    private Subject(int value, String type) {
+    Subject(int value, String type) {
         this.value = value;
         this.type = type;
     }
