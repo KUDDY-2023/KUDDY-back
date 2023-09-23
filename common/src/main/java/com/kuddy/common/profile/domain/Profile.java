@@ -42,8 +42,8 @@ public class Profile extends BaseTimeEntity {
 	@Column(columnDefinition = "TEXT")
 	private String introduce;
 
-	@Column(length = 100)
-	private Integer age;
+	@Column(length = 12)
+	private String birthDate;
 
 	@Column(length = 15)
 	@Enumerated(EnumType.STRING)
@@ -135,11 +135,11 @@ public class Profile extends BaseTimeEntity {
 
 
 	@Builder
-	public Profile(String job, Integer age, String nationality,
+	public Profile(String job, String birthDate, String nationality,
 		DecisionMaking decisionMaking,
 		Temperament temperament, GenderType genderType, Member member, String introduce) {
 		this.job = job;
-		this.age = age;
+		this.birthDate = birthDate;
 		this.kuddyLevel = KuddyLevel.NOT_KUDDY;
 		this.nationality = nationality;
 		this.decisionMaking = decisionMaking;
@@ -231,7 +231,7 @@ public class Profile extends BaseTimeEntity {
 
 	public void setHobbies(List<HobbiesInterests> newHobby) {
 		for(HobbiesInterests hobbiesInterest : newHobby){
-			if(!this.sports.contains(hobbiesInterest)){
+			if(!this.hobbiesInterests.contains(hobbiesInterest)){
 				this.hobbiesInterests.add(hobbiesInterest);
 			}
 		}
@@ -276,8 +276,8 @@ public class Profile extends BaseTimeEntity {
 	public void setDistricts(List<ProfileArea> districts) {
 		this.districts = districts;
 	}
-	public void updateAge(Integer age){
-		this.age = age;
+	public void updateBirthDate(String birthDate){
+		this.birthDate= birthDate;
 	}
 
 	public void initKuddyLevel(RoleType roleType){

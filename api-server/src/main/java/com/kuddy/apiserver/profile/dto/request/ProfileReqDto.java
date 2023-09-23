@@ -37,7 +37,7 @@ public class ProfileReqDto {
 		@Pattern(regexp = "[a-zA-Z0-9_]+", message = "닉네임은 영어, 숫자, 언더바만 포함할 수 있습니다.")
 		private String nickname;
 		private String profileImageUrl;
-		private Integer age;
+		private String birthDate;
 		private String nationality;
 		private GenderType genderType;
 		private DecisionMaking decisionMaking;
@@ -49,7 +49,7 @@ public class ProfileReqDto {
 		public Profile toEntity(Member member){
 			return Profile.builder()
 				.member(member)
-				.age(age)
+				.birthDate(birthDate)
 				.job(job)
 				.genderType(genderType)
 				.nationality(nationality)
@@ -69,7 +69,7 @@ public class ProfileReqDto {
 		private String job;
 		private String introduce;
 
-		private Integer age;
+		private String birthDate;
 		private String profileImageUrl;
 
 		@NotBlank(message = "닉네임은 비어있을 수 없습니다.")

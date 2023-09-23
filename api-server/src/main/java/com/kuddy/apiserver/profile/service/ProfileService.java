@@ -74,7 +74,7 @@ public class ProfileService {
 		profile.setDecisionMaking(reqDto.getDecisionMaking());
 		profile.setTemperament(reqDto.getTemperament());
 		profile.setGenderType(reqDto.getGenderType());
-		profile.updateAge(reqDto.getAge());
+		profile.updateBirthDate(reqDto.getBirthDate());
 		setInterests(profile, reqDto.getInterests());
 		profileLanguageService.updateProfileLanguage(profile, reqDto.getAvailableLanguages());
 		profileAreaService.updateProfileDistrics(profile, reqDto.getDistricts());
