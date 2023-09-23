@@ -29,7 +29,7 @@ public class ProfileSearchResDto {
 	private String role;
 	private String introduce;
 	private GenderType gender;
-	private Integer age;
+	private String birthDate;
 	private String temperament;
 	private String decisionMaking;
 	private String job;
@@ -79,7 +79,7 @@ public class ProfileSearchResDto {
 			.memberInfo(MemberResDto.of(member))
 			.role(member.getRoleType().getDisplayName())
 			.introduce(profile.getIntroduce())
-			.age(profile.getAge())
+			.birthDate(profile.getBirthDate())
 			.gender(profile.getGenderType())
 			.job(profile.getJob())
 			.temperament(profile.getTemperament().getName())
