@@ -5,11 +5,14 @@ import static com.kuddy.common.member.domain.QMember.*;
 import static com.kuddy.common.profile.domain.QProfileArea.*;
 
 import java.util.List;
+import com.kuddy.common.member.domain.RoleType;
 
 import com.kuddy.common.profile.domain.*;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,20 +49,26 @@ public class ProfileQueryService {
 			.otherwise(9999)
 			.asc();
 
-		List<Profile> profiles = queryFactory.selectFrom(profile)
-			.where(profile.kuddyLevel.ne(KuddyLevel.NOT_KUDDY))
-			.orderBy(orderSpecifier)
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
-			.fetch();
+		List<Profile> profiles = queryFactory
+				.selectFrom(profile)
+				.leftJoin(profile.member, member)
+				.where(member.roleType.eq(RoleType.KUDDY)
+						.and(member.nickname.ne(FORBIDDEN_WORD)))
+				.groupBy(profile.id)
+				.orderBy(profile.createdDate.desc())
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize())
+				.fetch();
 
-		long total = queryFactory
-			.select(profile.count())
-			.from(profile)
-			.where(profile.kuddyLevel.ne(KuddyLevel.NOT_KUDDY))
-			.fetchOne();
+		JPAQuery<Long> countQuery = queryFactory
+				.select(profile.count())
+				.from(profile)
+				.leftJoin(profile.member, member)
+				.where(member.roleType.eq(RoleType.KUDDY)
+						.and(member.nickname.ne(FORBIDDEN_WORD)));
 
-		return new PageImpl<>(profiles, pageable, total);
+
+		return PageableExecutionUtils.getPage(profiles, pageable, countQuery::fetchOne);
 	}
 
 
@@ -67,25 +76,25 @@ public class ProfileQueryService {
 	public Page<Profile> findProfilesTravelerOrderedByCreatedDate(Pageable pageable) {
 
 		List<Profile> profiles = queryFactory
-			.selectFrom(profile)
-			.leftJoin(profile.member, member)
-			.where(profile.kuddyLevel.eq(KuddyLevel.NOT_KUDDY)
-				.and(member.nickname.ne(FORBIDDEN_WORD)))  // 추가한 조건
-			.groupBy(profile.id)
-			.orderBy(profile.createdDate.desc())
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
-			.fetch();
+				.selectFrom(profile)
+				.leftJoin(profile.member, member)
+				.where(member.roleType.eq(RoleType.TRAVELER)
+						.and(member.nickname.ne(FORBIDDEN_WORD)))
+				.groupBy(profile.id)
+				.orderBy(profile.createdDate.desc())
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize())
+				.fetch();
 
-		long total = queryFactory
-			.select(profile.count())
-			.from(profile)
-			.leftJoin(profile.member, member)
-			.where(profile.kuddyLevel.eq(KuddyLevel.NOT_KUDDY)
-				.and(member.nickname.ne("unknown")))
-			.fetchOne();
+		JPAQuery<Long> countQuery = queryFactory
+				.select(profile.count())
+				.from(profile)
+				.leftJoin(profile.member, member)
+				.where(member.roleType.eq(RoleType.TRAVELER)
+						.and(member.nickname.ne(FORBIDDEN_WORD)));
 
-		return new PageImpl<>(profiles, pageable, total);
+
+		return PageableExecutionUtils.getPage(profiles, pageable, countQuery::fetchOne);
 	}
 	public List<Profile> findProfilesByMemberNickname(String nickname) {
 
@@ -113,7 +122,8 @@ public class ProfileQueryService {
 	}
 
 
-	public List<Profile> findProfilesBySearchCriteria(ProfileSearchReqDto searchCriteria) {
+	public Page<Profile> findProfilesBySearchCriteria(int page, int size, ProfileSearchReqDto searchCriteria) {
+		Pageable pageable = PageRequest.of(page, size);
 		BooleanBuilder builder = new BooleanBuilder();
 
 		// GenderType 검색 조건
@@ -147,17 +157,39 @@ public class ProfileQueryService {
 
 		NumberExpression<Integer> lengthOrder = Expressions.numberTemplate(Integer.class, "LENGTH({0})", member.nickname);
 
-		return queryFactory
-				.selectFrom(profile)
+		// RoleType 필터링
+		if (!searchCriteria.getRole().isBlank()) {
+			RoleType roleType = RoleType.fromString(searchCriteria.getRole());
+			builder.and(member.roleType.eq(roleType));
+		} else {
+			BooleanExpression roleCondition = member.roleType.eq(RoleType.KUDDY)
+					.or(member.roleType.eq(RoleType.TRAVELER));
+			builder.and(roleCondition);
+		}
+
+		List<Profile> profiles = queryFactory
+				.selectFrom(profile).distinct()
 				.leftJoin(profile.districts, profileArea)
-				.join(profile.member, member)  // Assumes a join with the member table
+				.join(profile.member, member)
 				.where(builder)
 				.orderBy(
 						caseOrder.asc(),
 						lengthOrder.asc(),
 						profile.createdDate.desc()
 				)
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize())
 				.fetch();
+
+		JPAQuery<Long> countQuery = queryFactory
+				.select(profile.count())
+				.from(profile)
+				.leftJoin(profile.districts, profileArea)
+				.join(profile.member, member)
+				.where(builder);
+
+
+		return PageableExecutionUtils.getPage(profiles, pageable, countQuery::fetchOne);
 
 	}
 
@@ -200,12 +232,9 @@ public class ProfileQueryService {
 					Wellbeing.valueOf(interestContent)
 				);
 			default:
-				return null; // 또는 적절한 예외를 던집니다.
+				return null;
 		}
 	}
-
-
-
 
 
 }

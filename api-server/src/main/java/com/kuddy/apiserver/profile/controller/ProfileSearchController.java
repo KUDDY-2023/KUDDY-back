@@ -74,13 +74,9 @@ public class ProfileSearchController {
 
 	@PostMapping("/search")
 	public ResponseEntity<StatusResponse> searchProfileInfo(
-		@RequestBody final ProfileSearchReqDto reqDto) {
-		List<Profile> profileList = profileQueryService.findProfilesBySearchCriteria(reqDto);
-		ProfileSearchListResDto response = ProfileSearchListResDto.from(profileList, reqDto.getInterestContent());
-		return ResponseEntity.ok(StatusResponse.builder()
-			.status(StatusEnum.OK.getStatusCode())
-			.message(StatusEnum.OK.getCode())
-			.data(response)
-			.build());
+			@RequestParam(value = "page") int page, @RequestParam(value = "size") int size,
+			@RequestBody final ProfileSearchReqDto reqDto) {
+		Page<Profile> profileList = profileQueryService.findProfilesBySearchCriteria(page, size, reqDto);
+		return profileService.changePageToResponse(profileList, page, size);
 	}
 }
