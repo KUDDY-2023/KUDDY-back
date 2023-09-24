@@ -13,6 +13,10 @@ import com.kuddy.common.notification.calendar.domain.Calendar;
 import com.kuddy.common.notification.calendar.repository.CalendarRepository;
 import com.kuddy.common.notification.calendar.service.GoogleCalendarService;
 import com.kuddy.common.notification.calendar.service.KakaoCalendarService;
+import lombok.Getter;
+import lombok.NonNull;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,14 +37,19 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MeetupService {
+public class MeetupService implements ApplicationEventPublisherAware{
 	private final MeetupRepository meetupRepository;
 	private final SpotRepository spotRepository;
 	private final KakaoCalendarService kakaoCalendarService;
 	private final GoogleCalendarService googleCalendarService;
 	private final CalendarRepository calendarRepository;
 	private final MeetupQueryService meetupQueryService;
+	private ApplicationEventPublisher eventPublisher;
 
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		this.eventPublisher = applicationEventPublisher;
+	}
 
 	public void create(Message message, Member findMember, Member receiveMember){
 		Spot spot = findByContentId(message.getSpotContentId());
@@ -68,29 +77,24 @@ public class MeetupService {
 		meetup.updateSpot(spot);
 		meetup.updateAppointment(dateTime);
 		meetup.updatePrice(new BigDecimal(message.getPrice()));
-		boolean isMeetupStatusUpdated = meetup.updateMeetupStatus(message.getMeetStatus());
-		if(isMeetupStatusUpdated){
-			//createCalanderEvent(meetup, message);
-		}
-	}
+		
+		boolean isMeetupStatusUpdated = Objects.equals(message.getMeetStatus(), meetup.getMeetupStatus());
+		meetup.updateMeetupStatus(message.getMeetStatus());
 
-	public void createCalanderEvent(Meetup meetup, Message message) throws IOException{
-		Member kuddy = meetup.getKuddy();
-		Member traveler = meetup.getTraveler();
-		MeetupStatus meetupStatus = MeetupStatus.fromString(message.getMeetStatus());
-		switch (meetupStatus){
-			case PAYED:
-				createEvent(kuddy, meetup);
-				createEvent(traveler, meetup);
-				break;
-			case KUDDY_CANCEL:
-			case TRAVELER_CANCEL:
-				List<Calendar> eventList = calendarRepository.findAllByMeetup_Id(meetup.getId());
-				deleteEvents(eventList);
-				break;
-			default:
-				break;
-			}
+		if (isMeetupStatusUpdated) {
+			MeetupStatus meetupStatus = MeetupStatus.fromString(message.getMeetStatus());
+			switch (meetupStatus){
+				case PAYED:
+					eventPublisher.publishEvent(new MeetupPayedEvent(meetup));
+					break;
+				case KUDDY_CANCEL:
+				case TRAVELER_CANCEL:
+					eventPublisher.publishEvent(new MeetupCanceledEvent(meetup));
+					break;
+				default:
+					break;
+				}
+		}
 	}
 	@Transactional(readOnly = true)
 	public Spot findByContentId(Long contentId){
@@ -101,25 +105,6 @@ public class MeetupService {
 	public Long countMeetupsForKuddy(Long kuddyId) {
 		List<MeetupStatus> excludedStatuses = Arrays.asList(MeetupStatus.REFUSED, MeetupStatus.KUDDY_CANCEL, MeetupStatus.TRAVELER_CANCEL);
 		return meetupRepository.countByKuddyIdAndMeetupStatusNotIn(kuddyId, excludedStatuses);
-	}
-
-	private void createEvent(Member member, Meetup meetup) throws IOException {
-		if (member.getProviderType().equals(ProviderType.KAKAO)) {
-			kakaoCalendarService.createKakaoEvent(member, meetup);
-		} else {
-			googleCalendarService.createGoogleEvent(member, meetup);
-		}
-	}
-
-	private void deleteEvents(List<Calendar> eventList) throws JsonProcessingException {
-		for(Calendar event : eventList){
-			if (event.getMember().getProviderType().equals(ProviderType.KAKAO)) {
-				kakaoCalendarService.deleteCalendarEvent(event);
-			} else {
-				googleCalendarService.deleteCalendarEvent(event);
-			}
-		}
-
 	}
 
 	@Transactional(readOnly = true)
@@ -135,6 +120,26 @@ public class MeetupService {
 			default:
 				throw new MeetupNotFoundException();
 		}
+	}
+
+	public static class MeetupPayedEvent {
+		@Getter
+		private Meetup meetup;
+
+		private MeetupPayedEvent(@NonNull Meetup meetup){
+			this.meetup = meetup;
+		}
+
+	}
+
+	public static class MeetupCanceledEvent{
+		@Getter
+		private Meetup meetup;
+
+		private MeetupCanceledEvent(@NonNull Meetup meetup){
+			this.meetup = meetup;
+		}
+
 	}
 
 }
