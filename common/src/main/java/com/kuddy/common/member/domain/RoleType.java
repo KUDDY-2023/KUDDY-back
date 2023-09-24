@@ -25,4 +25,15 @@ public enum RoleType {
 			.findAny()
 			.orElse(GUEST);
 	}
+	public static RoleType fromString(String roleString) {
+		if (roleString == null || roleString.trim().isEmpty()) {
+			return null;
+		}
+
+		try {
+			return RoleType.valueOf(roleString.toUpperCase().trim());
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
 }

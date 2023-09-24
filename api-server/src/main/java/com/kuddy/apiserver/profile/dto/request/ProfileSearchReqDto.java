@@ -14,5 +14,6 @@ public class ProfileSearchReqDto {
 	private String interestGroup;
 	private String interestContent;
 	private String nickname;
+	private String role;
 
 }
