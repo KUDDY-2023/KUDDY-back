@@ -8,7 +8,6 @@ import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.spot.domain.Spot;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,18 +50,23 @@ public class SpotController {
     }
 
     @GetMapping("/recommendation")
-    public ResponseEntity<StatusResponse> recommendSpot(@RequestParam(value = "page") int page, @RequestParam(value = "x") double mapX, @RequestParam(value = "y") double mapY) {
-        return spotService.changeJsonToResponse(tourApiService.getLocationBasedApi(page, 20, mapX, mapY));
+    public ResponseEntity<StatusResponse> recommendSpot(@RequestParam(value = "page") int page, @RequestParam(value = "x") String mapX, @RequestParam(value = "y") String mapY) {
+        Page<Spot> spotPage = spotService.getSpotsByDistance(page - 1, mapX, mapY);
+        return spotService.changePageToResponse(spotPage, page);
+    }
+
+    @GetMapping("/recommendation/{contentId}")
+    public ResponseEntity<StatusResponse> recommendFiveSpot(@PathVariable Long contentId, @RequestParam(value = "x") String mapX, @RequestParam(value = "y") String mapY) {
+        return spotService.getFiveSpotsByDistance(contentId, mapX, mapY);
     }
 
     @GetMapping("/{contentId}")
-    public ResponseEntity<StatusResponse> getSpotDetail(@PathVariable Long contentId, @RequestParam(value = "x") double mapX, @RequestParam(value = "y") double mapY) {
+    public ResponseEntity<StatusResponse> getSpotDetail(@PathVariable Long contentId) {
         Spot spot = spotService.findSpotByContentId(contentId);
         Object commonDetail = tourApiService.getCommonDetail(spot);
         Object detailInfo = tourApiService.getDetailInfo(spot);
-        JSONObject nearbySpots = tourApiService.getLocationBasedApi(1, 5, mapX, mapY);
         JSONArray imageArr = tourApiService.getDetailImages(contentId);
-        return spotService.responseDetailInfo(commonDetail, detailInfo, nearbySpots, imageArr, spot);
+        return spotService.responseDetailInfo(commonDetail, detailInfo, imageArr, spot);
     }
 
     @GetMapping("/trend")
@@ -71,7 +75,7 @@ public class SpotController {
     }
 
     //장소 검색(키워드+카테고리+지역구 각각 필터 가능, 지역구는 다중선택)
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<StatusResponse> searchSpot(@RequestBody SpotSearchReqDto spotSearchReqDto, @RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
         //필터링 조건 없으면 전체 조회
         if (spotSearchReqDto.getKeyword().isEmpty() && spotSearchReqDto.getCategory().isEmpty() && spotSearchReqDto.getDistrict().isEmpty()) {

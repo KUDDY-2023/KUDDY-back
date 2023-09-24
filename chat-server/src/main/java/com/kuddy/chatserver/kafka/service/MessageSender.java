@@ -1,4 +1,4 @@
-package com.kuddy.chatserver.chat.service;
+package com.kuddy.chatserver.kafka.service;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

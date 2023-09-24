@@ -26,11 +26,7 @@ public class RedisService {
 	}
 	public boolean existsMember(String key, String roomId){
 		String currentValue = getData(key);
-		if(roomId.equals(currentValue)){
-			redisTemplate.delete(key);
-			return true;  // 삭제 성공
-		}
-		return false;
+		return roomId.equals(currentValue);
 	}
 
 	public void deleteData(String key){

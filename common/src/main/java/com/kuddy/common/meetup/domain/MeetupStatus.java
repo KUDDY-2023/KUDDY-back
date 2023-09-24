@@ -22,7 +22,7 @@ public enum MeetupStatus {
 
 	public static MeetupStatus fromString(String name) {
 		return Arrays.stream(MeetupStatus.values())
-			.filter(r -> r.getCode().equalsIgnoreCase(name))
+			.filter(r -> r.getName().equalsIgnoreCase(name))
 			.findAny()
 			.orElse(NOT_ACCEPT);
 	}

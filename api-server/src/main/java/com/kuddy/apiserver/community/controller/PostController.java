@@ -24,14 +24,19 @@ public class PostController {
         return postService.savePost(type, reqDto, member);
     }
 
-    @GetMapping()
+    @GetMapping("/list")
     public ResponseEntity<StatusResponse> getPosts(@RequestParam String type, @RequestParam int page, @RequestParam int size) {
         return postService.getPosts(type, page, size);
     }
 
+    @GetMapping("/{postId}")
+    public ResponseEntity<StatusResponse> getPost(@PathVariable Long postId){
+        return postService.getPost(postId);
+    }
+
     @GetMapping("/my")
-    public ResponseEntity<StatusResponse> getMyPosts(@AuthUser Member member, @RequestParam int page, @RequestParam int size) {
-        return postService.getMyPosts(member, page, size);
+    public ResponseEntity<StatusResponse> getMyPosts(@AuthUser Member member) {
+        return postService.getMyPosts(member);
     }
 
     @PostMapping("/images")

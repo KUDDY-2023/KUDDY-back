@@ -18,6 +18,7 @@ import com.kuddy.apiserver.profile.dto.request.ProfileReqDto;
 
 import com.kuddy.apiserver.profile.dto.response.ProfileThumbnailResDto;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.member.domain.MemberStatus;
 import com.kuddy.common.page.PageInfo;
 import com.kuddy.common.profile.domain.Profile;
 import com.kuddy.common.profile.domain.ProfileArea;
@@ -25,6 +26,7 @@ import com.kuddy.common.profile.domain.ProfileLanguage;
 import com.kuddy.common.profile.exception.DuplicateProfileException;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
 
+import com.kuddy.common.profile.exception.WithdrawMemberProfileException;
 import com.kuddy.common.profile.repository.ProfileRepository;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
@@ -72,7 +74,7 @@ public class ProfileService {
 		profile.setDecisionMaking(reqDto.getDecisionMaking());
 		profile.setTemperament(reqDto.getTemperament());
 		profile.setGenderType(reqDto.getGenderType());
-		profile.updateAge(reqDto.getAge());
+		profile.updateBirthDate(reqDto.getBirthDate());
 		setInterests(profile, reqDto.getInterests());
 		profileLanguageService.updateProfileLanguage(profile, reqDto.getAvailableLanguages());
 		profileAreaService.updateProfileDistrics(profile, reqDto.getDistricts());
@@ -122,7 +124,12 @@ public class ProfileService {
 			.build());
 	}
 
-
+	public void validateProfile(Profile profile){
+		Member member = profile.getMember();
+		if(member.getMemberStatus().equals(MemberStatus.WITHDRAW)){
+			throw new WithdrawMemberProfileException();
+		}
+	}
 	@Transactional(readOnly = true)
 	public Profile findById(Long profileId){
 		return profileRepository.findById(profileId).orElseThrow(ProfileNotFoundException::new);

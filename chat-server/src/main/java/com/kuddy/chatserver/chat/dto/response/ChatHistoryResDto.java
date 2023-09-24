@@ -12,6 +12,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ChatHistoryResDto {
-	private String email;
+	private ReceiverInfoResDto receiverInfo;
 	private List<ChatResDto> chatList;
 }

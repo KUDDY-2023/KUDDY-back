@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -103,10 +104,10 @@ public class CommentNotiService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<StatusResponse> findAllNotification(Long memberId, int page, int size){
+    public ResponseEntity<StatusResponse> findAllCommentNotification(Long memberId, int page, int size){
+        List<NotificationType> types = Arrays.asList(NotificationType.REPLY, NotificationType.COMMENT);
         PageRequest pageRequest = PageRequest.of(page, size);
-
-        Page<Notification> notifications = notificationRepository.findAllByReceiverId(memberId, pageRequest);
+        Page<Notification> notifications = notificationRepository.findAllByReceiverIdAndNotificationTypeIn(memberId, types, pageRequest);
         List<NotificationResDto> notificationResDtos = notifications.stream()
                 .map(NotificationResDto::create)
                 .collect(Collectors.toList());
@@ -116,8 +117,10 @@ public class CommentNotiService {
     }
 
     @Transactional
-    public ResponseEntity<StatusResponse> readAllNotification(Member member) {
-        List<Notification> notifications = notificationRepository.findAllByReceiverId(member.getId());
+    public ResponseEntity<StatusResponse> readAllCommentNotification(Member member) {
+        List<NotificationType> types = Arrays.asList(NotificationType.REPLY, NotificationType.COMMENT);
+
+        List<Notification> notifications = notificationRepository.findAllByReceiverIdAndNotificationTypeIn(member.getId(),types);
         for(Notification notification : notifications){
             notification.read();
         }
@@ -129,13 +132,13 @@ public class CommentNotiService {
     public ResponseEntity<StatusResponse> readNotification(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId).orElseThrow(()-> new NotificationNotFoundException(notificationId));
         notification.read();
-
         return ResponseEntity.ok(createStatusResponse("알림 읽음 처리 완료"));
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<StatusResponse> countUnreadNotifications(Member member) {
-        long unreadCount = notificationRepository.countByIsReadFalseAndReceiver(member);
+    public ResponseEntity<StatusResponse> countUnreadCommentNotifications(Member member) {
+        List<NotificationType> types = Arrays.asList(NotificationType.REPLY, NotificationType.COMMENT);
+        long unreadCount = notificationRepository.countByIsReadFalseAndReceiverAndNotificationTypeIn(member, types);
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())

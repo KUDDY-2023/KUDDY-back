@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SpotResDto {
     private Long contentId;
     private String name;
@@ -28,6 +27,8 @@ public class SpotResDto {
                 .district(spot.getDistrict().getArea())
                 .category(spot.getCategory().getType())
                 .imageUrl(spot.getImageUrl())
+                .mapX(spot.getMapX())
+                .mapY(spot.getMapY())
                 .build();
     }
 }

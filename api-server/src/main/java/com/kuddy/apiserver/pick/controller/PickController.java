@@ -36,4 +36,14 @@ public class PickController {
     public ResponseEntity<StatusResponse> getPickDetail(@PathVariable Long pickId) {
         return pickService.findPick(pickId);
     }
+
+    //커디스픽 제목으로 검색
+    @GetMapping("/search")
+    public ResponseEntity<StatusResponse> searchPick(@RequestParam(value = "title") String title) {
+        //검색어 없으면 전체 조회
+        if (title == null || title.isEmpty()) {
+            return pickService.findAllThumbnailList();
+        }
+        return pickService.searchPick(title);
+    }
 }

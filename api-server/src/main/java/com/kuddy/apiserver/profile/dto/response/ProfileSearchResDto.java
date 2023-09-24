@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.kuddy.apiserver.member.dto.MemberResDto;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.profile.domain.GenderType;
@@ -24,13 +25,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileSearchResDto {
-	private Long memberId;
+	private MemberResDto memberInfo;
 	private String role;
 	private String introduce;
-	private String nickname;
-	private String profileImage;
 	private GenderType gender;
-	private Integer age;
+	private String birthDate;
 	private String temperament;
 	private String decisionMaking;
 	private String job;
@@ -41,20 +40,28 @@ public class ProfileSearchResDto {
 	private List<MemberAreaDto> areas;
 	private KuddyLevel kuddyLevel;
 	private String ticketStatus;
-	private boolean isMine;
+	private boolean mine;
 
-	public static ProfileSearchResDto from(Member member, Profile profile) {
+
+	private static List<MemberLanguageDto> buildLanguages(List<ProfileLanguage> availableLanguages) {
 		List<MemberLanguageDto> languageList = new ArrayList<>();
-		for(ProfileLanguage pl : profile.getAvailableLanguages()) {
+		for (ProfileLanguage pl : availableLanguages) {
 			MemberLanguageDto language = new MemberLanguageDto(pl.getLanguage().getType(), pl.getLaguageLevel());
 			languageList.add(language);
 		}
+		return languageList;
+	}
 
+	private static List<MemberAreaDto> buildAreas(List<ProfileArea> districts) {
 		List<MemberAreaDto> areaList = new ArrayList<>();
-		for(ProfileArea pa : profile.getDistricts()){
+		for (ProfileArea pa : districts) {
 			MemberAreaDto area = new MemberAreaDto(pa.getArea().getDistrict());
 			areaList.add(area);
 		}
+		return areaList;
+	}
+
+	public static ProfileSearchResDto from(Member member, Profile profile) {
 		KuddyLevel kuddyLevel = null;
 		String ticketStatus = null;
 		if(member.getRoleType().equals(RoleType.KUDDY)){
@@ -69,22 +76,21 @@ public class ProfileSearchResDto {
 		}
 
 		return ProfileSearchResDto.builder()
-			.memberId(member.getId())
+			.memberInfo(MemberResDto.of(member))
 			.role(member.getRoleType().getDisplayName())
-			.nickname(member.getNickname())
-			.profileImage(member.getProfileImageUrl())
 			.introduce(profile.getIntroduce())
-			.age(profile.getAge())
+			.birthDate(profile.getBirthDate())
 			.gender(profile.getGenderType())
+			.job(profile.getJob())
 			.temperament(profile.getTemperament().getName())
 			.decisionMaking(profile.getDecisionMaking().getName())
 			.interests(InterestsDto.of(profile))
 			.nationality(profile.getNationality())
-			.languages(languageList)
-			.areas(areaList)
+			.languages(buildLanguages(profile.getAvailableLanguages()))
+			.areas(buildAreas(profile.getDistricts()))
 			.ticketStatus(ticketStatus)
 			.kuddyLevel(kuddyLevel)
-			.isMine(checkMine)
+			.mine(checkMine)
 			.build();
 	}
 }

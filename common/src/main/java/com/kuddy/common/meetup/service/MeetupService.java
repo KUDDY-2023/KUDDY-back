@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kuddy.common.member.domain.ProviderType;
@@ -78,7 +77,7 @@ public class MeetupService implements ApplicationEventPublisherAware{
 		meetup.updateSpot(spot);
 		meetup.updateAppointment(dateTime);
 		meetup.updatePrice(new BigDecimal(message.getPrice()));
-
+		
 		boolean isMeetupStatusUpdated = Objects.equals(message.getMeetStatus(), meetup.getMeetupStatus());
 		meetup.updateMeetupStatus(message.getMeetStatus());
 
