@@ -2,12 +2,19 @@ package com.kuddy.apiserver.profile.service;
 
 import static com.kuddy.common.member.domain.Member.*;
 import static com.kuddy.common.member.domain.QMember.*;
+
 import static com.kuddy.common.profile.domain.QProfileArea.*;
+import static com.kuddy.common.review.domain.QReview.review;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.kuddy.common.member.domain.RoleType;
 
 import com.kuddy.common.profile.domain.*;
+import com.kuddy.common.review.domain.Grade;
+import com.querydsl.core.Tuple;
+
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,13 +48,12 @@ public class ProfileQueryService {
 
 	public Page<Profile> findAllExcludeNotKuddyOrderedByKuddyLevel(Pageable pageable) {
 		OrderSpecifier<Integer> orderSpecifier = new CaseBuilder()
-			.when(profile.kuddyLevel.stringValue().eq("SOULMATE")).then(1)
-			.when(profile.kuddyLevel.stringValue().eq("HARMONY")).then(2)
-			.when(profile.kuddyLevel.stringValue().eq("COMPANION")).then(3)
-			.when(profile.kuddyLevel.stringValue().eq("FRIENDZONE")).then(4)
-			.when(profile.kuddyLevel.stringValue().eq("EXPLORER")).then(5)
-			.otherwise(9999)
-			.asc();
+				.when(profile.kuddyLevel.stringValue().eq("SOULMATE")).then(1)
+				.when(profile.kuddyLevel.stringValue().eq("HARMONY")).then(2)
+				.when(profile.kuddyLevel.stringValue().eq("FRIEND")).then(3)
+				.when(profile.kuddyLevel.stringValue().eq("EXPLORER")).then(4)
+				.otherwise(9999)
+				.asc();
 
 		List<Profile> profiles = queryFactory
 				.selectFrom(profile)
@@ -55,7 +61,7 @@ public class ProfileQueryService {
 				.where(member.roleType.eq(RoleType.KUDDY)
 						.and(member.nickname.ne(FORBIDDEN_WORD)))
 				.groupBy(profile.id)
-				.orderBy(profile.createdDate.desc())
+				.orderBy(orderSpecifier, profile.createdDate.desc())  // Added orderSpecifier here
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
 				.fetch();
@@ -67,9 +73,9 @@ public class ProfileQueryService {
 				.where(member.roleType.eq(RoleType.KUDDY)
 						.and(member.nickname.ne(FORBIDDEN_WORD)));
 
-
 		return PageableExecutionUtils.getPage(profiles, pageable, countQuery::fetchOne);
 	}
+
 
 
 
@@ -191,6 +197,41 @@ public class ProfileQueryService {
 
 		return PageableExecutionUtils.getPage(profiles, pageable, countQuery::fetchOne);
 
+	}
+	public List<Profile> findTopKuddies() {
+		// 점수 계산
+		NumberExpression<Integer> reviewScore = new CaseBuilder()
+				.when(review.grade.eq(Grade.PERFECT)).then(10)
+				.when(review.grade.eq(Grade.GOOD)).then(5)
+				.when(review.grade.eq(Grade.DISAPPOINT)).then(-5)
+				.otherwise(0);
+
+		// 최우선은 KuddyLevel이 'SOULMATE'와 'COMPANION'인 멤버
+		BooleanExpression isHighLevelKuddy = member.profile.kuddyLevel.eq(KuddyLevel.SOULMATE)
+				.or(member.profile.kuddyLevel.eq(KuddyLevel.COMPANION));
+
+		// RoleType이 "KUDDY"인 멤버만
+		BooleanExpression isKuddyRole = member.roleType.eq(RoleType.KUDDY);
+
+		JPAQuery<Tuple> query = queryFactory
+				.select(review.meetup.kuddy, reviewScore.sum().as("totalScore"))
+				.from(review)
+				.leftJoin(review.meetup.kuddy, member)
+				.leftJoin(member.profile, profile)
+				.where(isHighLevelKuddy.and(isKuddyRole))  // 조건: 높은 레벨의 Kuddy만 + RoleType이 "KUDDY"인 경우
+				.groupBy(member.id)
+				.orderBy(
+						// 점수 높은 순, 그리고 최신 리뷰 날짜 순
+						Expressions.numberTemplate(Integer.class, "{0}", reviewScore.sum()).desc(),
+						review.createdDate.desc()
+				)
+				.limit(5);
+
+		List<Tuple> results = query.fetch();
+
+		return results.stream()
+				.map(tuple -> tuple.get(review.meetup.kuddy).getProfile())
+				.collect(Collectors.toList());
 	}
 
 	private BooleanExpression buildInterestCondition(String interestGroup, String interestContent) {
