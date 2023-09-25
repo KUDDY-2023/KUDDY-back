@@ -55,6 +55,17 @@ public class ProfileSearchController {
 		return profileService.changePageToResponse(profiles, page, size);
 	}
 
+	@GetMapping("kuddy/top5")
+	public ResponseEntity<StatusResponse> readTop5KuddyProfile() {
+		List<Profile> profileList = profileQueryService.findTopKuddies();
+		ProfileSearchListResDto response = ProfileSearchListResDto.of(profileList);
+		return ResponseEntity.ok(StatusResponse.builder()
+				.status(StatusEnum.OK.getStatusCode())
+				.message(StatusEnum.OK.getCode())
+				.data(response)
+				.build());
+	}
+
 	@GetMapping("/traveler")
 	public ResponseEntity<StatusResponse> readTravelerProfile(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
 		Page<Profile> profiles = profileService.getTravelerProfiles(page -1, size);
@@ -77,6 +88,6 @@ public class ProfileSearchController {
 			@RequestParam(value = "page") int page, @RequestParam(value = "size") int size,
 			@RequestBody final ProfileSearchReqDto reqDto) {
 		Page<Profile> profileList = profileQueryService.findProfilesBySearchCriteria(page, size, reqDto);
-		return profileService.changePageToResponse(profileList, page, size);
+		return profileService.changePageToSearchResponse(profileList, reqDto.getInterestContent(), page, size);
 	}
 }

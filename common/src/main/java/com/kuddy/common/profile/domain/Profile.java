@@ -288,7 +288,7 @@ public class Profile extends BaseTimeEntity {
 	public void updateKuddyLevelByMeetup(long meetNum, RoleType roleType) {
 		KuddyLevel newKuddyLevel;
 
-		if (meetNum < 5) {
+		if (meetNum < 4) {
 			newKuddyLevel = KuddyLevel.of((int)(meetNum + 1));
 		} else {
 			newKuddyLevel = KuddyLevel.SOULMATE;

@@ -40,7 +40,7 @@ public class ProfileThumbnailResDto {
 	private String nickname;
 	private String profileImage;
 	private KuddyLevel kuddyLevel;
-	private List<String> seletedInterests;
+	private List<String> allInterests;
 
 	public static ProfileThumbnailResDto of(Profile profile) {
 		Member owner = profile.getMember();
@@ -49,31 +49,16 @@ public class ProfileThumbnailResDto {
 			kuddyLevel =  profile.getKuddyLevel();
 		}
 		// 각 리스트를 스트림으로 변환하고 NOT_SELECTED를 제거
-		Stream<ActivitiesInvestmentTech> investmentTechStream = profile.getActivitiesInvestmentTechs().stream()
-			.filter(it -> !it.equals(ActivitiesInvestmentTech.NOT_SELECTED));
+		Stream<ActivitiesInvestmentTech> investmentTechStream = filterNotSelected(profile.getActivitiesInvestmentTechs().stream(), ActivitiesInvestmentTech.NOT_SELECTED);
+		Stream<ArtBeauty> artBeautyStream = filterNotSelected(profile.getArtBeauties().stream(), ArtBeauty.NOT_SELECTED);
+		Stream<CareerMajor> careerMajorStream = filterNotSelected(profile.getCareerMajors().stream(), CareerMajor.NOT_SELECTED);
+		Stream<Lifestyle> lifestyleStream = filterNotSelected(profile.getLifestyles().stream(), Lifestyle.NOT_SELECTED);
+		Stream<Entertainment> entertainmentStream = filterNotSelected(profile.getEntertainments().stream(), Entertainment.NOT_SELECTED);
+		Stream<Food> foodStream = filterNotSelected(profile.getFoods().stream(), Food.NOT_SELECTED);
+		Stream<HobbiesInterests> hobbiesInterestsStream = filterNotSelected(profile.getHobbiesInterests().stream(), HobbiesInterests.NOT_SELECTED);
+		Stream<Sports> sportsStream = filterNotSelected(profile.getSports().stream(), Sports.NOT_SELECTED);
+		Stream<Wellbeing> wellbeingStream = filterNotSelected(profile.getWellbeings().stream(), Wellbeing.NOT_SELECTED);
 
-		Stream<ArtBeauty> artBeautyStream = profile.getArtBeauties().stream()
-			.filter(it -> !it.equals(ArtBeauty.NOT_SELECTED));
-
-		Stream<CareerMajor> careerMajorStream = profile.getCareerMajors().stream()
-			.filter(it -> !it.equals(CareerMajor.NOT_SELECTED));
-		Stream<Lifestyle> lifestyleStream = profile.getLifestyles().stream()
-			.filter(it -> !it.equals(Lifestyle.NOT_SELECTED));
-
-		Stream<Entertainment> entertainmentStream = profile.getEntertainments().stream()
-			.filter(it -> !it.equals(Entertainment.NOT_SELECTED));
-
-		Stream<Food> foodStream = profile.getFoods().stream()
-			.filter(it -> !it.equals(Food.NOT_SELECTED));
-
-		Stream<HobbiesInterests> hobbiesInterestsStream = profile.getHobbiesInterests().stream()
-			.filter(it -> !it.equals(HobbiesInterests.NOT_SELECTED));
-
-		Stream<Sports> sportsStream = profile.getSports().stream()
-			.filter(it -> !it.equals(Sports.NOT_SELECTED));
-
-		Stream<Wellbeing> wellbeingStream = profile.getWellbeings().stream()
-			.filter(it -> !it.equals(Wellbeing.NOT_SELECTED));
 
 		// 모든 스트림을 하나로 병합하고 String으로 변환한 뒤 리스트로 변환합니다.
 		List<String> allInterests = Stream.of(
@@ -84,13 +69,6 @@ public class ProfileThumbnailResDto {
 			.map(Enum::name) // Enum을 String으로 변환
 			.collect(Collectors.toList());
 
-
-		Random rand = new Random();
-		List<String> selectedInterests = new ArrayList<>();
-		for (int i = 0; i < 3 && !allInterests.isEmpty(); i++) {
-			int randomIndex = rand.nextInt(allInterests.size());
-			selectedInterests.add(allInterests.remove(randomIndex));
-		}
 		return ProfileThumbnailResDto.builder()
 			.profileId(profile.getId())
 			.memberId(owner.getId())
@@ -99,42 +77,27 @@ public class ProfileThumbnailResDto {
 			.kuddyLevel(kuddyLevel)
 			.role(owner.getRoleType())
 			.nickname(owner.getNickname())
-			.seletedInterests(selectedInterests)
+			.allInterests(allInterests)
 			.build();
 	}
 
-	public static ProfileThumbnailResDto from(Profile profile, String searchContent) {
+	public static ProfileThumbnailResDto from(Profile profile,String searchContent) {
 		Member owner = profile.getMember();
 		KuddyLevel kuddyLevel = null;
 		if(owner.getRoleType().equals(RoleType.KUDDY)){
 			kuddyLevel =  profile.getKuddyLevel();
 		}
 		// 각 리스트를 스트림으로 변환하고 NOT_SELECTED를 제거
-		Stream<ActivitiesInvestmentTech> investmentTechStream = profile.getActivitiesInvestmentTechs().stream()
-			.filter(it -> !it.equals(ActivitiesInvestmentTech.NOT_SELECTED));
+		Stream<ActivitiesInvestmentTech> investmentTechStream = filterNotSelected(profile.getActivitiesInvestmentTechs().stream(), ActivitiesInvestmentTech.NOT_SELECTED);
+		Stream<ArtBeauty> artBeautyStream = filterNotSelected(profile.getArtBeauties().stream(), ArtBeauty.NOT_SELECTED);
+		Stream<CareerMajor> careerMajorStream = filterNotSelected(profile.getCareerMajors().stream(), CareerMajor.NOT_SELECTED);
+		Stream<Lifestyle> lifestyleStream = filterNotSelected(profile.getLifestyles().stream(), Lifestyle.NOT_SELECTED);
+		Stream<Entertainment> entertainmentStream = filterNotSelected(profile.getEntertainments().stream(), Entertainment.NOT_SELECTED);
+		Stream<Food> foodStream = filterNotSelected(profile.getFoods().stream(), Food.NOT_SELECTED);
+		Stream<HobbiesInterests> hobbiesInterestsStream = filterNotSelected(profile.getHobbiesInterests().stream(), HobbiesInterests.NOT_SELECTED);
+		Stream<Sports> sportsStream = filterNotSelected(profile.getSports().stream(), Sports.NOT_SELECTED);
+		Stream<Wellbeing> wellbeingStream = filterNotSelected(profile.getWellbeings().stream(), Wellbeing.NOT_SELECTED);
 
-		Stream<ArtBeauty> artBeautyStream = profile.getArtBeauties().stream()
-			.filter(it -> !it.equals(ArtBeauty.NOT_SELECTED));
-
-		Stream<CareerMajor> careerMajorStream = profile.getCareerMajors().stream()
-			.filter(it -> !it.equals(CareerMajor.NOT_SELECTED));
-		Stream<Lifestyle> lifestyleStream = profile.getLifestyles().stream()
-			.filter(it -> !it.equals(Lifestyle.NOT_SELECTED));
-
-		Stream<Entertainment> entertainmentStream = profile.getEntertainments().stream()
-			.filter(it -> !it.equals(Entertainment.NOT_SELECTED));
-
-		Stream<Food> foodStream = profile.getFoods().stream()
-			.filter(it -> !it.equals(Food.NOT_SELECTED));
-
-		Stream<HobbiesInterests> hobbiesInterestsStream = profile.getHobbiesInterests().stream()
-			.filter(it -> !it.equals(HobbiesInterests.NOT_SELECTED));
-
-		Stream<Sports> sportsStream = profile.getSports().stream()
-			.filter(it -> !it.equals(Sports.NOT_SELECTED));
-
-		Stream<Wellbeing> wellbeingStream = profile.getWellbeings().stream()
-			.filter(it -> !it.equals(Wellbeing.NOT_SELECTED));
 
 		// 모든 스트림을 하나로 병합하고 String으로 변환한 뒤 리스트로 변환합니다.
 		List<String> allInterests = Stream.of(
@@ -144,15 +107,11 @@ public class ProfileThumbnailResDto {
 			.flatMap(it -> it)
 			.map(Enum::name) // Enum을 String으로 변환
 			.collect(Collectors.toList());
-
-
-		Random rand = new Random();
-		List<String> selectedInterests = new ArrayList<>();
-		selectedInterests.add(searchContent);
-		for (int i = 0; i < 2 && !allInterests.isEmpty(); i++) {
-			int randomIndex = rand.nextInt(allInterests.size());
-			selectedInterests.add(allInterests.remove(randomIndex));
+		if (!searchContent.isBlank()) {
+			allInterests.remove(searchContent);
+			allInterests.add(0, searchContent);
 		}
+
 		return ProfileThumbnailResDto.builder()
 			.profileId(profile.getId())
 			.memberId(owner.getId())
@@ -161,8 +120,12 @@ public class ProfileThumbnailResDto {
 			.kuddyLevel(kuddyLevel)
 			.role(owner.getRoleType())
 			.nickname(owner.getNickname())
-			.seletedInterests(selectedInterests)
+			.allInterests(allInterests)
 			.build();
+	}
+
+	private static <E extends Enum<E>> Stream<E> filterNotSelected(Stream<E> stream, E notSelected) {
+		return stream.filter(it -> !it.equals(notSelected));
 	}
 }
 

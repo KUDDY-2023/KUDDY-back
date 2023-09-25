@@ -3,6 +3,7 @@ package com.kuddy.apiserver.profile.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -34,6 +35,7 @@ import com.kuddy.common.response.StatusResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+
 @Service
 @Transactional
 @Slf4j
@@ -44,6 +46,7 @@ public class ProfileService {
 	private final MemberService memberService;
 	private final ProfileAreaService profileAreaService;
 	private final ProfileQueryService profileQueryService;
+	private final JPAQueryFactory queryFactory;
 
 	public Long create(Member member, ProfileReqDto.Create reqDto){
 		if(existsProfileByMember(member)){
@@ -124,12 +127,35 @@ public class ProfileService {
 			.build());
 	}
 
+	public ResponseEntity<StatusResponse> changePageToSearchResponse(Page<Profile> profilePage, String searchInterestContent, int page, int size) {
+		List<Profile> profileList = profilePage.getContent();
+		List<ProfileThumbnailResDto> response = profileList.stream()
+				.map(profile -> ProfileThumbnailResDto.from(profile, searchInterestContent))
+				.collect(Collectors.toList());
+
+		//페이지가 1장일 경우 요소의 총 개수가 size
+		if (profilePage.getTotalPages() == 1) {
+			size = (int) profilePage.getTotalElements();
+		}
+
+		PageInfo pageInfo = new PageInfo(page, size, profilePage.getTotalElements(),profilePage.getTotalPages());
+		ProfileListResDto profileListResDto = new ProfileListResDto(response, pageInfo);
+
+		return ResponseEntity.ok(StatusResponse.builder()
+				.status(StatusEnum.OK.getStatusCode())
+				.message(StatusEnum.OK.getCode())
+				.data(profileListResDto)
+				.build());
+	}
+
 	public void validateProfile(Profile profile){
 		Member member = profile.getMember();
 		if(member.getMemberStatus().equals(MemberStatus.WITHDRAW)){
 			throw new WithdrawMemberProfileException();
 		}
 	}
+
+
 	@Transactional(readOnly = true)
 	public Profile findById(Long profileId){
 		return profileRepository.findById(profileId).orElseThrow(ProfileNotFoundException::new);

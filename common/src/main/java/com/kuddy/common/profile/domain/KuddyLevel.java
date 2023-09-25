@@ -10,12 +10,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum KuddyLevel {
-	NOT_KUDDY("0", "Not kuddy"),
-	EXPLORER("1", "Explorer"),
-	FRIENDZONE("2", "Friendzone"),
-	COMPANION("3", "Companion"),
-	HARMONY("4", "Harmony"),
-	SOULMATE("5", "Soulmate");
+	NOT_KUDDY("0", "NOT_KUDDY"),
+	EXPLORER("1", "EXPLORER"),
+	FRIEND("2", "FRIEND"),
+	COMPANION("3", "COMPANION"),
+	SOULMATE("4", "SOULMATE");
 
 	private final String code;
 	private final String name;
