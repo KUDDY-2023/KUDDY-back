@@ -1,6 +1,7 @@
 package com.kuddy.apiserver.comment.dto.response;
 
 import com.kuddy.common.comment.domain.Comment;
+import com.kuddy.common.community.domain.Post;
 import com.kuddy.common.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,14 +21,14 @@ public class CommentResDto { //TODO: 유저 레벨 추가
     private List<ReplyResDto> replyList;
     private Long parentId;
 
-    public static CommentResDto of(Comment comment, Member member, List<ReplyResDto> replyList) {
         WriterInfoDto writerInfoDto = new WriterInfoDto(comment.getWriter().getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
+    public static CommentResDto of(Comment comment, Post post, Member member, List<ReplyResDto> replyList) {
         CommentResDtoBuilder builder = CommentResDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
                 .isRemoved(comment.isRemoved())
-                .isAuthor(comment.getWriter().getId().equals(comment.getPost().getId()))
                 .writerInfoDto(writerInfoDto)
+                .isAuthor(comment.getWriter().getId().equals(post.getAuthor().getId()))
                 .createdDate(comment.getCreatedDate());
 
         if (comment.getParent() != null) {

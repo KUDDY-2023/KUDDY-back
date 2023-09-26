@@ -56,7 +56,7 @@ public class CommentService {
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
-                .data(CommentResDto.of(comment, member, null))
+                .data(CommentResDto.of(comment,post, member, null))
                 .build());
     }
 
@@ -79,7 +79,7 @@ public class CommentService {
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
-                .data(CommentResDto.of(comment, member, null))
+                .data(CommentResDto.of(comment, post, member, null))
                 .build());
     }
 
@@ -91,9 +91,9 @@ public class CommentService {
             Member member = memberRepository.findById(comment.getWriter().getId()).get();
             List<Comment> childList = comment.getChildList();
             List<ReplyResDto> replyList = childList.stream()
-                    .map(child -> ReplyResDto.of(child, postId, member))
+                    .map(child -> ReplyResDto.of(child, findPost, member))
                     .collect(Collectors.toList());
-            CommentResDto commentResDto = CommentResDto.of(comment, member, replyList);
+            CommentResDto commentResDto = CommentResDto.of(comment, findPost, member, replyList);
             commentResDtos.add(commentResDto);
         }
         return ResponseEntity.ok(StatusResponse.builder()
