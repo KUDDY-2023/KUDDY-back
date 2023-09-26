@@ -2,6 +2,8 @@ package com.kuddy.apiserver.profile.controller;
 
 import java.util.List;
 
+import com.kuddy.apiserver.profile.dto.response.Top5KuddyListResDto;
+import com.kuddy.apiserver.profile.service.Top5KuddyService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
@@ -35,6 +37,7 @@ public class ProfileSearchController {
 	private final ProfileService profileService;
 	private final ProfileQueryService profileQueryService;
 	private final MemberService memberService;
+	private final Top5KuddyService top5KuddyService;
 
 	@GetMapping
 	public ResponseEntity<StatusResponse> readProfile(@RequestParam final String nickname) {
@@ -57,8 +60,8 @@ public class ProfileSearchController {
 
 	@GetMapping("kuddy/top5")
 	public ResponseEntity<StatusResponse> readTop5KuddyProfile() {
-		List<Profile> profileList = profileQueryService.findTopKuddies();
-		ProfileSearchListResDto response = ProfileSearchListResDto.of(profileList);
+		List<Profile> profileList = top5KuddyService.findTopKuddies();
+		Top5KuddyListResDto response = top5KuddyService.changePageToResponse(profileList);
 		return ResponseEntity.ok(StatusResponse.builder()
 				.status(StatusEnum.OK.getStatusCode())
 				.message(StatusEnum.OK.getCode())
