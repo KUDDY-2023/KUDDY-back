@@ -21,8 +21,8 @@ public class CommentResDto { //TODO: 유저 레벨 추가
     private List<ReplyResDto> replyList;
     private Long parentId;
 
-        WriterInfoDto writerInfoDto = new WriterInfoDto(comment.getWriter().getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
     public static CommentResDto of(Comment comment, Post post, Member member, List<ReplyResDto> replyList) {
+        WriterInfoDto writerInfoDto = new WriterInfoDto(comment.getWriter().getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
         CommentResDtoBuilder builder = CommentResDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())

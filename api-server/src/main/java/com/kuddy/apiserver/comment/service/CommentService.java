@@ -56,7 +56,7 @@ public class CommentService {
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
-                .data(CommentResDto.of(comment,post, member, null))
+                .data(CommentResDto.of(comment, post, member, null))
                 .build());
     }
 
