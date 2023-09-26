@@ -10,6 +10,7 @@ import com.kuddy.common.comment.domain.Comment;
 import com.kuddy.common.comment.exception.NoAuthorityCommentRemove;
 import com.kuddy.common.comment.exception.NoCommentExistsException;
 import com.kuddy.common.comment.exception.NoPostExistException;
+import com.kuddy.common.comment.repository.CommentQuerydslRepository;
 import com.kuddy.common.comment.repository.CommentRepository;
 import com.kuddy.common.community.domain.Post;
 import com.kuddy.common.community.repository.PostRepository;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final CommentQuerydslRepository commentQuerydslRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final CommentNotiService notificationService;
@@ -56,7 +58,7 @@ public class CommentService {
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
-                .data(CommentResDto.of(comment, member, null))
+                .data(CommentResDto.of(comment, post, member, null))
                 .build());
     }
 
@@ -79,21 +81,21 @@ public class CommentService {
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
-                .data(CommentResDto.of(comment, member, null))
+                .data(CommentResDto.of(comment, post, member, null))
                 .build());
     }
 
     public ResponseEntity<StatusResponse> getCommentList(Long postId) {
         Post findPost = postRepository.findById(postId).orElseThrow(() -> new NoPostExistException());
-        List<Comment> commentList = commentRepository.findAllByPostOrderByCreatedDateDesc(findPost);
+        List<Comment> commentList = commentQuerydslRepository.findAllCommentByPost(findPost);
         List<CommentResDto> commentResDtos = new ArrayList<>();
         for (Comment comment : commentList) {
             Member member = memberRepository.findById(comment.getWriter().getId()).get();
             List<Comment> childList = comment.getChildList();
             List<ReplyResDto> replyList = childList.stream()
-                    .map(child -> ReplyResDto.of(child, postId, member))
+                    .map(child -> ReplyResDto.of(child, findPost, member))
                     .collect(Collectors.toList());
-            CommentResDto commentResDto = CommentResDto.of(comment, member, replyList);
+            CommentResDto commentResDto = CommentResDto.of(comment, findPost, member, replyList);
             commentResDtos.add(commentResDto);
         }
         return ResponseEntity.ok(StatusResponse.builder()
