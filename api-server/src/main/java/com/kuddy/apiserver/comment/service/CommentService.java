@@ -2,6 +2,7 @@ package com.kuddy.apiserver.comment.service;
 
 import com.kuddy.apiserver.comment.dto.request.CommentReqDto;
 import com.kuddy.apiserver.comment.dto.request.ReplyReqDto;
+import com.kuddy.apiserver.comment.dto.response.CommentDto;
 import com.kuddy.apiserver.comment.dto.response.CommentResDto;
 import com.kuddy.apiserver.comment.dto.response.MyCommentResDto;
 import com.kuddy.apiserver.comment.dto.response.ReplyResDto;
@@ -58,7 +59,7 @@ public class CommentService {
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
-                .data(CommentResDto.of(comment, post, member, null))
+                .data(CommentDto.of(comment, post, member, null))
                 .build());
     }
 
@@ -81,27 +82,34 @@ public class CommentService {
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
-                .data(CommentResDto.of(comment, post, member, null))
+                .data(CommentDto.of(comment, post, member, null))
                 .build());
     }
 
     public ResponseEntity<StatusResponse> getCommentList(Long postId) {
         Post findPost = postRepository.findById(postId).orElseThrow(() -> new NoPostExistException());
         List<Comment> commentList = commentQuerydslRepository.findAllCommentByPost(findPost);
-        List<CommentResDto> commentResDtos = new ArrayList<>();
+        Integer commentNo = commentRepository.countAllByPostId(postId);
+        List<CommentDto> commentDtoList = new ArrayList<>();
         for (Comment comment : commentList) {
             Member member = memberRepository.findById(comment.getWriter().getId()).get();
             List<Comment> childList = comment.getChildList();
             List<ReplyResDto> replyList = childList.stream()
                     .map(child -> ReplyResDto.of(child, findPost, member))
                     .collect(Collectors.toList());
-            CommentResDto commentResDto = CommentResDto.of(comment, findPost, member, replyList);
-            commentResDtos.add(commentResDto);
+            CommentDto commentDto = CommentDto.of(comment, findPost, member, replyList);
+            commentDtoList.add(commentDto);
         }
+
+        CommentResDto resDto = CommentResDto.builder()
+                .commentDtoList(commentDtoList)
+                .commentNo(commentNo)
+                .build();
+
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
-                .data(commentResDtos)
+                .data(resDto)
                 .build());
 
     }
