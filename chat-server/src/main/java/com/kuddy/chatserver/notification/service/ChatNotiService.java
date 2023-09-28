@@ -54,4 +54,36 @@ public class ChatNotiService {
 		});
 
 	}
+
+	public SseEmitter subscribe(Long memberId, String lastEventId) {
+		String emitterId = makeUniqueEmitterId(memberId);
+		Long timeout = 60L * 1000L * 60L; // 1시간
+		SseEmitter sseEmitter = emitterRepository.save(emitterId, new SseEmitter(timeout));
+
+		sseEmitter.onCompletion(()-> emitterRepository.deleteById(emitterId));
+		sseEmitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
+
+		String eventId = makeUniqueEmitterId(memberId);
+		sendNotification(sseEmitter, eventId, emitterId, "EventStream Created. [memberId=" + memberId + "]");
+
+		if (hasLostData(lastEventId)) {
+			sendLostData(lastEventId, memberId, emitterId, sseEmitter);
+		}
+		return sseEmitter;
+	}
+
+	private boolean hasLostData(String lastEventId) {
+		return !lastEventId.isEmpty();
+	}
+
+	private void sendLostData(String lastEventId, Long memberId, String emitterId, SseEmitter emitter) {
+		Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithMemberId(String.valueOf(memberId));
+		eventCaches.entrySet().stream()
+				.filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
+				.forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
+	}
+
+	private String makeUniqueEmitterId(Long memberId){
+		return memberId + "_" + System.currentTimeMillis();
+	}
 }
