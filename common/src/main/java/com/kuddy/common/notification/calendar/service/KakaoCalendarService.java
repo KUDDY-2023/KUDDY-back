@@ -11,6 +11,7 @@ import com.kuddy.common.notification.calendar.domain.Calendar;
 import com.kuddy.common.notification.calendar.repository.CalendarRepository;
 import com.kuddy.common.notification.exception.KakaoCalendarAPIException;
 import com.kuddy.common.redis.RedisService;
+import com.kuddy.common.spot.domain.Spot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -32,6 +34,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class KakaoCalendarService {
     private final KakaoAuthService kakaoAuthService;
@@ -59,10 +62,10 @@ public class KakaoCalendarService {
     }
 
     // 카카오 일반 일정 생성
-    public void createKakaoEvent(Member member, Meetup meetup) throws JsonProcessingException {
+    public void createKakaoEvent(Member member, Meetup meetup, String spotName) throws JsonProcessingException {
         String kakaoAccessToken = verifyAndRefreshKakaoToken(member.getEmail());
         ObjectMapper objectMapper = new ObjectMapper();
-        String kakaoEventString = objectMapper.writeValueAsString(KakaoEvent.from(meetup));
+        String kakaoEventString = objectMapper.writeValueAsString(KakaoEvent.from(meetup, spotName));
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(KAKAO_CALENDAR_URL);
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE); //WebClient에 의한 Encoding 옵션 끄기

@@ -3,7 +3,10 @@ package com.kuddy.apiserver.notification;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kuddy.apiserver.notification.service.MailNotiService;
 import com.kuddy.common.meetup.domain.Meetup;
+import com.kuddy.common.meetup.domain.MeetupStatus;
+import com.kuddy.common.meetup.exception.MeetupNotFoundException;
 import com.kuddy.common.meetup.repository.MeetupRepository;
+import com.kuddy.common.meetup.service.MeetupService;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.member.domain.ProviderType;
 import com.kuddy.common.notification.calendar.domain.Calendar;
@@ -14,6 +17,7 @@ import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.security.user.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +35,8 @@ public class NotiController {
     private final CalendarRepository calendarRepository;
     private final GoogleCalendarService googleCalendarService;
     private final MailNotiService mailNotiService;
+    private final MeetupService meetupService;
+    private ApplicationEventPublisher eventPublisher;
 
 //    @PostMapping("/{chatId}")
 //    public void createEvent(@AuthUser Member member, @PathVariable String chatId) throws JsonProcessingException {
@@ -70,6 +76,21 @@ public class NotiController {
 //    @PostMapping("/email")
 //    public void sendMail() throws MessagingException {
 //        mailNotiService.sendReviewRequestEmail();
+//    }
+
+//    @PostMapping("/{meetupId}")
+//    public String acceptMeetup(@PathVariable Long meetupId){
+//        String newMeetupStatus = "PAYED";
+//        meetupService.updateMeetupTest(meetupId, newMeetupStatus);
+//
+//        return "일정 등록 완료";
+//    }
+//
+//    @DeleteMapping("/{meetupId}")
+//    public String deleteMeetup(@PathVariable Long meetupId){
+//        String newMeetupStatus = "KUDDY_CANCEL";
+//        meetupService.updateMeetupTest(meetupId, newMeetupStatus);
+//        return "일정 삭제 완료";
 //    }
 
 }

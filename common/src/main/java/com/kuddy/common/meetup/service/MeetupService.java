@@ -78,15 +78,18 @@ public class MeetupService implements ApplicationEventPublisherAware{
 		meetup.updateSpot(spot);
 		meetup.updateAppointment(dateTime);
 		meetup.updatePrice(new BigDecimal(message.getPrice()));
-		
-		boolean isMeetupStatusUpdated = !Objects.equals(message.getMeetStatus(), meetup.getMeetupStatus());
+
+		boolean isMeetupStatusUpdated = !message.getMeetStatus().equals(String.valueOf(meetup.getMeetupStatus()));
 		meetup.updateMeetupStatus(message.getMeetStatus());
 
 		if (isMeetupStatusUpdated) {
+			Long kuddyId = meetup.getKuddy().getId();
+			Long travelerId = meetup.getTraveler().getId();
+			String spotName = meetup.getSpot().getName();
 			MeetupStatus meetupStatus = MeetupStatus.fromString(message.getMeetStatus());
 			switch (meetupStatus){
 				case PAYED:
-					eventPublisher.publishEvent(new MeetupPayedEvent(meetup));
+					eventPublisher.publishEvent(new MeetupPayedEvent(meetup,kuddyId, travelerId, spotName));
 					break;
 				case KUDDY_CANCEL:
 				case TRAVELER_CANCEL:
@@ -95,6 +98,30 @@ public class MeetupService implements ApplicationEventPublisherAware{
 				default:
 					break;
 				}
+		}
+	}
+
+	public void updateMeetupTest(Long meetupId, String newMeetupStatus){
+		Meetup meetup = meetupRepository.findById(meetupId).orElseThrow(MeetupNotFoundException::new);
+		boolean isMeetupStatusUpdated = !newMeetupStatus.equals(String.valueOf(meetup.getMeetupStatus()));
+		meetup.updateMeetupStatus("PAYED");
+
+		if (isMeetupStatusUpdated) {
+			Long kuddyId = meetup.getKuddy().getId();
+			Long travelerId = meetup.getTraveler().getId();
+			String spotName = meetup.getSpot().getName();
+			MeetupStatus meetupStatus = MeetupStatus.fromString(newMeetupStatus);
+			switch (meetupStatus){
+				case PAYED:
+					eventPublisher.publishEvent(new MeetupPayedEvent(meetup, kuddyId, travelerId, spotName));
+					break;
+				case KUDDY_CANCEL:
+				case TRAVELER_CANCEL:
+					eventPublisher.publishEvent(new MeetupCanceledEvent(meetup));
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	@Transactional(readOnly = true)
@@ -123,19 +150,26 @@ public class MeetupService implements ApplicationEventPublisherAware{
 		}
 	}
 
+	@Getter
 	public static class MeetupPayedEvent {
-		@Getter
 		private Meetup meetup;
+		private Long kuddyId; //Meetup을 통해 이벤트 내에서 불러오면 LazyIntializationException 발생
+		private Long travelerId;
+		private String spotName;
 
-		private MeetupPayedEvent(@NonNull Meetup meetup){
+		private MeetupPayedEvent(@NonNull Meetup meetup, @NonNull Long kuddyId, @NonNull Long travelerId, @NonNull String spotName){ //TODO: private으로 수정
 			this.meetup = meetup;
+			this.kuddyId = kuddyId;
+			this.travelerId = travelerId;
+			this.spotName = spotName;
 		}
 
 	}
 
-	public static class MeetupCanceledEvent{
+	public static class MeetupCanceledEvent{ //TODO: private으로 수정
 		@Getter
 		private Meetup meetup;
+
 
 		private MeetupCanceledEvent(@NonNull Meetup meetup){
 			this.meetup = meetup;

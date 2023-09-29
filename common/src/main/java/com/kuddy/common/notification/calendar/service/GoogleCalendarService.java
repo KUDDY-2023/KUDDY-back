@@ -12,12 +12,14 @@ import com.kuddy.common.notification.calendar.dto.GoogleEvent;
 import com.kuddy.common.notification.calendar.repository.CalendarRepository;
 import com.kuddy.common.notification.exception.GoogleCalendarAPIException;
 import com.kuddy.common.redis.RedisService;
+import com.kuddy.common.spot.domain.Spot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -28,6 +30,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class GoogleCalendarService {
     private final GoogleAuthService googleAuthService;
@@ -56,10 +59,10 @@ public class GoogleCalendarService {
         }
     }
 
-    public void createGoogleEvent(Member member, Meetup meetup) throws IOException {
+    public void createGoogleEvent(Member member, Meetup meetup, String spotName) throws IOException {
         String googleAccessToken = verifyAndRefreshGoogleToken(member.getEmail());
 
-        GoogleEvent googleEvent = GoogleEvent.from(meetup);
+        GoogleEvent googleEvent = GoogleEvent.from(meetup, spotName);
         ObjectMapper objectMapper = new ObjectMapper();
         String googleEventString = objectMapper.writeValueAsString(googleEvent);
         log.info(String.valueOf(BodyInserters.fromValue(googleEvent)));
