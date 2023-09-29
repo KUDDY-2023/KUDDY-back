@@ -79,7 +79,7 @@ public class MeetupService implements ApplicationEventPublisherAware{
 		meetup.updateAppointment(dateTime);
 		meetup.updatePrice(new BigDecimal(message.getPrice()));
 		
-		boolean isMeetupStatusUpdated = Objects.equals(message.getMeetStatus(), meetup.getMeetupStatus());
+		boolean isMeetupStatusUpdated = !Objects.equals(message.getMeetStatus(), meetup.getMeetupStatus());
 		meetup.updateMeetupStatus(message.getMeetStatus());
 
 		if (isMeetupStatusUpdated) {
