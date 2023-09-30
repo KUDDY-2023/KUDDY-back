@@ -1,6 +1,7 @@
 package com.kuddy.apiserver.profile.service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,21 +41,38 @@ public class ProfileAreaService {
 		return areas;
 	}
 
-	public void updateProfileDistrics(Profile profile, List<MemberAreaDto> areaReqDto){
-		for(MemberAreaDto areaDto : areaReqDto) {
+	public void updateProfileDistricts(Profile profile, List<MemberAreaDto> areaReqDto) {
+		List<ProfileArea> newDistricts = new ArrayList<>();
+
+		for (MemberAreaDto areaDto : areaReqDto) {
 			Area area = findByDistrict(areaDto.getAreaName());
 			Optional<ProfileArea> optionalProfileArea = findByProfileAndArea(profile, area);
-			if(!optionalProfileArea.isPresent()){
-				ProfileArea profileArea = ProfileArea.builder()
-					.area(area)
-					.profile(profile)
-					.build();
-				profileAreaRepository.save(profileArea);
-				profile.updateDistricts(profileArea);
-			}
 
+			if (optionalProfileArea.isPresent()) {
+				newDistricts.add(optionalProfileArea.get());
+			} else {
+				ProfileArea profileArea = ProfileArea.builder()
+						.area(area)
+						.profile(profile)
+						.build();
+				profileAreaRepository.save(profileArea);
+				newDistricts.add(profileArea);
+			}
 		}
+
+		Iterator<ProfileArea> iterator = profile.getDistricts().iterator();
+		while (iterator.hasNext()) {
+			ProfileArea existingArea = iterator.next();
+			if (!newDistricts.contains(existingArea)) {
+				iterator.remove();
+				profileAreaRepository.delete(existingArea);
+			}
+		}
+
+
+		profile.setDistricts(newDistricts);
 	}
+
 	@Transactional(readOnly = true)
 	public Area findByDistrict(String district){
 		return areaRepository.findByDistrict(district).orElseThrow(AreaNotFoundException::new);

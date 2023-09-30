@@ -31,16 +31,16 @@ public class ProfileLanguage {
 	private Language language;
 
 	@Column(length = 5)
-	private Integer laguageLevel;
+	private Integer languageLevel;
 
 	@Builder
-	public ProfileLanguage(Profile profile, Language language, Integer laguageLevel) {
+	public ProfileLanguage(Profile profile, Language language, Integer languageLevel) {
 		this.profile = profile;
 		this.language = language;
-		this.laguageLevel = laguageLevel;
+		this.languageLevel = languageLevel;
 	}
 
-	public void updateLanguageLevel(Integer laguageLevel) {
-		this.laguageLevel = laguageLevel;
+	public void updateLanguageLevel(Integer languageLevel) {
+		this.languageLevel = languageLevel;
 	}
 }

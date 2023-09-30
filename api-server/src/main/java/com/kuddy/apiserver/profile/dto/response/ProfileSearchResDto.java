@@ -46,7 +46,7 @@ public class ProfileSearchResDto {
 	private static List<MemberLanguageDto> buildLanguages(List<ProfileLanguage> availableLanguages) {
 		List<MemberLanguageDto> languageList = new ArrayList<>();
 		for (ProfileLanguage pl : availableLanguages) {
-			MemberLanguageDto language = new MemberLanguageDto(pl.getLanguage().getType(), pl.getLaguageLevel());
+			MemberLanguageDto language = new MemberLanguageDto(pl.getLanguage().getType(), pl.getLanguageLevel());
 			languageList.add(language);
 		}
 		return languageList;
