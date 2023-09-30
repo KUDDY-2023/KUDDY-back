@@ -1,6 +1,7 @@
 package com.kuddy.apiserver.profile.service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class ProfileLanguageService {
 			Language language = findByType(languageDto.getLanguageType());
 			ProfileLanguage profileLanguage = ProfileLanguage.builder()
 				.profile(profile)
-				.laguageLevel(languageDto.getLanguageLevel())
+				.languageLevel(languageDto.getLanguageLevel())
 				.language(language)
 				.build();
 			profileLanguageRepository.save(profileLanguage);
@@ -42,6 +43,7 @@ public class ProfileLanguageService {
 	}
 
 	public void updateProfileLanguage(Profile profile, List<MemberLanguageDto> languageReqDto){
+		List<ProfileLanguage> newAvailableLanguages = new ArrayList<>();
 		for(MemberLanguageDto languageDto : languageReqDto) {
 			Language language = findByType(languageDto.getLanguageType());
 			Optional<ProfileLanguage> optionalProfileLanguage = findByProfileAnAndLanguage(profile, language);
@@ -52,15 +54,28 @@ public class ProfileLanguageService {
 				profileLanguage.updateLanguageLevel(languageDto.getLanguageLevel());
 			} else {
 				profileLanguage = ProfileLanguage.builder()
-					.profile(profile)
-					.laguageLevel(languageDto.getLanguageLevel())
-					.language(language)
-					.build();
+						.profile(profile)
+						.languageLevel(languageDto.getLanguageLevel())
+						.language(language)
+						.build();
 				profileLanguageRepository.save(profileLanguage);
 			}
-			profile.updateAvailableLanguages(profileLanguage);
+			newAvailableLanguages.add(profileLanguage);
 		}
+
+		Iterator<ProfileLanguage> iterator = profile.getAvailableLanguages().iterator();
+		while (iterator.hasNext()) {
+			ProfileLanguage existingLanguage = iterator.next();
+			if (!newAvailableLanguages.contains(existingLanguage)) {
+				iterator.remove();
+				profileLanguageRepository.delete(existingLanguage);
+			}
+		}
+
+
+		profile.setAvailableLanguages(newAvailableLanguages);
 	}
+
 	@Transactional(readOnly = true)
 	public Language findByType(String type){
 		return languageRepository.findByType(type).orElseThrow(LanguageNotFoundException::new);

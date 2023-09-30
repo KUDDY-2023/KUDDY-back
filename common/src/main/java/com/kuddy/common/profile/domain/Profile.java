@@ -169,27 +169,18 @@ public class Profile extends BaseTimeEntity {
 	}
 
 	public void setActivitiesInvestmentTechs(List<ActivitiesInvestmentTech> newActivitiesInvestmentTechs) {
-		for (ActivitiesInvestmentTech newActivitiesInvestmentTech : newActivitiesInvestmentTechs) {
-			if (!this.activitiesInvestmentTechs.contains(newActivitiesInvestmentTech)) {
-				this.activitiesInvestmentTechs.add(newActivitiesInvestmentTech);
-			}
-		}
+		this.activitiesInvestmentTechs.clear();  // 기존의 리스트를 초기화
+		this.activitiesInvestmentTechs.addAll(newActivitiesInvestmentTechs);
 	}
 
 	public void setArtBeauties(List<ArtBeauty> newArtBeauties) {
-		for (ArtBeauty newArtBeauty : newArtBeauties) {
-			if (!this.artBeauties.contains(newArtBeauty)) {
-				this.artBeauties.add(newArtBeauty);
-			}
-		}
+		this.artBeauties.clear();
+		this.artBeauties.addAll(newArtBeauties);
 	}
 
 	public void setCareerMajors(List<CareerMajor> newCareerMajors) {
-		for (CareerMajor newCareerMajor : newCareerMajors) {
-			if (!this.careerMajors.contains(newCareerMajor)) {
-				this.careerMajors.add(newCareerMajor);
-			}
-		}
+		this.careerMajors.clear();
+		this.careerMajors.addAll(newCareerMajors);
 	}
 
 
@@ -200,27 +191,18 @@ public class Profile extends BaseTimeEntity {
 	}
 
 	public void setEntertainments(List<Entertainment> newEntertainments) {
-		for (Entertainment newEntertainment : newEntertainments) {
-			if (!this.entertainments.contains(newEntertainment)) {
-				this.entertainments.add(newEntertainment);
-			}
-		}
+		this.entertainments.clear();
+		this.entertainments.addAll(newEntertainments);
 	}
 
 	public void setFoods(List<Food> newFoods) {
-		for (Food newFood : newFoods) {
-			if (!this.foods.contains(newFood)) {
-				this.foods.add(newFood);
-			}
-		}
+		this.foods.clear();
+		this.foods.addAll(newFoods);
 	}
 
 	public void setLifestyles(List<Lifestyle> newLifestyles) {
-		for (Lifestyle newLifestyle : newLifestyles) {
-			if (!this.lifestyles.contains(newLifestyle)) {
-				this.lifestyles.add(newLifestyle);
-			}
-		}
+		this.lifestyles.clear();
+		this.lifestyles.addAll(newLifestyles);
 	}
 
 	public void setGenderType(GenderType newGenderType) {
@@ -230,20 +212,15 @@ public class Profile extends BaseTimeEntity {
 	}
 
 	public void setHobbies(List<HobbiesInterests> newHobby) {
-		for(HobbiesInterests hobbiesInterest : newHobby){
-			if(!this.hobbiesInterests.contains(hobbiesInterest)){
-				this.hobbiesInterests.add(hobbiesInterest);
-			}
-		}
+		this.hobbiesInterests.clear();
+		this.hobbiesInterests.addAll(newHobby);
 	}
 
 	public void setSports(List<Sports> newSports) {
-		for(Sports sport : newSports){
-			if(!this.sports.contains(sport)){
-				this.sports.add(sport);
-			}
-		}
+		this.sports.clear();
+		this.sports.addAll(newSports);
 	}
+
 
 	public void setTemperament(Temperament newTemperament) {
 		if (!Objects.equals(this.temperament, newTemperament)) {
@@ -252,18 +229,11 @@ public class Profile extends BaseTimeEntity {
 	}
 
 	public void setWellbeing(List<Wellbeing> newWellbeing) {
-		for (Wellbeing wellbeing : newWellbeing) {
-			if (!this.wellbeings.contains(wellbeing)) {
-				this.wellbeings.add(wellbeing);
-			}
-		}
+		this.wellbeings.clear();
+		this.wellbeings.addAll(newWellbeing);
 	}
 
-	public void updateAvailableLanguages(ProfileLanguage newAvailableLanguage) {
-		if (!this.availableLanguages.contains(newAvailableLanguage)) {
-			this.availableLanguages.add(newAvailableLanguage);
-		}
-	}
+
 	public void setAvailableLanguages(List<ProfileLanguage> profileLanguages){
 		this.availableLanguages = profileLanguages;
 	}

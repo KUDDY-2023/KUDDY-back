@@ -80,7 +80,7 @@ public class ProfileService {
 		profile.updateBirthDate(reqDto.getBirthDate());
 		setInterests(profile, reqDto.getInterests());
 		profileLanguageService.updateProfileLanguage(profile, reqDto.getAvailableLanguages());
-		profileAreaService.updateProfileDistrics(profile, reqDto.getDistricts());
+		profileAreaService.updateProfileDistricts(profile, reqDto.getDistricts());
 		return profile;
 	}
 
