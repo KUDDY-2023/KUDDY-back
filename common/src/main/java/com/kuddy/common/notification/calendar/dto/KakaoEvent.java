@@ -45,19 +45,23 @@ public class KakaoEvent {
         this.reminders = reminders;
     }
 
-    public static KakaoEvent from(Meetup meetup) {
-        Spot spot = meetup.getSpot();
-
+    public static KakaoEvent from(Meetup meetup, String spotName) {
         LocalDateTime dateTime = meetup.getAppointment();
         int minute = dateTime.getMinute();
         int remainder = minute % 5; // The minimum unit of start_at is 5 minutes
         LocalDateTime adjustedDateTime = dateTime.minusMinutes(remainder);
-        String startIsoString = adjustedDateTime
+        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
+        ZonedDateTime zonedDateTime = adjustedDateTime.atZone(koreaZone);
+        ZonedDateTime endOfTheDay = zonedDateTime
+                .plusDays(1)
+                .truncatedTo(ChronoUnit.DAYS);
+
+        String startIsoString = zonedDateTime
+                .toInstant()
                 .atOffset(ZoneOffset.UTC)
                 .format(DateTimeFormatter.ISO_INSTANT);
-        LocalDateTime endOfTheDay = adjustedDateTime.toLocalDate().plusDays(1).atStartOfDay();
         String endIsoString = endOfTheDay
-                .truncatedTo(ChronoUnit.DAYS)
+                .toInstant()
                 .atOffset(ZoneOffset.UTC)
                 .format(DateTimeFormatter.ISO_INSTANT);
 
@@ -70,7 +74,7 @@ public class KakaoEvent {
                 .build();
 
         Location location = Location.builder()
-                .name(meetup.getSpot().getName())
+                .name(spotName)
                 .build();
 
         int[] reminders = {1440};  // 동행 하루 전 알림

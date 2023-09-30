@@ -1,6 +1,7 @@
 package com.kuddy.common.notification.calendar.dto;
 
 import com.kuddy.common.meetup.domain.Meetup;
+import com.kuddy.common.spot.domain.Spot;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,7 +53,7 @@ public class GoogleEvent {
         this.reminders = reminders;
     }
 
-    public static GoogleEvent from(Meetup meetup){
+    public static GoogleEvent from(Meetup meetup, String spotName){
         LocalDateTime dateTime = meetup.getAppointment();
         ZoneId koreaZone = ZoneId.of("Asia/Seoul");
 
@@ -93,7 +94,7 @@ public class GoogleEvent {
         return GoogleEvent.builder()
                 .end(end)
                 .start(start)
-                .location(meetup.getSpot().getName())
+                .location(spotName)
                 .summary("Meet up")
                 .reminders(reminders)
                 .build();

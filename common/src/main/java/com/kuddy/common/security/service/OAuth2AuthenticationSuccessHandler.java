@@ -72,8 +72,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             oauthRefreshToken = refreshToken != null
                     ? refreshToken.getTokenValue()
                     : redisService.getData("KakaoRefreshToken:" + email);
-            redisService.setData("KakaoAccessToken:" + email, oauthAccessToken, kakaoAccessTokenValidationMs);
-            redisService.setData("KakaoRefreshToken:" + email, oauthRefreshToken, kakaoRefreshTokenValidationMs);
+            redisService.setData("KakaoAccessToken:" + email, oauthAccessToken);
+            redisService.setData("KakaoRefreshToken:" + email, oauthRefreshToken);
         } else if (providerType.equals(ProviderType.GOOGLE)) {
             GoogleUserInfo googleUserInfo = new GoogleUserInfo(attributes);
             email = googleUserInfo.getEmail();
@@ -81,8 +81,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             oauthRefreshToken = refreshToken != null
                     ? refreshToken.getTokenValue()
                     : redisService.getData("GoogleRefreshToken:" + email);
-            redisService.setData("GoogleAccessToken:" + email, oauthAccessToken, googleAccessTokenValidationMs);
-            redisService.setData("GoogleRefreshToken:" + email, oauthRefreshToken, googleRefreshTokenValidationMs);
+            redisService.setData("GoogleAccessToken:" + email, oauthAccessToken);
+            redisService.setData("GoogleRefreshToken:" + email, oauthRefreshToken);
         } else {
             Map<String, Object> providerData = (Map<String, Object>) attributes.get(providerType.name().toLowerCase());
             if (providerData != null) {
