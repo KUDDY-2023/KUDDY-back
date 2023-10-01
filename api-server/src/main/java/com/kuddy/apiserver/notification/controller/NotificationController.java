@@ -1,7 +1,9 @@
 package com.kuddy.apiserver.notification.controller;
 
 import com.kuddy.apiserver.notification.service.CommentNotiService;
+import com.kuddy.common.meetup.service.MeetupService;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.security.user.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 public class NotificationController {
     private final CommentNotiService notificationService;
+    private final MeetupService meetupService;
 
     //알림 구독 (SSE)
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
@@ -45,5 +48,29 @@ public class NotificationController {
     @GetMapping("/count")
     public ResponseEntity<StatusResponse> countUnreadNotifications(@AuthUser Member member){
         return notificationService.countUnreadCommentNotifications(member);
+    }
+
+    @PostMapping("/calendars/{chatId}")
+    public ResponseEntity<StatusResponse> createCalendarEvent(@PathVariable String chatId) {
+        String newMeetupStatus = "PAYED";
+        meetupService.invokeCalendarEvent(chatId, newMeetupStatus);
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data("일정 등록 완료")
+                .build());
+    }
+
+    @DeleteMapping("/calendars/{chatId}")
+    public ResponseEntity<StatusResponse> deleteCalendarEvent(@PathVariable String chatId){
+        String newMeetupStatus = "KUDDY_CANCEL";
+        meetupService.invokeCalendarEvent(chatId, newMeetupStatus);
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data("일정 삭제 완료")
+                .build());
     }
 }

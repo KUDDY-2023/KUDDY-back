@@ -78,18 +78,18 @@ public class NotiController {
 //        mailNotiService.sendReviewRequestEmail();
 //    }
 
-//    @PostMapping("/{meetupId}")
-//    public String acceptMeetup(@PathVariable Long meetupId){
+//    @PostMapping("/calendars/{chatId}")
+//    public String acceptMeetup(@PathVariable String chatId){
 //        String newMeetupStatus = "PAYED";
-//        meetupService.updateMeetupTest(meetupId, newMeetupStatus);
+//        meetupService.invokeCalendarEvent(chatId, newMeetupStatus);
 //
 //        return "일정 등록 완료";
 //    }
 //
-//    @DeleteMapping("/{meetupId}")
-//    public String deleteMeetup(@PathVariable Long meetupId){
+//    @DeleteMapping("/calendars/{chatId}")
+//    public String deleteMeetup(@PathVariable String chatId){
 //        String newMeetupStatus = "KUDDY_CANCEL";
-//        meetupService.updateMeetupTest(meetupId, newMeetupStatus);
+//        meetupService.invokeCalendarEvent(chatId, newMeetupStatus);
 //        return "일정 삭제 완료";
 //    }
 
