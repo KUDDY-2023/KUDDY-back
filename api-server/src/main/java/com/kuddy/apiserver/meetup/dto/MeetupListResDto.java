@@ -28,6 +28,7 @@ public class MeetupListResDto {
 	@AllArgsConstructor
 	public static class SingleMeetup {
 		private final Long meetupId;
+		private final String chatId;
 		private final Long spotId;
 		private final String spotName;
 		private final String appointmentTime;
@@ -38,6 +39,7 @@ public class MeetupListResDto {
 
 		public SingleMeetup(Meetup meetup, Member loginMember) {
 			this.meetupId = meetup.getId();
+			this.chatId = meetup.getChatId();
 			this.appointmentTime = CustomDateUtil.toStringFormat(meetup.getAppointment());
 			this.meetupStatus = Optional.ofNullable(meetup.getMeetupStatus()).orElse(MeetupStatus.UNKNOWN);
 			this.createdDate = CustomDateUtil.toStringFormat(meetup.getCreatedDate());
