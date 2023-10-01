@@ -3,6 +3,7 @@ package com.kuddy.apiserver.notification.controller;
 import com.kuddy.apiserver.notification.service.CommentNotiService;
 import com.kuddy.common.meetup.service.MeetupService;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.security.user.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -50,18 +51,26 @@ public class NotificationController {
     }
 
     @PostMapping("/calendars/{chatId}")
-    public String createCalendarEvent(@PathVariable String chatId){
+    public ResponseEntity<StatusResponse> createCalendarEvent(@PathVariable String chatId) {
         String newMeetupStatus = "PAYED";
         meetupService.invokeCalendarEvent(chatId, newMeetupStatus);
 
-        return "일정 등록 완료";
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data("일정 등록 완료")
+                .build());
     }
 
     @DeleteMapping("/calendars/{chatId}")
-    public String deleteCalendarEvent(@PathVariable String chatId){
+    public ResponseEntity<StatusResponse> deleteCalendarEvent(@PathVariable String chatId){
         String newMeetupStatus = "KUDDY_CANCEL";
         meetupService.invokeCalendarEvent(chatId, newMeetupStatus);
 
-        return "일정 삭제 완료";
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data("일정 삭제 완료")
+                .build());
     }
 }
