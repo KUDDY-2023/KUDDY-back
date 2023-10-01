@@ -27,8 +27,8 @@ public class MeetUpPayedEventListener {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = MeetupService.MeetupPayedEvent.class)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handleMeetupPayedEvent(MeetupService.MeetupPayedEvent event) throws IOException {
+        log.info("handleMeetupPayedEvent 발생");
         Long kuddyId = event.getKuddyId();
         Long travelerId = event.getTravelerId();
         log.info("kuddy id  :  " + String.valueOf(kuddyId));

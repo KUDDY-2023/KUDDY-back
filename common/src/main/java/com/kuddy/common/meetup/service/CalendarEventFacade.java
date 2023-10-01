@@ -12,6 +12,7 @@ import com.kuddy.common.notification.calendar.service.KakaoCalendarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class CalendarEventFacade {
     private final GoogleCalendarService googleCalendarService;
     private final MemberRepository memberRepository;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void createCalendarEvent(Long memberId, Meetup meetup, String spotName) throws IOException {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         log.info("member 소셜 :" + member.getProviderType());

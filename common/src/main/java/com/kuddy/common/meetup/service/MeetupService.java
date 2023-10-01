@@ -87,6 +87,7 @@ public class MeetupService implements ApplicationEventPublisherAware{
 			Long travelerId = meetup.getTraveler().getId();
 			String spotName = meetup.getSpot().getName();
 			MeetupStatus meetupStatus = MeetupStatus.fromString(message.getMeetStatus());
+			log.info("이벤트 발생");
 			switch (meetupStatus){
 				case PAYED:
 					eventPublisher.publishEvent(new MeetupPayedEvent(meetup,kuddyId, travelerId, spotName));
@@ -101,29 +102,26 @@ public class MeetupService implements ApplicationEventPublisherAware{
 		}
 	}
 
-	public void updateMeetupTest(Long meetupId, String newMeetupStatus){
-		Meetup meetup = meetupRepository.findById(meetupId).orElseThrow(MeetupNotFoundException::new);
-		boolean isMeetupStatusUpdated = !newMeetupStatus.equals(String.valueOf(meetup.getMeetupStatus()));
-		meetup.updateMeetupStatus("PAYED");
+	public void invokeCalendarEvent(String chatId, String newMeetupStatus){
+		Meetup meetup = meetupRepository.findByChatId(chatId).orElseThrow(MeetupNotFoundException::new);
 
-		if (isMeetupStatusUpdated) {
-			Long kuddyId = meetup.getKuddy().getId();
-			Long travelerId = meetup.getTraveler().getId();
-			String spotName = meetup.getSpot().getName();
-			MeetupStatus meetupStatus = MeetupStatus.fromString(newMeetupStatus);
-			switch (meetupStatus){
-				case PAYED:
-					eventPublisher.publishEvent(new MeetupPayedEvent(meetup, kuddyId, travelerId, spotName));
-					break;
-				case KUDDY_CANCEL:
-				case TRAVELER_CANCEL:
-					eventPublisher.publishEvent(new MeetupCanceledEvent(meetup));
-					break;
-				default:
-					break;
+		Long kuddyId = meetup.getKuddy().getId();
+		Long travelerId = meetup.getTraveler().getId();
+		String spotName = meetup.getSpot().getName();
+		MeetupStatus meetupStatus = MeetupStatus.fromString(newMeetupStatus);
+		switch (meetupStatus){
+			case PAYED:
+				eventPublisher.publishEvent(new MeetupPayedEvent(meetup, kuddyId, travelerId, spotName));
+				break;
+			case KUDDY_CANCEL:
+			case TRAVELER_CANCEL:
+				eventPublisher.publishEvent(new MeetupCanceledEvent(meetup));
+				break;
+			default:
+				break;
 			}
-		}
 	}
+
 	@Transactional(readOnly = true)
 	public Spot findByContentId(Long contentId){
 		return spotRepository.findByContentId(contentId);
