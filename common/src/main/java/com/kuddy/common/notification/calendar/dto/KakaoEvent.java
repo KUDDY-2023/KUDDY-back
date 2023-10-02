@@ -48,8 +48,9 @@ public class KakaoEvent {
     public static KakaoEvent from(Meetup meetup, String spotName) {
         LocalDateTime dateTime = meetup.getAppointment();
         int minute = dateTime.getMinute();
+        int second = dateTime.getSecond();
         int remainder = minute % 5; // The minimum unit of start_at is 5 minutes
-        LocalDateTime adjustedDateTime = dateTime.minusMinutes(remainder);
+        LocalDateTime adjustedDateTime = dateTime.minusMinutes(remainder).minusSeconds(second);
         ZoneId koreaZone = ZoneId.of("Asia/Seoul");
         ZonedDateTime zonedDateTime = adjustedDateTime.atZone(koreaZone);
         ZonedDateTime endOfTheDay = zonedDateTime
