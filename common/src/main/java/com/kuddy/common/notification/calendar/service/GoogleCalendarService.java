@@ -46,12 +46,16 @@ public class GoogleCalendarService {
     public String verifyAndRefreshGoogleToken(String email) throws JsonProcessingException {
         String googleAccessToken = redisService.getData("GoogleAccessToken:" + email);
         boolean isValidAccessToken = googleAuthService.validateGoogleAccessToken(googleAccessToken);
+
+        log.info("구글 액세스토큰 유효 여부 : " + isValidAccessToken);
+
+
+        // 구글 액세스 토큰이 유효하지 않을 경우, 리프레시 토큰을 이용하여 재발급
         if (!isValidAccessToken) {
-            String googleRefreshToken = redisService.getData("GoogleRefreshToken" + email);
+            String googleRefreshToken = redisService.getData("GoogleRefreshToken:" + email);
             Map<String, String> newTokens = googleAuthService.refreshGoogleTokens(googleRefreshToken);
 
-            redisService.setData("GoogleAccessToken:" + email, newTokens.get("access_token"), googleAccessTokenValidationMs);
-            redisService.setData("GoogleRefreshToken" + email, newTokens.get("refresh_token"), googleRefreshTokenValidationMs);
+            redisService.setData("GoogleAccessToken:" + email, newTokens.get("access_token"));
 
             return newTokens.get("access_token");
         } else {
