@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kuddy.common.notification.exception.KakaoCalendarAPIException;
 import com.kuddy.common.redis.RedisService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class KakaoAuthService {
     private final RedisService redisService;
     private static final String TOKEN_CHECK_URI = "https://kapi.kakao.com/v1/user/access_token_info";
@@ -42,16 +44,24 @@ public class KakaoAuthService {
 
     public boolean validateKakaoAccessToken(String kakaoAccessToken) {
         WebClient wc = WebClient.create(TOKEN_CHECK_URI);
-        ResponseEntity<String> response = wc.get()
-                .header("Authorization", "Bearer " + kakaoAccessToken)
-                .retrieve()
-                // 4xx 클라이언트 오류 상태 코드 처리
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoCalendarAPIException()))
-                // 5xx 서버 오류 상태 코드 처리
-                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoCalendarAPIException()))
-                .toEntity(String.class).block();
+        try{
+            ResponseEntity<String> response = wc.get()
+                    .header("Authorization", "Bearer " + kakaoAccessToken)
+                    .retrieve()
+                    // 4xx 클라이언트 오류 상태 코드 처리
+                    .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoCalendarAPIException()))
+                    // 5xx 서버 오류 상태 코드 처리
+                    .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoCalendarAPIException()))
+                    .toEntity(String.class).block();
 
-        return (response != null ? response.getStatusCode() : null) == HttpStatus.OK;
+            return (response != null ? response.getStatusCode() : null) == HttpStatus.OK;
+        } catch (Exception e){
+            log.error("Error while validating access token", e);
+            return false;
+        }
+
+
+
     }
 
     public Map<String, String> refreshKakaoTokens(String refreshToken) throws JsonProcessingException {
