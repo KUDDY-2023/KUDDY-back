@@ -25,10 +25,12 @@ public class TourApiService {
     private static final String BASE_URL = "https://apis.data.go.kr/B551011/EngService1/";
 
     //카테고리별로 20개씩 조회
-    public JSONArray getApiDataList(int page, int category) {
+    public JSONArray getApiDataList(int page, int size, int category) {
 
         try {
-            URL url = new URL(BASE_URL + "areaBasedList1?numOfRows=20&pageNo=" +
+            URL url = new URL(BASE_URL + "areaBasedList1?numOfRows=" +
+                    size +
+                    "&pageNo=" +
                     page +
                     "&MobileOS=ETC&MobileApp=Kuddy&_type=json&listYN=Y&arrange=A&contentTypeId=" +
                     category +
@@ -66,13 +68,13 @@ public class TourApiService {
     }
 
     //각 관광지 공통 정보 조회
-    public Object getCommonDetail(Spot spot) {
+    public Object getCommonDetail(String category, Long contentId) {
 
         try {
             URL url = new URL(BASE_URL + "detailCommon1?contentTypeId=" +
-                    spot.getCategory().getCode() +
+                    category +
                     "&contentId=" +
-                    spot.getContentId() +
+                    contentId +
                     "&MobileOS=ETC&MobileApp=Kuddy&defaultYN=Y&addrinfoYN=Y&overviewYN=Y&_type=json&ServiceKey="
                     + SECRET_KEY);
 

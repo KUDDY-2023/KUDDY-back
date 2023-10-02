@@ -19,6 +19,7 @@ import com.kuddy.common.spot.exception.NoSpotNearbyException;
 import com.kuddy.common.spot.exception.SpotNotFoundException;
 import com.kuddy.common.spot.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.data.domain.*;
@@ -36,20 +37,24 @@ import static com.kuddy.common.spot.repository.SpotSpecification.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class SpotService {
 
     private final SpotRepository spotRepository;
     private final HeartRepository heartRepository;
     private final SpotQueryService spotQueryService;
+    private final TourApiService tourApiService;
 
-    //JSON 응답값 중 필요한 정보(이름, 지역, 카테고리, 사진, 고유id)만 db에 저장
-    public void changeAndSave(JSONArray spotArr) {
+    //JSON 응답값 중 필요한 정보(이름, 지역, 카테고리, 사진, 고유id, x, y, about)만 db에 저장
+    public void changeAndSaveTourData(JSONArray spotArr) {
         for (Object o : spotArr) {
             JSONObject item = (JSONObject) o;
+            Long contentId = Long.valueOf((String) item.get("contentid"));
             String contentType = "";
             String areaCode = "";
+            String about = "";
 
-            if (!spotRepository.existsByContentId(Long.valueOf((String) item.get("contentid")))) {
+            if (!spotRepository.existsByContentId(contentId)) {
                 for (Category category : Category.values()) {
                     if (item.get("contenttypeid").equals(category.getCode()))
                         contentType = category.name();
@@ -59,15 +64,23 @@ public class SpotService {
                         areaCode = district.name();
                 }
 
+                //about 저장
+                Object commonDetail = tourApiService.getCommonDetail((String) item.get("contenttypeid"), contentId);
+                JSONObject detail = (JSONObject) commonDetail;
+                log.info(String.valueOf(detail));
+                about = (String) detail.get("overview");
+                log.info(about);
+
                 spotRepository.save(Spot.builder()
                         .name((String) item.get("title"))
-                        .contentId(Long.valueOf((String) item.get("contentid")))
+                        .contentId(contentId)
                         .district(District.valueOf(areaCode))
                         .category(Category.valueOf(contentType))
                         .imageUrl((String) item.get("firstimage"))
                         .numOfHearts(0L)
                         .mapX((String) item.get("mapx"))
                         .mapY((String) item.get("mapy"))
+                        .about(about)
                         .build());
             }
         }
