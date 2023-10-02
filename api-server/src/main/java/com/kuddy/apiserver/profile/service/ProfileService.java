@@ -85,16 +85,13 @@ public class ProfileService {
 	}
 
 	public void setInterests(Profile profile, InterestsDto reqDto){
-
-		profile.setActivitiesInvestmentTechs(reqDto.getActivitiesInvestmentTech());
 		profile.setArtBeauties(reqDto.getArtBeauty());
-		profile.setCareerMajors(reqDto.getCareerMajor());
+		profile.setCareers(reqDto.getCareerMajor());
 		profile.setLifestyles(reqDto.getLifestyle());
 		profile.setEntertainments(reqDto.getEntertainment());
 		profile.setFoods(reqDto.getFood());
 		profile.setHobbies(reqDto.getHobbiesInterests());
 		profile.setSports(reqDto.getSports());
-		profile.setWellbeing(reqDto.getWellbeing());
 	}
 
 	public Page<Profile> getKuddyProfiles(int page, int size) {
