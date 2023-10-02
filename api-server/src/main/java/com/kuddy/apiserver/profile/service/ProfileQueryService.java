@@ -199,16 +199,12 @@ public class ProfileQueryService {
 
 	private BooleanExpression buildInterestCondition(String interestGroup, String interestContent) {
 		switch (interestGroup) {
-			case "investmentTech":
-				return profile.activitiesInvestmentTechs.contains(
-					ActivitiesInvestmentTech.valueOf(interestContent)
-				);
 			case "artBeauty":
-				return profile.artBeauties.contains(
+				return profile.art.contains(
 					Art.valueOf(interestContent)
 				);
 			case "careerMajor":
-				return profile.careerMajors.contains(
+				return profile.careers.contains(
 					Career.valueOf(interestContent)
 				);
 			case "lifestyle":
@@ -224,16 +220,12 @@ public class ProfileQueryService {
 					Food.valueOf(interestContent)
 				);
 			case "hobbiesInterests":
-				return profile.hobbiesInterests.contains(
+				return profile.hobbies.contains(
 					Hobbies.valueOf(interestContent)
 				);
 			case "sports":
 				return profile.sports.contains(
 					Sports.valueOf(interestContent)
-				);
-			case "wellbeing":
-				return profile.wellbeings.contains(
-					Wellbeing.valueOf(interestContent)
 				);
 			default:
 				return null;

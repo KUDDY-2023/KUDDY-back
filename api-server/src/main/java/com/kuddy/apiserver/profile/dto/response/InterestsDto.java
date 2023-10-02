@@ -2,16 +2,14 @@ package com.kuddy.apiserver.profile.dto.response;
 
 import java.util.List;
 
-import com.kuddy.common.profile.domain.ActivitiesInvestmentTech;
-import com.kuddy.common.profile.domain.ArtBeauty;
-import com.kuddy.common.profile.domain.CareerMajor;
+import com.kuddy.common.profile.domain.Art;
+import com.kuddy.common.profile.domain.Career;
 import com.kuddy.common.profile.domain.Entertainment;
 import com.kuddy.common.profile.domain.Food;
-import com.kuddy.common.profile.domain.HobbiesInterests;
+import com.kuddy.common.profile.domain.Hobbies;
 import com.kuddy.common.profile.domain.Lifestyle;
 import com.kuddy.common.profile.domain.Profile;
 import com.kuddy.common.profile.domain.Sports;
-import com.kuddy.common.profile.domain.Wellbeing;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,26 +22,23 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InterestsDto {
-	private List<ActivitiesInvestmentTech> activitiesInvestmentTech;
-	private List<ArtBeauty> artBeauty;
-	private List<CareerMajor> careerMajor;
+	private List<Art> artBeauty;
+	private List<Career> careerMajor;
 	private List<Lifestyle> lifestyle;
 	private List<Entertainment> entertainment;
 	private List<Food> food;
-	private List<HobbiesInterests> hobbiesInterests;
+	private List<Hobbies> hobbiesInterests;
 	private List<Sports> sports;
-	private List<Wellbeing> wellbeing;
+
 
 	public static InterestsDto of(Profile profile) {
 		return InterestsDto.builder()
-			.activitiesInvestmentTech(profile.getActivitiesInvestmentTechs())
-			.artBeauty(profile.getArtBeauties())
-			.hobbiesInterests(profile.getHobbiesInterests())
+			.artBeauty(profile.getArt())
+			.hobbiesInterests(profile.getHobbies())
 			.lifestyle(profile.getLifestyles())
-			.careerMajor(profile.getCareerMajors())
+			.careerMajor(profile.getCareers())
 			.entertainment(profile.getEntertainments())
 			.food(profile.getFoods())
-			.wellbeing(profile.getWellbeings())
 			.sports(profile.getSports())
 			.build();
 	}
