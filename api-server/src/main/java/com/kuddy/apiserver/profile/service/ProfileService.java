@@ -87,8 +87,8 @@ public class ProfileService {
 	public void setInterests(Profile profile, InterestsDto reqDto){
 
 		profile.setActivitiesInvestmentTechs(reqDto.getActivitiesInvestmentTech());
-		profile.setArtBeauties(reqDto.getArtBeauty());
-		profile.setCareerMajors(reqDto.getCareerMajor());
+		profile.setArtBeauties(reqDto.getArt());
+		profile.setCareers(reqDto.getCareer());
 		profile.setLifestyles(reqDto.getLifestyle());
 		profile.setEntertainments(reqDto.getEntertainment());
 		profile.setFoods(reqDto.getFood());

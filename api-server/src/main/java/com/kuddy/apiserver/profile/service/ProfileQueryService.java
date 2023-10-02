@@ -205,11 +205,11 @@ public class ProfileQueryService {
 				);
 			case "artBeauty":
 				return profile.artBeauties.contains(
-					ArtBeauty.valueOf(interestContent)
+					Art.valueOf(interestContent)
 				);
 			case "careerMajor":
 				return profile.careerMajors.contains(
-					CareerMajor.valueOf(interestContent)
+					Career.valueOf(interestContent)
 				);
 			case "lifestyle":
 				return profile.lifestyles.contains(
@@ -225,7 +225,7 @@ public class ProfileQueryService {
 				);
 			case "hobbiesInterests":
 				return profile.hobbiesInterests.contains(
-					HobbiesInterests.valueOf(interestContent)
+					Hobbies.valueOf(interestContent)
 				);
 			case "sports":
 				return profile.sports.contains(

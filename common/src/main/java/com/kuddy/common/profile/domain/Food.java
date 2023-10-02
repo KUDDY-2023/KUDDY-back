@@ -6,21 +6,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum Food {
-	NOT_SELECTED("0", "Not Selected"),
-	RESTAURANT("1", "Restaurant"),
-	COFFEE("2", "Coffee"),
-	DESSERT("3", "Dessert"),
-	SUSHI("4", "Sushi"),
-	ALCOHOL("5", "Alcohol"),
-	CHICKEN("6", "Chicken"),
-	TTEOKBOKKI("7", "Tteokbokki"),
-	BEER("8", "Beer"),
-	PASTA("9", "Pasta"),
-	BREAD("10", "Bread"),
-	HAMBURGER("11", "Hamburger"),
-	SALAD("12", "Salad"),
-	WINE("13", "Wine"),
-	WHISKEY("14", "Whiskey");
+	NOT_SELECTED("0", "NOT_SELECTED"),
+	KOREAN("1", "KOREAN"),
+	CHINESE("2", "CHINESE"),
+	ITALIAN("3", "ITALIAN"),
+	MEXICAN("4", "MEXICAN"),
+	JAPANESE("5", "JAPANESE"),
+	COFFEE("6", "COFFEE"),
+	DESSERT("7", "DESSERT"),
+	DRINK("8", "DRINK");
+
 	private final String code;
 	private final String name;
 }

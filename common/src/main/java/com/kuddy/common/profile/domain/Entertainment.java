@@ -6,28 +6,18 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Entertainment {
-	NOT_SELECTED("0", "Not Selected"),
-	MOVIES("1", "Movies"),
-	NETFLIX("2", "Netflix"),
-	KPOP("3", "Kpop"),
-	ANIMATION("4", "Animation"),
-	INSTAGRAM("5", "Instagram"),
-	GAME("6", "Game"),
-	YOUTUBE("7", "YouTube"),
-	DRAMA("8", "Drama"),
-	WEBTOON("9", "Webtoon"),
-	SINGING("10", "Singing"),
-	DISNEY("11", "Disney"),
-	INSTRUMENTAL_MUSIC("12", "Instrumental Music"),
-	EATING("13", "Eating"),
-	HARRY_POTTER("14", "Harry Potter"),
-	MARVEL("15", "Marvel"),
-	LOL("16", "LOL"),
-	NINTENDO("17", "Nintendo"),
-	PLAYSTATION("18", "PlayStation"),
-	STEAM("19", "STEAM"),
-	PUBG("20", "PUBG"),
-	PERFORMANCE("21", "Performance");
+	NOT_SELECTED("0", "NOT_SELECTED"),
+	MOVIES("1", "MOVIES"),
+	KPOP("2", "KPOP"),
+	ANIMATION("3", "ANIMATION"),
+	SOCIAL_MEDIA("4", "SOCIAL_MEDIA"),
+	GAME("5", "GAME"),
+	VIDEO_STREAMING("6", "VIDEO_STREAMING"),
+	DRAMA("7", "DRAMA"),
+	WEBTOON("8", "WEBTOON"),
+	SINGING("9", "SINGING"),
+	MUSIC("10", "MUSIC"),
+	EATING("11", "EATING");
 
 	private final String code;
 	private final String name;
