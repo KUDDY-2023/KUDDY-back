@@ -51,8 +51,11 @@ public class KakaoCalendarService {
         if (!isValidAccessToken) {
             String kakaoRefreshToken = redisService.getData("KakaoRefreshToken:" + email);
             Map<String, String> newTokens = kakaoAuthService.refreshKakaoTokens(kakaoRefreshToken);
-            redisService.setData("KakaoAccessToken:" + email, newTokens.get("access_token"), kakaoAccessTokenValidationMs);
-            redisService.setData("KakaoRefreshToken:" + email, newTokens.get("refresh_token"), kakaoRefreshTokenValidationMs);
+            redisService.setData("KakaoAccessToken:" + email, newTokens.get("access_token"));
+            // refresh_token 값은 유효기간이 1개월 미만인 경우에만 갱신되어 담겨옴
+            if( newTokens.containsKey("refresh_token")){
+                redisService.setData("KakaoRefreshToken:" + email, newTokens.get("refresh_token"));
+            }
 
             return newTokens.get("access_token");
         } else {
