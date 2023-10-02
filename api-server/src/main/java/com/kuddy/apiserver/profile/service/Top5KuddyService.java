@@ -17,6 +17,9 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +36,8 @@ import static com.kuddy.common.review.domain.QReview.review;
 public class Top5KuddyService {
     private final ReviewRepository reviewRepository;
     private final JPAQueryFactory queryFactory;
+
+    @Cacheable(value="topKuddies",cacheManager = "contentCacheManager")
     public List<Profile> findTopKuddies() {
         // 점수 계산
         NumberExpression<Integer> reviewScore = new CaseBuilder()
@@ -78,6 +83,12 @@ public class Top5KuddyService {
                 })
                 .collect(Collectors.toList());
         return Top5KuddyListResDto.of(resDtos);
+    }
+
+    @CacheEvict(value = "topKuddies", allEntries = true,cacheManager = "contentCacheManager" )
+    @Scheduled(cron = "0 0 12 * * ?") // 매일 오후 12시에 실행
+    public void refreshTopKuddies() {
+        findTopKuddies();
     }
 
     @Transactional(readOnly = true)
