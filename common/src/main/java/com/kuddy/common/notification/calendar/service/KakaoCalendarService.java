@@ -47,8 +47,7 @@ public class KakaoCalendarService {
     // 카카오 access token 유효성 검사 및 재발급
     public String verifyAndRefreshKakaoToken(String email) throws JsonProcessingException {
         String kakaoAccessToken = redisService.getData("KakaoAccessToken:" + email);
-//        boolean isValidAccessToken = kakaoAuthService.validateKakaoAccessToken(kakaoAccessToken);
-        boolean isValidAccessToken = false;
+        boolean isValidAccessToken = kakaoAuthService.validateKakaoAccessToken(kakaoAccessToken);
         if (!isValidAccessToken) {
             String kakaoRefreshToken = redisService.getData("KakaoRefreshToken:" + email);
             Map<String, String> newTokens = kakaoAuthService.refreshKakaoTokens(kakaoRefreshToken);
