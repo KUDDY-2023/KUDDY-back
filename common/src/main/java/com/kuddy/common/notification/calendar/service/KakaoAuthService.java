@@ -45,17 +45,13 @@ public class KakaoAuthService {
         ResponseEntity<String> response = wc.get()
                 .header("Authorization", "Bearer " + kakaoAccessToken)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> {
-                    // 4xx 클라이언트 오류 상태 코드 처리
-                    return Mono.error(new KakaoCalendarAPIException());
-                })
-                .onStatus(HttpStatus::is5xxServerError, clientResponse -> {
-                    // 5xx 서버 오류 상태 코드 처리
-                    return Mono.error(new KakaoCalendarAPIException());
-                })
+                // 4xx 클라이언트 오류 상태 코드 처리
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new KakaoCalendarAPIException()))
+                // 5xx 서버 오류 상태 코드 처리
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(new KakaoCalendarAPIException()))
                 .toEntity(String.class).block();
 
-        return response.getStatusCode() == HttpStatus.OK;
+        return (response != null ? response.getStatusCode() : null) == HttpStatus.OK;
     }
 
     public Map<String, String> refreshKakaoTokens(String refreshToken) throws JsonProcessingException {
