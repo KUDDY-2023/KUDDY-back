@@ -3,6 +3,7 @@ package com.kuddy.common.notification.calendar.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kuddy.common.notification.exception.KakaoCalendarAPIException;
 import com.kuddy.common.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
@@ -43,6 +45,14 @@ public class KakaoAuthService {
         ResponseEntity<String> response = wc.get()
                 .header("Authorization", "Bearer " + kakaoAccessToken)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> {
+                    // 4xx 클라이언트 오류 상태 코드 처리
+                    return Mono.error(new KakaoCalendarAPIException());
+                })
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> {
+                    // 5xx 서버 오류 상태 코드 처리
+                    return Mono.error(new KakaoCalendarAPIException());
+                })
                 .toEntity(String.class).block();
 
         return response.getStatusCode() == HttpStatus.OK;

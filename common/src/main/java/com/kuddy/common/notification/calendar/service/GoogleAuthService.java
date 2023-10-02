@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kuddy.common.notification.calendar.dto.NewGoogleAccessTokenReqDto;
+import com.kuddy.common.notification.exception.GoogleCalendarAPIException;
 import com.kuddy.common.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import reactor.core.publisher.Mono;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -46,6 +48,14 @@ public class GoogleAuthService {
                         .queryParam("access_token", URLEncoder.encode(googleAccessToken, StandardCharsets.UTF_8))
                         .build())
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> {
+                    // 4xx 클라이언트 오류 상태 코드 처리
+                    return Mono.error(new GoogleCalendarAPIException());
+                })
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> {
+                    // 5xx 서버 오류 상태 코드 처리
+                    return Mono.error(new GoogleCalendarAPIException());
+                })
                 .toEntity(String.class).block();
 
         return response.getStatusCode() == HttpStatus.OK;
