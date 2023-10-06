@@ -25,6 +25,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,6 @@ public class Top5KuddyService {
     private final ReviewRepository reviewRepository;
     private final JPAQueryFactory queryFactory;
     private final CacheManager contentCacheManager;
-
     public List<Profile> findTopKuddies() {
         // 점수 계산
         NumberExpression<Integer> reviewScore = new CaseBuilder()
@@ -55,12 +55,17 @@ public class Top5KuddyService {
         // RoleType이 "KUDDY"인 멤버만
         BooleanExpression isKuddyRole = member.roleType.eq(RoleType.KUDDY);
 
+        // 오늘 기준 7일 전 날짜
+        LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
+
+        BooleanExpression isWithinLastSevenDays = review.createdDate.after(sevenDaysAgo.atStartOfDay());
+
         JPAQuery<Tuple> query = queryFactory
                 .select(review.meetup.kuddy, reviewScore.sum().as("totalScore"))
                 .from(review)
                 .leftJoin(review.meetup.kuddy, member)
                 .leftJoin(member.profile, profile)
-                .where(isHighLevelKuddy.and(isKuddyRole))  // 조건: 높은 레벨의 Kuddy만 + RoleType이 "KUDDY"인 경우
+                .where(isHighLevelKuddy.and(isKuddyRole).and(isWithinLastSevenDays))  // 조건: 높은 레벨의 Kuddy만 + RoleType이 "KUDDY"인 경우 + 최근 7일 이내의 리뷰
                 .groupBy(member.id)
                 .orderBy(
                         // 점수 높은 순, 그리고 최신 리뷰 날짜 순
@@ -75,6 +80,7 @@ public class Top5KuddyService {
                 .map(tuple -> tuple.get(review.meetup.kuddy).getProfile())
                 .collect(Collectors.toList());
     }
+
 
     @Cacheable(value="topKuddies",cacheManager = "contentCacheManager")
     public Top5KuddyListResDto getTop5Kuddy(){
