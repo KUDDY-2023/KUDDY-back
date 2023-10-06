@@ -17,6 +17,8 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,8 +38,8 @@ import static com.kuddy.common.review.domain.QReview.review;
 public class Top5KuddyService {
     private final ReviewRepository reviewRepository;
     private final JPAQueryFactory queryFactory;
+    private final CacheManager contentCacheManager;
 
-    @Cacheable(value="topKuddies",cacheManager = "contentCacheManager")
     public List<Profile> findTopKuddies() {
         // 점수 계산
         NumberExpression<Integer> reviewScore = new CaseBuilder()
@@ -74,7 +76,9 @@ public class Top5KuddyService {
                 .collect(Collectors.toList());
     }
 
-    public Top5KuddyListResDto changePageToResponse(List<Profile> profiles){
+    @Cacheable(value="topKuddies",cacheManager = "contentCacheManager")
+    public Top5KuddyListResDto getTop5Kuddy(){
+        List<Profile> profiles = findTopKuddies(); // 캐시에 데이터가 없으면 실행
         List<Top5KuddyListResDto.Top5KuddyResDto> resDtos = profiles.stream()
                 .map(profile -> {
                     Member member = profile.getMember();
@@ -88,7 +92,26 @@ public class Top5KuddyService {
     @CacheEvict(value = "topKuddies", allEntries = true,cacheManager = "contentCacheManager" )
     @Scheduled(cron = "0 0 12 * * ?") // 매일 오후 12시에 실행
     public void refreshTopKuddies() {
-        findTopKuddies();
+        getTop5Kuddy();
+    }
+
+    public void updateTop5KuddiesCache(Member member){
+        Top5KuddyListResDto cachedData = getTop5Kuddy();
+        for(Top5KuddyListResDto.Top5KuddyResDto kuddy : cachedData.getTop5KuddyList()) {
+            if(kuddy.getMemberId().equals(member.getId())) {
+                kuddy.setNickname(member.getNickname());
+                kuddy.setProfileImageUrl(member.getProfileImageUrl());
+                updateCache(cachedData);  // 변경된 정보로 캐시 업데이트
+                break;
+            }
+        }
+    }
+
+    private void updateCache(Top5KuddyListResDto updatedData) {
+        Cache cache = contentCacheManager.getCache("topKuddies");
+        if (cache != null) {
+            cache.put("topKuddies", updatedData);
+        }
     }
 
     @Transactional(readOnly = true)

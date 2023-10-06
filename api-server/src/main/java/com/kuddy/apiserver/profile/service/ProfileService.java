@@ -3,7 +3,6 @@ package com.kuddy.apiserver.profile.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -46,7 +45,8 @@ public class ProfileService {
 	private final MemberService memberService;
 	private final ProfileAreaService profileAreaService;
 	private final ProfileQueryService profileQueryService;
-	private final JPAQueryFactory queryFactory;
+	private final Top5KuddyService top5KuddyService;
+
 
 	public Long create(Member member, ProfileReqDto.Create reqDto){
 		if(existsProfileByMember(member)){
@@ -81,8 +81,10 @@ public class ProfileService {
 		setInterests(profile, reqDto.getInterests());
 		profileLanguageService.updateProfileLanguage(profile, reqDto.getAvailableLanguages());
 		profileAreaService.updateProfileDistricts(profile, reqDto.getDistricts());
+		top5KuddyService.updateTop5KuddiesCache(member);
 		return profile;
 	}
+
 
 	public void setInterests(Profile profile, InterestsDto reqDto){
 
