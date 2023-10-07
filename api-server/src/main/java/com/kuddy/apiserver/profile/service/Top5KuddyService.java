@@ -10,6 +10,7 @@ import com.kuddy.common.review.domain.Review;
 import com.kuddy.common.review.exception.ReviewNotFoundException;
 import com.kuddy.common.review.repository.ReviewRepository;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
@@ -41,45 +42,59 @@ public class Top5KuddyService {
     private final JPAQueryFactory queryFactory;
     private final CacheManager contentCacheManager;
     public List<Profile> findTopKuddies() {
-        // 점수 계산
-        NumberExpression<Integer> reviewScore = new CaseBuilder()
-                .when(review.grade.eq(Grade.PERFECT)).then(10)
-                .when(review.grade.eq(Grade.GOOD)).then(5)
-                .when(review.grade.eq(Grade.DISAPPOINT)).then(-5)
-                .otherwise(0);
-
-        // 최우선은 KuddyLevel이 'SOULMATE'와 'COMPANION'인 멤버
-        BooleanExpression isHighLevelKuddy = member.profile.kuddyLevel.eq(KuddyLevel.SOULMATE)
-                .or(member.profile.kuddyLevel.eq(KuddyLevel.COMPANION));
-
-        // RoleType이 "KUDDY"인 멤버만
-        BooleanExpression isKuddyRole = member.roleType.eq(RoleType.KUDDY);
-
-        // 오늘 기준 7일 전 날짜
-        LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
-
-        BooleanExpression isWithinLastSevenDays = review.createdDate.after(sevenDaysAgo.atStartOfDay());
+        NumberExpression<Integer> reviewScore = calculateReviewScore();
+        BooleanExpression highLevelAndRoleCriteria = highLevelKuddyCriteria().and(isKuddyRole());
+        BooleanExpression lastSevenDaysCriteria = withinLastSevenDays();
 
         JPAQuery<Tuple> query = queryFactory
                 .select(review.meetup.kuddy, reviewScore.sum().as("totalScore"))
                 .from(review)
                 .leftJoin(review.meetup.kuddy, member)
                 .leftJoin(member.profile, profile)
-                .where(isHighLevelKuddy.and(isKuddyRole).and(isWithinLastSevenDays))  // 조건: 높은 레벨의 Kuddy만 + RoleType이 "KUDDY"인 경우 + 최근 7일 이내의 리뷰
+                .where(highLevelAndRoleCriteria.and(lastSevenDaysCriteria))
                 .groupBy(member.id)
-                .orderBy(
-                        // 점수 높은 순, 그리고 최신 리뷰 날짜 순
-                        Expressions.numberTemplate(Integer.class, "{0}", reviewScore.sum()).desc(),
-                        review.createdDate.desc()
-                )
+                .orderBy(orderByScoreAndDate(reviewScore))
                 .limit(5);
 
         List<Tuple> results = query.fetch();
 
+        return extractProfilesFromResults(results);
+    }
+
+    private NumberExpression<Integer> calculateReviewScore() {
+        return new CaseBuilder()
+                .when(review.grade.eq(Grade.PERFECT)).then(10)
+                .when(review.grade.eq(Grade.GOOD)).then(5)
+                .when(review.grade.eq(Grade.DISAPPOINT)).then(-5)
+                .otherwise(0);
+    }
+
+    private BooleanExpression highLevelKuddyCriteria() {
+        return member.profile.kuddyLevel.in(KuddyLevel.SOULMATE, KuddyLevel.COMPANION);
+    }
+
+    private BooleanExpression isKuddyRole() {
+        return member.roleType.eq(RoleType.KUDDY);
+    }
+
+    private BooleanExpression withinLastSevenDays() {
+        LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
+        return review.createdDate.after(sevenDaysAgo.atStartOfDay());
+    }
+
+    private OrderSpecifier<?>[] orderByScoreAndDate(NumberExpression<Integer> reviewScore) {
+        return new OrderSpecifier[]{
+                Expressions.numberTemplate(Integer.class, "{0}", reviewScore.sum()).desc(),
+                review.createdDate.desc()
+        };
+    }
+
+    private List<Profile> extractProfilesFromResults(List<Tuple> results) {
         return results.stream()
                 .map(tuple -> tuple.get(review.meetup.kuddy).getProfile())
                 .collect(Collectors.toList());
     }
+
 
 
     @Cacheable(value="topKuddies",cacheManager = "contentCacheManager")
