@@ -11,8 +11,11 @@ import com.kuddy.common.chat.domain.mongo.Chatting;
 
 public interface MongoChatRepository extends MongoRepository<Chatting, String> {
 
+
 	List<Chatting> findByRoomId(Long roomId);
 	Optional<Chatting> findById(String id);
 
 	Page<Chatting> findByRoomIdOrderBySendTimeDesc(Long roomId, Pageable pageable);
+
+	List<Chatting> findBySenderId(Long memberId);
 }

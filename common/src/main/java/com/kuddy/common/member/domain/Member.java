@@ -84,10 +84,12 @@ public class Member extends BaseTimeEntity {
 			this.email = email;
 		}
 	}
-	public void updateNickname(String nickname) {
-		if (validateNickName(nickname)) {
+	public boolean updateNickname(String nickname) {
+		if (validateNickName(nickname) && !this.nickname.equals(nickname)) {
 			this.nickname = nickname;
+			return true;
 		}
+		return false;
 	}
 	public void updateRole(RoleType roleType) {
 		if (roleType != null && !this.roleType.equals(roleType)) {
