@@ -60,8 +60,7 @@ public class ProfileSearchController {
 
 	@GetMapping("kuddy/top5")
 	public ResponseEntity<StatusResponse> readTop5KuddyProfile() {
-		List<Profile> profileList = top5KuddyService.findTopKuddies();
-		Top5KuddyListResDto response = top5KuddyService.changePageToResponse(profileList);
+		Top5KuddyListResDto response = top5KuddyService.getTop5Kuddy();
 		return ResponseEntity.ok(StatusResponse.builder()
 				.status(StatusEnum.OK.getStatusCode())
 				.message(StatusEnum.OK.getCode())
