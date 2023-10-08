@@ -3,6 +3,7 @@ package com.kuddy.apiserver.profile.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.kuddy.common.chat.service.ChattingUpdateService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -45,6 +46,7 @@ public class ProfileService {
 	private final MemberService memberService;
 	private final ProfileAreaService profileAreaService;
 	private final ProfileQueryService profileQueryService;
+	private final ChattingUpdateService chattingUpdateService;
 	private final Top5KuddyService top5KuddyService;
 
 
@@ -68,7 +70,9 @@ public class ProfileService {
 		Profile profile = findByMember(member);
 		Member findMember = memberService.findById(member.getId());
 
-		findMember.updateNickname(reqDto.getNickname());
+		if(findMember.updateNickname(reqDto.getNickname())){
+			chattingUpdateService.updateSenderNameInChatting(findMember);
+		}
 		findMember.updateProfileImage(reqDto.getProfileImageUrl());
 		profile.changeJob(reqDto.getJob());
 		profile.updateIntroduce(reqDto.getIntroduce());
