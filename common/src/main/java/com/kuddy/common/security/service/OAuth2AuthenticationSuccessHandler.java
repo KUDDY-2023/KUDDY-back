@@ -114,7 +114,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private String makeRedirectUrl(String email, String redirectUrl) {
 
         if (redirectUrl.equals(getDefaultTargetUrl())) {
-            redirectUrl = "http://localhost:3000";
+            redirectUrl = "http://localhost:8080/login/oauth2/code/kakao";
         }
         log.info(redirectUrl);
 

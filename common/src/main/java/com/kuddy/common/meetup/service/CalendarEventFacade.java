@@ -27,25 +27,25 @@ public class CalendarEventFacade {
     private final GoogleCalendarService googleCalendarService;
     private final MemberRepository memberRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void createCalendarEvent(Long memberId, Meetup meetup, String spotName) throws IOException {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        log.info("member 소셜 :" + member.getProviderType());
-        if (member.getProviderType().equals(ProviderType.KAKAO)) {
-            kakaoCalendarService.createKakaoEvent(member, meetup, spotName);
-        } else {
-            googleCalendarService.createGoogleEvent(member, meetup, spotName);
-        }
-    }
-
-    public void deleteEvents(List<Calendar> eventList) throws JsonProcessingException {
-        for(Calendar event : eventList){
-            if (event.getMember().getProviderType().equals(ProviderType.KAKAO)) {
-                kakaoCalendarService.deleteCalendarEvent(event);
-            } else {
-                googleCalendarService.deleteCalendarEvent(event);
-            }
-        }
-
-    }
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    public void createCalendarEvent(Long memberId, Meetup meetup, String spotName) throws IOException {
+//        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+//        log.info("member 소셜 :" + member.getProviderType());
+//        if (member.getProviderType().equals(ProviderType.KAKAO)) {
+//            kakaoCalendarService.createKakaoEvent(member, meetup, spotName);
+//        } else {
+//            googleCalendarService.createGoogleEvent(member, meetup, spotName);
+//        }
+//    }
+//
+//    public void deleteEvents(List<Calendar> eventList) throws JsonProcessingException {
+//        for(Calendar event : eventList){
+//            if (event.getMember().getProviderType().equals(ProviderType.KAKAO)) {
+//                kakaoCalendarService.deleteCalendarEvent(event);
+//            } else {
+//                googleCalendarService.deleteCalendarEvent(event);
+//            }
+//        }
+//
+//    }
 }

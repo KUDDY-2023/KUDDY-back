@@ -5,6 +5,9 @@ import static org.springframework.http.HttpHeaders.*;
 import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kuddy.common.notification.calendar.service.KakaoAuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -21,12 +24,15 @@ import com.kuddy.common.response.StatusResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("api/v1/token")
 @RequiredArgsConstructor
 public class AuthController {
 	private final AuthService authService;
+	private final KakaoAuthService kakaoAuthService;
 
 	private static final String LOGOUT_SUCCESS = "성공적으로 로그아웃 되었습니다.";
 
@@ -57,6 +63,15 @@ public class AuthController {
 			.message(StatusEnum.OK.getCode())
 			.data(resDto)
 			.build());
+	}
+
+	@PostMapping("/calendar")
+	public ResponseEntity<StatusResponse> createToken(@RequestBody Map<String, String> payload) throws JsonProcessingException {
+		kakaoAuthService.createToken(payload);
+		return ResponseEntity.ok(StatusResponse.builder()
+				.status(StatusEnum.OK.getStatusCode())
+				.message(StatusEnum.OK.getCode())
+				.build());
 	}
 
 }
