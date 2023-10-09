@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kuddy.common.notification.calendar.dto.NewGoogleAccessTokenReqDto;
 import com.kuddy.common.notification.exception.GoogleCalendarAPIException;
-import com.kuddy.common.notification.exception.KakaoCalendarAPIException;
 import com.kuddy.common.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

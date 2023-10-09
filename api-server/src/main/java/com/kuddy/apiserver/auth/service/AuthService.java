@@ -1,5 +1,7 @@
 package com.kuddy.apiserver.auth.service;
 
+import com.kuddy.common.security.user.KakaoUserInfo;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,9 +17,12 @@ import com.kuddy.common.security.exception.InvalidRefreshTokenException;
 import com.kuddy.common.security.exception.InvalidTokenException;
 import com.kuddy.common.security.exception.InvalidTokenTypeException;
 import com.kuddy.common.security.exception.NotMatchStoredResfreshTokenException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -91,6 +96,4 @@ public class AuthService {
 		redisService.setData("BlackList:" + accessToken, "signOut", remainingTime);
 		redisService.deleteData("RefreshToken:" + authentication.getName());
 	}
-
-
 }

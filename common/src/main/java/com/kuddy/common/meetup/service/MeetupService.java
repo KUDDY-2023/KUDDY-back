@@ -102,24 +102,11 @@ public class MeetupService implements ApplicationEventPublisherAware{
 		}
 	}
 
-	public void invokeCalendarEvent(String chatId, String newMeetupStatus){
-		Meetup meetup = meetupRepository.findByChatId(chatId).orElseThrow(MeetupNotFoundException::new);
+	public void invokeCalendarEvent(Long meetupId, Member member) throws JsonProcessingException {
+		Meetup meetup = meetupRepository.findById(meetupId).orElseThrow(MeetupNotFoundException::new);
+		Spot spot = meetup.getSpot();
+		kakaoCalendarService.createKakaoEvent(member, meetup, spot);
 
-		Long kuddyId = meetup.getKuddy().getId();
-		Long travelerId = meetup.getTraveler().getId();
-		String spotName = meetup.getSpot().getName();
-		MeetupStatus meetupStatus = MeetupStatus.fromString(newMeetupStatus);
-		switch (meetupStatus){
-			case PAYED:
-				eventPublisher.publishEvent(new MeetupPayedEvent(meetup, kuddyId, travelerId, spotName));
-				break;
-			case KUDDY_CANCEL:
-			case TRAVELER_CANCEL:
-				eventPublisher.publishEvent(new MeetupCanceledEvent(meetup));
-				break;
-			default:
-				break;
-			}
 	}
 
 	@Transactional(readOnly = true)

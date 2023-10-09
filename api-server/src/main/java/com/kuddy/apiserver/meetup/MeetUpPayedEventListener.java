@@ -25,24 +25,24 @@ public class MeetUpPayedEventListener {
     private final CalendarEventFacade calendarEventFacade;
     private final CalendarRepository calendarRepository;
 
-    @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = MeetupService.MeetupPayedEvent.class)
-    public void handleMeetupPayedEvent(MeetupService.MeetupPayedEvent event) throws IOException {
-        log.info("handleMeetupPayedEvent 발생");
-        Long kuddyId = event.getKuddyId();
-        Long travelerId = event.getTravelerId();
-        log.info("kuddy id  :  " + String.valueOf(kuddyId));
-        log.info("traveler id  :  " + String.valueOf(travelerId));
+//    @Async
+//    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = MeetupService.MeetupPayedEvent.class)
+//    public void handleMeetupPayedEvent(MeetupService.MeetupPayedEvent event) throws IOException {
+//        log.info("handleMeetupPayedEvent 발생");
+//        Long kuddyId = event.getKuddyId();
+//        Long travelerId = event.getTravelerId();
+//        log.info("kuddy id  :  " + String.valueOf(kuddyId));
+//        log.info("traveler id  :  " + String.valueOf(travelerId));
+//
+//        calendarEventFacade.createCalendarEvent(kuddyId, event.getMeetup(), event.getSpotName());
+//        calendarEventFacade.createCalendarEvent(travelerId, event.getMeetup(), event.getSpotName());
+//    }
 
-        calendarEventFacade.createCalendarEvent(kuddyId, event.getMeetup(), event.getSpotName());
-        calendarEventFacade.createCalendarEvent(travelerId, event.getMeetup(), event.getSpotName());
-    }
-
-    @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = MeetupService.MeetupCanceledEvent.class)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void handleMeetupCanceledEvent(MeetupService.MeetupCanceledEvent event) throws JsonProcessingException {
-        List<Calendar> eventList = calendarRepository.findAllByMeetup_Id(event.getMeetup().getId());
-        calendarEventFacade.deleteEvents(eventList);
-    }
+//    @Async
+//    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = MeetupService.MeetupCanceledEvent.class)
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    public void handleMeetupCanceledEvent(MeetupService.MeetupCanceledEvent event) throws JsonProcessingException {
+//        List<Calendar> eventList = calendarRepository.findAllByMeetup_Id(event.getMeetup().getId());
+//        calendarEventFacade.deleteEvents(eventList);
+//    }
 }

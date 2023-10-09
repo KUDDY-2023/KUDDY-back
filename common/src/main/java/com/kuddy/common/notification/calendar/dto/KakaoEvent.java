@@ -24,6 +24,8 @@ public class KakaoEvent {
     @Getter
     public static class Location {
         private String name;
+        private String latitude;
+        private String longitude;
     }
 
     @Getter
@@ -45,7 +47,7 @@ public class KakaoEvent {
         this.reminders = reminders;
     }
 
-    public static KakaoEvent from(Meetup meetup, String spotName) {
+    public static KakaoEvent from(Meetup meetup, Spot spot) {
         LocalDateTime dateTime = meetup.getAppointment();
         int minute = dateTime.getMinute();
         int second = dateTime.getSecond();
@@ -74,8 +76,11 @@ public class KakaoEvent {
                 .lunar(false)
                 .build();
 
+
         Location location = Location.builder()
-                .name(spotName)
+                .name(spot.getName())
+                .latitude(spot.getMapX())
+                .longitude(spot.getMapY())
                 .build();
 
         int[] reminders = {1440};  // 동행 하루 전 알림

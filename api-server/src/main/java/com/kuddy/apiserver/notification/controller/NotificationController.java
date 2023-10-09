@@ -1,16 +1,21 @@
 package com.kuddy.apiserver.notification.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kuddy.apiserver.notification.service.CommentNotiService;
 import com.kuddy.common.meetup.service.MeetupService;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.notification.calendar.service.KakaoCalendarService;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.security.user.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.io.UnsupportedEncodingException;
 
 @Slf4j
 @RestController
@@ -19,6 +24,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class NotificationController {
     private final CommentNotiService notificationService;
     private final MeetupService meetupService;
+    private final KakaoCalendarService kakaoCalendarService;
 
     //알림 구독 (SSE)
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
@@ -50,10 +56,11 @@ public class NotificationController {
         return notificationService.countUnreadCommentNotifications(member);
     }
 
-    @PostMapping("/calendars/{chatId}")
-    public ResponseEntity<StatusResponse> createCalendarEvent(@PathVariable String chatId) {
+    // 톡캘린더 일정 생성
+    @PostMapping("/calendars/{meetupId}")
+    public ResponseEntity<StatusResponse> createCalendarEvent(@AuthUser Member member, @PathVariable Long meetupId) throws JsonProcessingException {
         String newMeetupStatus = "PAYED";
-        meetupService.invokeCalendarEvent(chatId, newMeetupStatus);
+        meetupService.invokeCalendarEvent(meetupId, member);
 
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
@@ -62,15 +69,4 @@ public class NotificationController {
                 .build());
     }
 
-    @DeleteMapping("/calendars/{chatId}")
-    public ResponseEntity<StatusResponse> deleteCalendarEvent(@PathVariable String chatId){
-        String newMeetupStatus = "KUDDY_CANCEL";
-        meetupService.invokeCalendarEvent(chatId, newMeetupStatus);
-
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data("일정 삭제 완료")
-                .build());
-    }
 }

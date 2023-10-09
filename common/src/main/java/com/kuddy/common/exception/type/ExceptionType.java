@@ -19,6 +19,7 @@ import com.kuddy.common.exception.custom.ApplicationException;
 import com.kuddy.common.meetup.exception.NotAdminException;
 import com.kuddy.common.notification.exception.GoogleCalendarAPIException;
 import com.kuddy.common.notification.exception.KakaoCalendarAPIException;
+import com.kuddy.common.notification.exception.KakaoCalendarAPIPermissionException;
 import com.kuddy.common.notification.exception.NotificationNotFoundException;
 import com.kuddy.common.profile.exception.DuplicateProfileException;
 import com.kuddy.common.profile.exception.WithdrawMemberProfileException;
@@ -143,7 +144,8 @@ public enum ExceptionType {
 	//알림 관련 - C13***
 	GOOGLE_CALENDAR_API_EXCEPTION("C13000", "Google Calendar API를 불러올 수 없습니다.", GoogleCalendarAPIException.class),
 	KAKAO_CALENDAR_API_EXCEPTION("C13001", "Kakao 톡캘린더 API를 불러올 수 없습니다.", KakaoCalendarAPIException.class),
-	NOTIFICATION_NOT_FOUND_EXCEPTION("C13002", "해당 알림을 찾을 수 없습니다.", NotificationNotFoundException.class);
+	NOTIFICATION_NOT_FOUND_EXCEPTION("C13002", "해당 알림을 찾을 수 없습니다.", NotificationNotFoundException.class),
+	KAKAO_CALENDAR_API_PERMISSION_EXCEPTION("C13003", "톡캘린더 권한 동의가 필요합니다.", KakaoCalendarAPIPermissionException.class);
 
 	private final String errorCode;
 	private final String message;
