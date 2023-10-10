@@ -175,8 +175,7 @@ public class PostService {
 
     private List<String> saveImageUrls(List<String> images, Post post) {
         List<String> imageUrls = new ArrayList<>();
-        for (String fileName : images) {
-            String fileUrl = String.valueOf(imagePath + fileName);
+        for (String fileUrl : images) {
             PostImage postImage = postImageRepository.save(new PostImage(fileUrl, post));
             imageUrls.add(postImage.getFileUrl());
         }
