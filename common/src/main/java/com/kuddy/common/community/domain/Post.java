@@ -27,7 +27,7 @@ public class Post extends BaseTimeEntity {
 
     private String title;
 
-    @Column(length = 1500)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private Integer people; // only for PostType.JOIN_US
