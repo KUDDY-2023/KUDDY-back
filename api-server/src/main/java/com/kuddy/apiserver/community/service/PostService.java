@@ -161,6 +161,7 @@ public class PostService {
     public ResponseEntity<StatusResponse> deletePost(Member member, Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(NoPostExistException::new);
         checkValidMember(member.getId(), post.getAuthor().getId());
+        postImageRepository.deleteAllByPost(post);
         postRepository.delete(post);
         return ResponseEntity.ok(createStatusResponse("post deleted"));
     }
