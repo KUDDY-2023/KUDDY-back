@@ -1,5 +1,7 @@
 package com.kuddy.apiserver.community.dto.response;
 
+import com.kuddy.common.community.domain.Post;
+import com.kuddy.common.community.domain.PostType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,12 +14,15 @@ public class MyPostResDto {
     private String postType;
     private String title;
     private LocalDateTime createdDate;
+    private Boolean isJoinus;
 
-    @Builder
-    public MyPostResDto(Long id, String postType, String title, LocalDateTime createdDate) {
-        this.id = id;
-        this.postType = postType;
-        this.title = title;
-        this.createdDate = createdDate;
+    public static MyPostResDto of(Post post) {
+        return MyPostResDto.builder()
+                .id(post.getId())
+                .postType(post.getPostType().equals(PostType.ITINERARY)?"itinerary":"talingBoard")
+                .isJoinus(post.getPostType().equals(PostType.JOIN_US))
+                .title(post.getTitle())
+                .createdDate(post.getCreatedDate())
+                .build();
     }
 }
