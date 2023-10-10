@@ -151,12 +151,7 @@ public class PostService {
         List<MyPostResDto> myPostResDtos = new ArrayList<>();
 
         for (Post post : posts) {
-            MyPostResDto myPostResDto = MyPostResDto.builder()
-                    .id(post.getId())
-                    .postType(post.getPostType().getType())
-                    .title(post.getTitle())
-                    .createdDate(post.getCreatedDate())
-                    .build();
+            MyPostResDto myPostResDto = MyPostResDto.of(post);
             myPostResDtos.add(myPostResDto);
         }
 
