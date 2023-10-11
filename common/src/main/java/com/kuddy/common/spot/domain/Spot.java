@@ -42,11 +42,14 @@ public class Spot {
     @Column(nullable = false, length = 20)
     private String mapY;
 
-    @Column(length = 1000)
+    @Column(length = 10000)
     private String about;
 
+    @Column(nullable = false, length = 20)
+    private String modifiedTime;
+
     @Builder
-    public Spot(String name, Long contentId, District district, String imageUrl, Category category, Long numOfHearts, String mapX, String mapY, String about) {
+    public Spot(String name, Long contentId, District district, String imageUrl, Category category, Long numOfHearts, String mapX, String mapY, String about, String modifiedTime) {
         this.name= name;
         this.contentId = contentId;
         this.district = district;
@@ -56,6 +59,7 @@ public class Spot {
         this.mapX = mapX;
         this.mapY = mapY;
         this.about = about;
+        this.modifiedTime = modifiedTime;
     }
 
     public void likeSpot() {

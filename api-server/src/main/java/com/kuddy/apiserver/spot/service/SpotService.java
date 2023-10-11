@@ -44,8 +44,7 @@ public class SpotService {
     private final HeartRepository heartRepository;
     private final SpotQueryService spotQueryService;
     private final TourApiService tourApiService;
-
-    //JSON 응답값 중 필요한 정보(이름, 지역, 카테고리, 사진, 고유id, x, y, about)만 db에 저장
+    
     public void changeAndSaveTourData(JSONArray spotArr) {
         for (Object o : spotArr) {
             JSONObject item = (JSONObject) o;
@@ -81,6 +80,7 @@ public class SpotService {
                         .mapX((String) item.get("mapx"))
                         .mapY((String) item.get("mapy"))
                         .about(about)
+                        .modifiedTime((String) item.get("modifiedtime"))
                         .build());
             }
         }
@@ -176,8 +176,8 @@ public class SpotService {
 
         //이미지
         List<String> imageList = new ArrayList<>();
-        if(!spot.getImageUrl().isEmpty())
-            imageList.add(spot.getImageUrl());
+//        if(!spot.getImageUrl().isEmpty()) ""
+//            imageList.add(spot.getImageUrl());
         if(!(imageArr == null)) {
             for (Object object : imageArr) {
                 JSONObject item = (JSONObject) object;
