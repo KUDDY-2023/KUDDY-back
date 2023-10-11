@@ -243,14 +243,15 @@ public class SpotService {
 
         //이미지
         List<String> imageList = new ArrayList<>();
-//        if(!spot.getImageUrl().isEmpty()) ""
-//            imageList.add(spot.getImageUrl());
         if(!(imageArr == null)) {
             for (Object object : imageArr) {
                 JSONObject item = (JSONObject) object;
                 String imageUrl = (String) item.get("originimgurl");
                 imageList.add(imageUrl);
             }
+        }
+        if(imageList.isEmpty() && !spot.getImageUrl().isEmpty()) {
+            imageList.add(spot.getImageUrl());
         }
 
         //상세 정보
