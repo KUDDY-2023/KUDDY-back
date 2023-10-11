@@ -7,11 +7,13 @@ import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.spot.domain.Spot;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/spots")
 @RequiredArgsConstructor
@@ -20,11 +22,9 @@ public class SpotController {
     private final SpotService spotService;
     private final TourApiService tourApiService;
 
-    //테스트용으로 관광정보 저장하는 api
-    @PostMapping
-    public ResponseEntity<StatusResponse> saveData(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size, @RequestParam(value = "category") int category) {
-        spotService.changeAndSaveTourData(tourApiService.getApiDataList(page, size, category));
-
+    @PostMapping("/sync")
+    public ResponseEntity<StatusResponse> syncTourData(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size, @RequestParam(value = "date") String date) {
+        spotService.synchronizeTourData(tourApiService.getSyncList(page, size, date));
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())

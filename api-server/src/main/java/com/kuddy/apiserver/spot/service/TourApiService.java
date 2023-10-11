@@ -25,42 +25,18 @@ public class TourApiService {
 
     private static final String BASE_URL = "https://apis.data.go.kr/B551011/EngService1/";
 
-    //카테고리별로 20개씩 조회
-    public JSONArray getApiDataList(int page, int size, int category) {
-
+    public JSONArray getSyncList(int page, int size, String modifiedTime) {
         try {
-            URL url = new URL(BASE_URL + "areaBasedList1?numOfRows=" +
-                    size +
-                    "&pageNo=" +
-                    page +
-                    DEFAULT_QUERY_PARAM + "&listYN=Y&arrange=A&contentTypeId=" +
-                    category +
-                    "&areaCode=1&serviceKey="
+            URL url = new URL(BASE_URL + "areaBasedSyncList1?numOfRows=" +
+                    size + "&pageNo=" + page +
+                    DEFAULT_QUERY_PARAM + "&listYN=Y&arrange=C&areaCode=1&modifiedtime=" +
+                    modifiedTime +
+                    "&serviceKey="
                     + SECRET_KEY);
-
             JSONObject items = (JSONObject) extractBody(url).get("items");
             JSONArray spotArr = (JSONArray) items.get("item");
 
             return spotArr;
-
-        } catch(Exception e) {
-            e.printStackTrace();
-            throw new TourApiExeption();
-        }
-    }
-
-    //현재 위치 기반으로 2km 반경 관광지 20개씩 조회
-    public JSONObject getLocationBasedApi(int page, int size, String mapX, String mapY) {
-
-        try {
-            URL url = new URL(BASE_URL + "locationBasedList1?numOfRows=" +
-                    size + "&pageNo=" + page +
-                    DEFAULT_QUERY_PARAM + "&listYN=Y&mapX=" +
-                    mapX + "&mapY=" + mapY +
-                    "&radius=2000&serviceKey="
-                    + SECRET_KEY);
-
-            return extractBody(url);
 
         } catch(Exception e) {
             e.printStackTrace();
