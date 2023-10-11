@@ -13,6 +13,7 @@ import com.kuddy.common.spot.repository.SpotRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -34,7 +35,8 @@ public class RecommendApiService {
 
     private static final String RECOMMEND_SERVER_URL = "https://api.kuddy.co.kr/recommend/";
 
-    @Cacheable(value="spotRecommend",cacheManager="recommendationCacheManager")
+    @CacheEvict(value="spotRecommend", key="#contentId", beforeInvocation=true)
+    @Cacheable(value="spotRecommend", cacheManager="recommendationCacheManager")
     public List<SpotResDto> getFiveSpotsByDistance(Member member, Long contentId) {
         String url = RECOMMEND_SERVER_URL + contentId + "/" + member.getId();
 
@@ -49,7 +51,7 @@ public class RecommendApiService {
         return changeListToDto(spotList);
     }
 
-    private List<Long> fetchRecommendedSpotIds(String url) {
+    public List<Long> fetchRecommendedSpotIds(String url) {
         try {
             ResponseEntity<List<Long>> responseEntity = restTemplate.exchange(
                     url,
