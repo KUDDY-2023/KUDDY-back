@@ -76,6 +76,7 @@ public class SpotService {
                 //표출되고 있는 데이터이고 db에 저장되어 있지 않은 경우 새로 저장
                 if ((item.get("showflag").equals("1")) && (!spotRepository.existsByContentId(contentId))) {
                     saveSpot(item, contentId);
+                    addImage(contentId);
                 }
             }
         }
@@ -106,6 +107,7 @@ public class SpotService {
                     getSpotAbout(item, contentId),
                     (String) item.get("modifiedtime"));
             log.info("update showflag = 1, contentId = " + contentId);
+            addImage(contentId);
         }
 
     }
@@ -134,6 +136,21 @@ public class SpotService {
         about = (String) detail.get("overview");
         return about;
 
+    }
+
+    //썸네일 없을때 상세 이미지들 중 첫번째 사진을 썸네일로 지정
+    public void addImage(Long contentId) {
+        Spot spot = findSpotByContentId(contentId);
+        if(spot.getImageUrl().isEmpty()){
+            JSONArray imageArr = tourApiService.getDetailImages(contentId);
+            if(imageArr == null)
+                spot.setImageUrl("");
+            if(!(imageArr == null)) {
+                JSONObject detailImage = (JSONObject) imageArr.get(0);
+                spot.setImageUrl((String) detailImage.get("originimgurl"));
+            }
+            log.info("addImage URL = " + spot.getImageUrl());
+        }
     }
 
     @Transactional(readOnly = true)

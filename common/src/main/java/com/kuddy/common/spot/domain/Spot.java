@@ -80,4 +80,9 @@ public class Spot {
         this.about = about;
         this.modifiedTime = modifiedTime;
     }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 }
