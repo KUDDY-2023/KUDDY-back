@@ -63,23 +63,18 @@ public class Profile extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private Temperament temperament;
 
-	@ElementCollection(targetClass = ActivitiesInvestmentTech.class)
-	@CollectionTable(name = "activities_investment_tech_mapping", joinColumns = @JoinColumn(name = "profile_id"))
-	@Enumerated(EnumType.STRING)
-	@Column(name = "activities_investment_tech")
-	private List<ActivitiesInvestmentTech> activitiesInvestmentTechs = new ArrayList<>();
 
-	@ElementCollection(targetClass = ArtBeauty.class)
+	@ElementCollection(targetClass = Art.class)
 	@CollectionTable(name = "art_beauty_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
 	@Column(name = "art_beauty")
-	private List<ArtBeauty> artBeauties = new ArrayList<>();
+	private List<Art> art = new ArrayList<>();
 
-	@ElementCollection(targetClass = CareerMajor.class)
+	@ElementCollection(targetClass = Career.class)
 	@CollectionTable(name = "career_major_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
 	@Column(name = "career_major")
-	private List<CareerMajor> careerMajors = new ArrayList<>();
+	private List<Career> careers = new ArrayList<>();
 
 
 	@ElementCollection(targetClass = Lifestyle.class)
@@ -100,11 +95,11 @@ public class Profile extends BaseTimeEntity {
 	@Column(name = "food")
 	private List<Food> foods = new ArrayList<>();
 
-	@ElementCollection(targetClass = HobbiesInterests.class)
+	@ElementCollection(targetClass = Hobbies.class)
 	@CollectionTable(name = "hobbies_interests_mapping", joinColumns = @JoinColumn(name = "profile_id"))
 	@Enumerated(EnumType.STRING)
 	@Column(name = "hobbies_interests")
-	private List<HobbiesInterests> hobbiesInterests = new ArrayList<>();
+	private List<Hobbies> hobbies = new ArrayList<>();
 
 	@ElementCollection(targetClass = Sports.class)
 	@CollectionTable(name = "sports_mapping", joinColumns = @JoinColumn(name = "profile_id"))
@@ -112,11 +107,6 @@ public class Profile extends BaseTimeEntity {
 	@Column(name = "sports")
 	private List<Sports> sports = new ArrayList<>();
 
-	@ElementCollection(targetClass = Wellbeing.class)
-	@CollectionTable(name = "wellbeing_mapping", joinColumns = @JoinColumn(name = "profile_id"))
-	@Enumerated(EnumType.STRING)
-	@Column(name = "wellbeing")
-	private List<Wellbeing> wellbeings = new ArrayList<>();
 
 
 	@OneToOne
@@ -168,19 +158,15 @@ public class Profile extends BaseTimeEntity {
 		}
 	}
 
-	public void setActivitiesInvestmentTechs(List<ActivitiesInvestmentTech> newActivitiesInvestmentTechs) {
-		this.activitiesInvestmentTechs.clear();  // 기존의 리스트를 초기화
-		this.activitiesInvestmentTechs.addAll(newActivitiesInvestmentTechs);
+
+	public void setArtBeauties(List<Art> newArtBeauties) {
+		this.art.clear();
+		this.art.addAll(newArtBeauties);
 	}
 
-	public void setArtBeauties(List<ArtBeauty> newArtBeauties) {
-		this.artBeauties.clear();
-		this.artBeauties.addAll(newArtBeauties);
-	}
-
-	public void setCareerMajors(List<CareerMajor> newCareerMajors) {
-		this.careerMajors.clear();
-		this.careerMajors.addAll(newCareerMajors);
+	public void setCareers(List<Career> newCareers) {
+		this.careers.clear();
+		this.careers.addAll(newCareers);
 	}
 
 
@@ -211,9 +197,9 @@ public class Profile extends BaseTimeEntity {
 		}
 	}
 
-	public void setHobbies(List<HobbiesInterests> newHobby) {
-		this.hobbiesInterests.clear();
-		this.hobbiesInterests.addAll(newHobby);
+	public void setHobbies(List<Hobbies> newHobby) {
+		this.hobbies.clear();
+		this.hobbies.addAll(newHobby);
 	}
 
 	public void setSports(List<Sports> newSports) {
@@ -228,10 +214,6 @@ public class Profile extends BaseTimeEntity {
 		}
 	}
 
-	public void setWellbeing(List<Wellbeing> newWellbeing) {
-		this.wellbeings.clear();
-		this.wellbeings.addAll(newWellbeing);
-	}
 
 
 	public void setAvailableLanguages(List<ProfileLanguage> profileLanguages){

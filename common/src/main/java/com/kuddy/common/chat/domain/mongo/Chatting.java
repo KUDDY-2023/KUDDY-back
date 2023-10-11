@@ -39,6 +39,11 @@ public class Chatting { //MongoDB에서 메시지 저장에 사용할 도메인 
 	private String price;
 	//동행일 경우 범위끝
 
+	public void updateSenderName(String newNickname){
+		if(!this.senderName.equals(newNickname)){
+			this.senderName = newNickname;
+		}
+	}
 
 
 }

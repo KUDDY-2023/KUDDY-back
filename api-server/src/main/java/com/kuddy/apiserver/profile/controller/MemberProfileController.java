@@ -51,8 +51,7 @@ public class MemberProfileController {
 	}
 
 	@GetMapping("/{profileId}")
-	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<StatusResponse> readProfile(@AuthUser Member member, @PathVariable Long profileId) {
+	public ResponseEntity<StatusResponse> readProfile(@PathVariable Long profileId) {
 		Profile profile = profileService.findById(profileId);
 		profileService.validateProfile(profile);
 		ProfileSearchResDto response = ProfileSearchResDto.from(profile.getMember(), profile);

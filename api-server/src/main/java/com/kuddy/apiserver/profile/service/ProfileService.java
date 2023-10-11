@@ -3,6 +3,7 @@ package com.kuddy.apiserver.profile.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.kuddy.common.chat.service.ChattingUpdateService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -45,6 +46,7 @@ public class ProfileService {
 	private final MemberService memberService;
 	private final ProfileAreaService profileAreaService;
 	private final ProfileQueryService profileQueryService;
+	private final ChattingUpdateService chattingUpdateService;
 	private final Top5KuddyService top5KuddyService;
 
 
@@ -68,7 +70,9 @@ public class ProfileService {
 		Profile profile = findByMember(member);
 		Member findMember = memberService.findById(member.getId());
 
-		findMember.updateNickname(reqDto.getNickname());
+		if(findMember.updateNickname(reqDto.getNickname())){
+			chattingUpdateService.updateSenderNameInChatting(findMember);
+		}
 		findMember.updateProfileImage(reqDto.getProfileImageUrl());
 		profile.changeJob(reqDto.getJob());
 		profile.updateIntroduce(reqDto.getIntroduce());
@@ -87,16 +91,13 @@ public class ProfileService {
 
 
 	public void setInterests(Profile profile, InterestsDto reqDto){
-
-		profile.setActivitiesInvestmentTechs(reqDto.getActivitiesInvestmentTech());
 		profile.setArtBeauties(reqDto.getArtBeauty());
-		profile.setCareerMajors(reqDto.getCareerMajor());
+		profile.setCareers(reqDto.getCareerMajor());
 		profile.setLifestyles(reqDto.getLifestyle());
 		profile.setEntertainments(reqDto.getEntertainment());
 		profile.setFoods(reqDto.getFood());
 		profile.setHobbies(reqDto.getHobbiesInterests());
 		profile.setSports(reqDto.getSports());
-		profile.setWellbeing(reqDto.getWellbeing());
 	}
 
 	public Page<Profile> getKuddyProfiles(int page, int size) {

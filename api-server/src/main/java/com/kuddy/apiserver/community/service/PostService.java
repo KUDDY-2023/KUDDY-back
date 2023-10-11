@@ -151,12 +151,7 @@ public class PostService {
         List<MyPostResDto> myPostResDtos = new ArrayList<>();
 
         for (Post post : posts) {
-            MyPostResDto myPostResDto = MyPostResDto.builder()
-                    .id(post.getId())
-                    .postType(post.getPostType().getType())
-                    .title(post.getTitle())
-                    .createdDate(post.getCreatedDate())
-                    .build();
+            MyPostResDto myPostResDto = MyPostResDto.of(post);
             myPostResDtos.add(myPostResDto);
         }
 
@@ -180,8 +175,7 @@ public class PostService {
 
     private List<String> saveImageUrls(List<String> images, Post post) {
         List<String> imageUrls = new ArrayList<>();
-        for (String fileName : images) {
-            String fileUrl = String.valueOf(imagePath + fileName);
+        for (String fileUrl : images) {
             PostImage postImage = postImageRepository.save(new PostImage(fileUrl, post));
             imageUrls.add(postImage.getFileUrl());
         }

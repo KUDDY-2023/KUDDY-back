@@ -5,6 +5,7 @@ import com.kuddy.common.meetup.domain.Meetup;
 import com.kuddy.common.meetup.domain.MeetupStatus;
 import com.kuddy.common.meetup.repository.MeetupRepository;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.member.domain.ProviderType;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,8 @@ public class MeetupReviewService {
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         log.info("현재 시간: " + now);
         List<Meetup> meetupList = meetupRepository.findAllByNotReviewed(now.minusDays(3), now, member.getId(), false, MeetupStatus.PAYED);
-        MeetupListResDto response = MeetupListResDto.from(meetupList, member);
+        ProviderType providerType = member.getProviderType();
+        MeetupListResDto response = MeetupListResDto.from(meetupList, member, providerType);
 
         return ResponseEntity.ok(StatusResponse.builder()
                 .status(StatusEnum.OK.getStatusCode())
