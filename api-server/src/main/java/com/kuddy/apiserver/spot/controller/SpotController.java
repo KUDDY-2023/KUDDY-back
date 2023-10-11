@@ -1,14 +1,10 @@
 package com.kuddy.apiserver.spot.controller;
 
-import com.kuddy.apiserver.spot.dto.SpotResDto;
 import com.kuddy.apiserver.spot.dto.SpotSearchReqDto;
-import com.kuddy.apiserver.spot.service.RecommendApiService;
 import com.kuddy.apiserver.spot.service.TourApiService;
 import com.kuddy.apiserver.spot.service.SpotService;
-import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.response.StatusEnum;
 import com.kuddy.common.response.StatusResponse;
-import com.kuddy.common.security.user.AuthUser;
 import com.kuddy.common.spot.domain.Spot;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -16,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/spots")
@@ -25,7 +20,6 @@ public class SpotController {
 
     private final SpotService spotService;
     private final TourApiService tourApiService;
-    private final RecommendApiService recommendApiService;
 
     //테스트용으로 관광정보 저장하는 api
     @PostMapping("/test")
@@ -56,24 +50,6 @@ public class SpotController {
         return spotService.changePageToResponse(spotPage, page);
     }
 
-    @GetMapping("/recommendation")
-    public ResponseEntity<StatusResponse> recommendSpot(@RequestParam(value = "page") int page, @RequestParam(value = "x") String mapX, @RequestParam(value = "y") String mapY) {
-        Page<Spot> spotPage = spotService.getSpotsByDistance(page - 1, mapX, mapY);
-        return spotService.changePageToResponse(spotPage, page);
-    }
-
-    @GetMapping("/recommendation/{contentId}")
-    public ResponseEntity<StatusResponse> recommendFiveSpot(@AuthUser Member member,
-                                                            @PathVariable Long contentId,
-                                                            @RequestParam(value = "x") String mapX,
-                                                            @RequestParam(value = "y") String mapY) {
-        List<SpotResDto> response = recommendApiService.getFiveSpotsByDistance(member, contentId, mapX, mapY);
-        return ResponseEntity.ok(StatusResponse.builder()
-                .status(StatusEnum.OK.getStatusCode())
-                .message(StatusEnum.OK.getCode())
-                .data(response)
-                .build());
-    }
 
     @GetMapping("/{contentId}")
     public ResponseEntity<StatusResponse> getSpotDetail(@PathVariable Long contentId) {
