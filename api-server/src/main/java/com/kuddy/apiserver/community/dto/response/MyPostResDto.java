@@ -19,7 +19,7 @@ public class MyPostResDto {
     public static MyPostResDto of(Post post) {
         return MyPostResDto.builder()
                 .id(post.getId())
-                .postType(post.getPostType().equals(PostType.ITINERARY)?"itinerary":"talingBoard")
+                .postType(post.getPostType().equals(PostType.ITINERARY)?"itinerary":"talkingBoard")
                 .isJoinus(post.getPostType().equals(PostType.JOIN_US))
                 .title(post.getTitle())
                 .createdDate(post.getCreatedDate())
