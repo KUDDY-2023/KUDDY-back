@@ -2,6 +2,7 @@ package com.kuddy.apiserver.comment.dto.response;
 
 import com.kuddy.common.comment.domain.Comment;
 import com.kuddy.common.community.domain.Post;
+import com.kuddy.common.community.domain.PostType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,14 +14,16 @@ public class MyCommentResDto {
     private Long id;
     private String postType;
     private String postTitle;
+    private Boolean isJoinus;
     private LocalDateTime createdDate;
 
     public static MyCommentResDto of(Comment comment) {
         Post post = comment.getPost();
         return MyCommentResDto.builder()
-                .id(comment.getId())
-                .postType(post.getPostType().getType())
-                .postTitle(post.getTitle())
+                .id(comment.getPost().getId())
+                .postType(comment.getPost().getPostType().equals(PostType.ITINERARY)?  "itinerary" : "talkingBoard")
+                .postTitle(comment.getPost().getTitle())
+                .isJoinus(comment.getPost().getPostType().equals(PostType.ITINERARY))
                 .createdDate(comment.getCreatedDate())
                 .build();
     }
