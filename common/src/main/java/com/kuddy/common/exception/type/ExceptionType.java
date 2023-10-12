@@ -19,6 +19,7 @@ import com.kuddy.common.exception.custom.ApplicationException;
 import com.kuddy.common.meetup.exception.NotAdminException;
 import com.kuddy.common.notification.exception.GoogleCalendarAPIException;
 import com.kuddy.common.notification.exception.KakaoCalendarAPIException;
+import com.kuddy.common.notification.exception.KakaoCalendarAPIPermissionException;
 import com.kuddy.common.notification.exception.NotificationNotFoundException;
 import com.kuddy.common.profile.exception.DuplicateProfileException;
 import com.kuddy.common.profile.exception.WithdrawMemberProfileException;
@@ -28,7 +29,7 @@ import com.kuddy.common.review.exception.NotTravelerException;
 import com.kuddy.common.review.exception.ReviewNotFoundException;
 import com.kuddy.common.security.exception.AlreadyLogoutException;
 import com.kuddy.common.security.exception.NotMatchStoredResfreshTokenException;
-import com.kuddy.common.spot.exception.NoSpotExists;
+import com.kuddy.common.spot.exception.*;
 import com.kuddy.common.heart.exception.AlreadyLikedException;
 import com.kuddy.common.heart.exception.HeartNotFoundException;
 import com.kuddy.common.meetup.exception.MeetupNotFoundException;
@@ -48,9 +49,6 @@ import com.kuddy.common.security.exception.InvalidRefreshTokenException;
 import com.kuddy.common.security.exception.InvalidTokenException;
 import com.kuddy.common.security.exception.InvalidTokenTypeException;
 import com.kuddy.common.security.exception.UnAuthorizedTokenException;
-import com.kuddy.common.spot.exception.NoSpotNearbyException;
-import com.kuddy.common.spot.exception.SpotNotFoundException;
-import com.kuddy.common.spot.exception.TourApiExeption;
 import com.kuddy.common.ticket.exception.OnlyTravelerRequestException;
 import com.kuddy.common.ticket.exception.TicketNotFoundException;
 
@@ -88,6 +86,7 @@ public enum ExceptionType {
 	ALREADY_LIKED_EXCEPTION("C4003", "이미 찜한 관광지입니다.", AlreadyLikedException.class),
 	NO_SPOT_EXISTS_EXCEPTION("C4004", "존재하지 않는 spot id입니다.", NoSpotExists.class),
 	NO_SPOT_NEARBY_EXCEPTION("C4005", "주변에 관광지가 없습니다.", NoSpotNearbyException.class),
+	SPOT_RECOMMEND_API_EXCEPTION("C4006", "장소 추천 API를 불러올 수 없습니다.", SpotRecommendApiException.class),
 
 	//회원 관련 - C2***
 	INVALID_NICKNAME_EXCEPTION("C2000", "유효하지 않은 닉네임입니다.", InvalidNicknameException.class),
@@ -143,7 +142,8 @@ public enum ExceptionType {
 	//알림 관련 - C13***
 	GOOGLE_CALENDAR_API_EXCEPTION("C13000", "Google Calendar API를 불러올 수 없습니다.", GoogleCalendarAPIException.class),
 	KAKAO_CALENDAR_API_EXCEPTION("C13001", "Kakao 톡캘린더 API를 불러올 수 없습니다.", KakaoCalendarAPIException.class),
-	NOTIFICATION_NOT_FOUND_EXCEPTION("C13002", "해당 알림을 찾을 수 없습니다.", NotificationNotFoundException.class);
+	NOTIFICATION_NOT_FOUND_EXCEPTION("C13002", "해당 알림을 찾을 수 없습니다.", NotificationNotFoundException.class),
+	KAKAO_CALENDAR_API_PERMISSION_EXCEPTION("C13003", "톡캘린더 권한 동의가 필요합니다.", KakaoCalendarAPIPermissionException.class);
 
 	private final String errorCode;
 	private final String message;

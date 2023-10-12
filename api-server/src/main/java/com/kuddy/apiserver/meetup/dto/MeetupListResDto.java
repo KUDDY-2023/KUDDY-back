@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.kuddy.common.meetup.domain.Meetup;
 import com.kuddy.common.meetup.domain.MeetupStatus;
 import com.kuddy.common.member.domain.Member;
+import com.kuddy.common.member.domain.ProviderType;
 import com.kuddy.common.util.CustomDateUtil;
 
 import lombok.AccessLevel;
@@ -23,6 +24,7 @@ import lombok.ToString;
 public class MeetupListResDto {
 	private final List<SingleMeetup> meetupList;
 	private final Integer totalMeetupCount;
+	private final String providerType;
 
 	@Getter
 	@AllArgsConstructor
@@ -65,7 +67,7 @@ public class MeetupListResDto {
 		}
 	}
 
-	public static MeetupListResDto from(List<Meetup> meetups, Member loginMember) {
+	public static MeetupListResDto from(List<Meetup> meetups, Member loginMember, ProviderType providerType) {
 		List<SingleMeetup> list = meetups.stream()
 			.filter(meetup -> meetup != null)
 			.map(meetup -> SingleMeetup.of(meetup, loginMember))
@@ -74,6 +76,7 @@ public class MeetupListResDto {
 		return MeetupListResDto.builder()
 			.meetupList(Collections.unmodifiableList(list))
 			.totalMeetupCount(list.size())
+			.providerType(String.valueOf(providerType))
 			.build();
 	}
 }

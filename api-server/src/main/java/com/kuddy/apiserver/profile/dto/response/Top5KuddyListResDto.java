@@ -9,15 +9,15 @@ import java.util.List;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Top5KuddyListResDto {
     private List<Top5KuddyResDto> top5KuddyList;
     private long size;
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
     public static class Top5KuddyResDto{
         private Long memberId;
@@ -36,6 +36,13 @@ public class Top5KuddyListResDto {
                     .recentReview(recentReview)
                     .kuddyLevel(member.getProfile().getKuddyLevel())
                     .build();
+        }
+
+        public void setNickname(String newNickname){
+            this.nickname = newNickname;
+        }
+        public void setProfileImageUrl(String profileImageUrl){
+            this.profileImageUrl = profileImageUrl;
         }
     }
 

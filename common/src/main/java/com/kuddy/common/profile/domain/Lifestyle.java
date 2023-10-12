@@ -7,19 +7,16 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Lifestyle {
-	NOT_SELECTED("0", "Not Selected"),
-	LIGHTHEARTED("1", "Lighthearted"),
-	MAKING_FRIENDS("2", "Making Friends"),
-	STAYING_HOME("3", "Staying Home"),
-	DATING("4", "Dating"),
-	CAT_BUTLER("5", "Cat Butler"),
-	WALK("6", "Walk"),
-	DOG("7", "Dog"),
-	FAN("8", "Fan"),
-	PET("9", "Pet"),
-	DIET("10", "Diet"),
-	MARRIAGE("11", "Marriage"),
-	CHILD_CARE("12", "Child Care");
+	NOT_SELECTED("0", "NOT_SELECTED"),
+	SOCIALIZING("1", "SOCIALIZING"),
+	HOMEBODY("2", "HOMEBODY"),
+	WALK("3", "WALK"),
+	PET("4", "PET"),
+	FITNESS("5", "FITNESS"),
+	CAMPING("6", "CAMPING"),
+	PICNIC("7", "PICNIC"),
+	VEGAN("8", "VEGAN"),
+	VOLUNTEER("9", "VOLUNTEER");
 
 	private final String code;
 	private final String name;

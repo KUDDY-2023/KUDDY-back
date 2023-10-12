@@ -206,6 +206,7 @@ public class SpotService {
         return returnStatusResponse(changeListToDto(spotList));
     }
 
+
     //조회한 spot 리스트와 페이지 정보를 공통응답형식으로 반환하도록 변환하는 메소드
     public ResponseEntity<StatusResponse> changePageToResponse(Page<Spot> spotPage, int page) {
         List<Spot> spotList = spotPage.getContent();
