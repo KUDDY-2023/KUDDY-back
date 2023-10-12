@@ -65,9 +65,8 @@ public class MemberTicketController {
 			.build());
 	}
 	@PatchMapping("/status")
-	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<StatusResponse> updateTicketStatus(@AuthUser Member member, @Valid @RequestBody TicketStatusUpdateDto reqDto) {
-		Ticket ticket = ticketService.updateStatus(member, reqDto);
+	public ResponseEntity<StatusResponse> updateTicketStatus(@Valid @RequestBody TicketStatusUpdateDto reqDto) {
+		Ticket ticket = ticketService.updateStatus(reqDto);
 		TicketResDto response = TicketResDto.of(ticket);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
