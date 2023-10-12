@@ -46,4 +46,11 @@ public enum District {
     public static District of(final String area) {
         return District.valueOf(DISTRICT_MAP.get(area));
     }
+
+    private static final Map<String, String> DISTRICT_CODE_MAP = Collections.unmodifiableMap(
+            Stream.of(values()).collect(Collectors.toMap(District::getCode, District::name)));
+
+    public static District valueOfCode(final String code) {
+        return District.valueOf(DISTRICT_CODE_MAP.get(code));
+    }
 }

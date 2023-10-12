@@ -32,18 +32,17 @@ public class HeartService {
 
         if(heartRepository.findByMemberAndSpot(member, spot).isPresent()) {
             throw new AlreadyLikedException();
-        } else {
-            heartRepository.save(Heart.builder()
-                    .member(member)
-                    .spot(spot)
-                    .build());
-            spot.likeSpot();
-            return ResponseEntity.ok(StatusResponse.builder()
-                    .status(StatusEnum.OK.getStatusCode())
-                    .message(StatusEnum.OK.getCode())
-                    .data(contentId+"번 관광지 찜")
-                    .build());
         }
+        heartRepository.save(Heart.builder()
+                .member(member)
+                .spot(spot)
+                .build());
+        spot.likeSpot();
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data(contentId+"번 관광지 찜")
+                .build());
     }
 
     public ResponseEntity<StatusResponse> cancelSpotLike(Long contentId, Member member) {
