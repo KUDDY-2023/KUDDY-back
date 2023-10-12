@@ -27,7 +27,7 @@ public class SpotRecommendController {
         Page<Spot> spotPage = spotService.getSpotsByDistance(page - 1, mapX, mapY);
         return spotService.changePageToResponse(spotPage, page);
     }
-    @GetMapping("/recommendation/{contentId}")
+    @GetMapping("/{contentId}")
     public ResponseEntity<StatusResponse> recommendFiveSpot(@PathVariable Long contentId, @RequestParam(value = "x") String mapX, @RequestParam(value = "y") String mapY) {
         return spotService.getFiveSpotsByDistance(contentId, mapX, mapY);
     }
