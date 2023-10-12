@@ -20,7 +20,7 @@ public class MyCommentResDto {
     public static MyCommentResDto of(Comment comment) {
         Post post = comment.getPost();
         return MyCommentResDto.builder()
-                .id(comment.getId())
+                .id(comment.getPost().getId())
                 .postType(post.getPostType().equals(PostType.ITINERARY)?"itinerary":"talkingBoard")
                 .isJoinus(post.getPostType().equals(PostType.JOIN_US))
                 .postTitle(post.getTitle())
