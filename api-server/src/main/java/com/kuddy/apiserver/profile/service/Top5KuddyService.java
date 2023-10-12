@@ -110,7 +110,7 @@ public class Top5KuddyService {
         return Top5KuddyListResDto.of(resDtos);
     }
 
-    @CacheEvict(value = "topKuddies", allEntries = true,cacheManager = "contentCacheManager" )
+    @CacheEvict(value = "topKuddies", allEntries = true, cacheManager = "contentCacheManager" )
     @Scheduled(cron = "0 0 12 * * ?") // 매일 오후 12시에 실행
     public void refreshTopKuddies() {
         getTop5Kuddy();

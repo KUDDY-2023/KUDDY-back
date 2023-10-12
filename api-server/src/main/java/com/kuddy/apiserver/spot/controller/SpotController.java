@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/api/v1/spots")
 @RequiredArgsConstructor
@@ -49,16 +50,6 @@ public class SpotController {
         return spotService.changePageToResponse(spotPage, page);
     }
 
-    @GetMapping("/recommendation")
-    public ResponseEntity<StatusResponse> recommendSpot(@RequestParam(value = "page") int page, @RequestParam(value = "x") String mapX, @RequestParam(value = "y") String mapY) {
-        Page<Spot> spotPage = spotService.getSpotsByDistance(page - 1, mapX, mapY);
-        return spotService.changePageToResponse(spotPage, page);
-    }
-
-    @GetMapping("/recommendation/{contentId}")
-    public ResponseEntity<StatusResponse> recommendFiveSpot(@PathVariable Long contentId, @RequestParam(value = "x") String mapX, @RequestParam(value = "y") String mapY) {
-        return spotService.getFiveSpotsByDistance(contentId, mapX, mapY);
-    }
 
     @GetMapping("/{contentId}")
     public ResponseEntity<StatusResponse> getSpotDetail(@PathVariable Long contentId) {
