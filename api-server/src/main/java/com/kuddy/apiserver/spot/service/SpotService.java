@@ -19,14 +19,21 @@ import com.kuddy.common.spot.exception.NoSpotNearbyException;
 import com.kuddy.common.spot.exception.SpotNotFoundException;
 import com.kuddy.common.spot.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,40 +43,113 @@ import static com.kuddy.common.spot.repository.SpotSpecification.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@EnableScheduling
+@Slf4j
 public class SpotService {
 
     private final SpotRepository spotRepository;
     private final HeartRepository heartRepository;
     private final SpotQueryService spotQueryService;
+    private final TourApiService tourApiService;
 
-    //JSON 응답값 중 필요한 정보(이름, 지역, 카테고리, 사진, 고유id)만 db에 저장
-    public void changeAndSave(JSONArray spotArr) {
+    @Scheduled(cron = "0 0 6 * * *")
+    public void syncTourDataEveryDay() {
+        LocalDate seoulNow = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDate oneDayAgo = seoulNow.minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String modifiedTime = oneDayAgo.format(formatter);
+        log.info(modifiedTime);
+        synchronizeTourData(tourApiService.getSyncList(1, 50, modifiedTime));
+    }
+
+    public void synchronizeTourData(JSONArray spotArr) {
         for (Object o : spotArr) {
             JSONObject item = (JSONObject) o;
-            String contentType = "";
-            String areaCode = "";
+            Long contentId = Long.valueOf((String) item.get("contentid"));
+            log.info("sync contentId = " + contentId);
 
-            if (!spotRepository.existsByContentId(Long.valueOf((String) item.get("contentid")))) {
-                for (Category category : Category.values()) {
-                    if (item.get("contenttypeid").equals(category.getCode()))
-                        contentType = category.name();
+            if(Category.hasValue((String) item.get("contenttypeid"))) {
+                //이미 저장되어 있을 경우 내용 업데이트
+                if (spotRepository.existsByContentId(contentId)) {
+                    updateSpot(item, contentId);
                 }
-                for (District district : District.values()) {
-                    if (item.get("sigungucode").equals(district.getCode()))
-                        areaCode = district.name();
+                //표출되고 있는 데이터이고 db에 저장되어 있지 않은 경우 새로 저장
+                if ((item.get("showflag").equals("1")) && (!spotRepository.existsByContentId(contentId))) {
+                    saveSpot(item, contentId);
+                    addImage(contentId);
                 }
-
-                spotRepository.save(Spot.builder()
-                        .name((String) item.get("title"))
-                        .contentId(Long.valueOf((String) item.get("contentid")))
-                        .district(District.valueOf(areaCode))
-                        .category(Category.valueOf(contentType))
-                        .imageUrl((String) item.get("firstimage"))
-                        .numOfHearts(0L)
-                        .mapX((String) item.get("mapx"))
-                        .mapY((String) item.get("mapy"))
-                        .build());
             }
+        }
+    }
+
+    public void updateSpot(JSONObject item, Long contentId) {
+        Spot spot = findSpotByContentId(contentId);
+        //더이상 표출되지 않는 데이터이면 내용 비우기
+        if(item.get("showflag").equals("0")) {
+            spot.update((String) item.get("title"),
+                    District.valueOfCode((String) item.get("sigungucode")),
+                    "",
+                    Category.valueOfCode((String) item.get("contenttypeid")),
+                    "",
+                    "",
+                    "No more information found for this spot.",
+                    (String) item.get("modifiedtime"));
+            log.info("update showflag = 0, contentId = " + contentId);
+        }
+        //표출되고 있고 저장되어 있는 데이터와 modifiedTime이 다르면 정보 업데이트
+        if((item.get("showflag").equals("1")) && (!spot.getModifiedTime().equals(item.get("modifiedtime")))) {
+            spot.update((String) item.get("title"),
+                    District.valueOfCode((String) item.get("sigungucode")),
+                    (String) item.get("firstimage"),
+                    Category.valueOfCode((String) item.get("contenttypeid")),
+                    (String) item.get("mapx"),
+                    (String) item.get("mapy"),
+                    getSpotAbout(item, contentId),
+                    (String) item.get("modifiedtime"));
+            log.info("update showflag = 1, contentId = " + contentId);
+            addImage(contentId);
+        }
+
+    }
+
+    public void saveSpot(JSONObject item, Long contentId) {
+        log.info("save contentId = " + contentId);
+        spotRepository.save(Spot.builder()
+                .name((String) item.get("title"))
+                .contentId(contentId)
+                .district(District.valueOfCode((String) item.get("sigungucode")))
+                .category(Category.valueOfCode((String) item.get("contenttypeid")))
+                .imageUrl((String) item.get("firstimage"))
+                .numOfHearts(0L)
+                .mapX((String) item.get("mapx"))
+                .mapY((String) item.get("mapy"))
+                .about(getSpotAbout(item, contentId))
+                .modifiedTime((String) item.get("modifiedtime"))
+                .build());
+    }
+
+    //TourAPI에서 spot about만 가져오기
+    public String getSpotAbout(JSONObject item, Long contentId) {
+        String about;
+        Object commonDetail = tourApiService.getCommonDetail((String) item.get("contenttypeid"), contentId);
+        JSONObject detail = (JSONObject) commonDetail;
+        about = (String) detail.get("overview");
+        return about;
+
+    }
+
+    //썸네일 없을때 상세 이미지들 중 첫번째 사진을 썸네일로 지정
+    public void addImage(Long contentId) {
+        Spot spot = findSpotByContentId(contentId);
+        if(spot.getImageUrl().isEmpty()){
+            JSONArray imageArr = tourApiService.getDetailImages(contentId);
+            if(imageArr == null)
+                spot.setImageUrl("");
+            if(!(imageArr == null)) {
+                JSONObject detailImage = (JSONObject) imageArr.get(0);
+                spot.setImageUrl((String) detailImage.get("originimgurl"));
+            }
+            log.info("addImage URL = " + spot.getImageUrl());
         }
     }
 
@@ -126,6 +206,7 @@ public class SpotService {
         return returnStatusResponse(changeListToDto(spotList));
     }
 
+
     //조회한 spot 리스트와 페이지 정보를 공통응답형식으로 반환하도록 변환하는 메소드
     public ResponseEntity<StatusResponse> changePageToResponse(Page<Spot> spotPage, int page) {
         List<Spot> spotList = spotPage.getContent();
@@ -163,14 +244,15 @@ public class SpotService {
 
         //이미지
         List<String> imageList = new ArrayList<>();
-        if(!spot.getImageUrl().isEmpty())
-            imageList.add(spot.getImageUrl());
         if(!(imageArr == null)) {
             for (Object object : imageArr) {
                 JSONObject item = (JSONObject) object;
                 String imageUrl = (String) item.get("originimgurl");
                 imageList.add(imageUrl);
             }
+        }
+        if(imageList.isEmpty() && !spot.getImageUrl().isEmpty()) {
+            imageList.add(spot.getImageUrl());
         }
 
         //상세 정보

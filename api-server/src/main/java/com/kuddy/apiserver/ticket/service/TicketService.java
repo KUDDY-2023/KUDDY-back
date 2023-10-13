@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kuddy.apiserver.ticket.dto.TicketReqDto;
 import com.kuddy.apiserver.ticket.dto.TicketStatusUpdateDto;
-import com.kuddy.common.meetup.exception.NotAdminException;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.member.exception.MemberNotFoundException;
@@ -52,10 +51,7 @@ public class TicketService {
 		return ticket;
 	}
 
-	public Ticket updateStatus(Member admin, TicketStatusUpdateDto reqDto){
-		if(!admin.getRoleType().equals(RoleType.ADMIN)){
-			throw new NotAdminException();
-		}
+	public Ticket updateStatus(TicketStatusUpdateDto reqDto){
 		Member findMember = memberRepository.findByEmail(reqDto.getMemberEmail()).orElseThrow(MemberNotFoundException::new);
 		Ticket ticket = findByMember(findMember);
 		ticket.updateTicketStatus(reqDto.getTicketStatus());

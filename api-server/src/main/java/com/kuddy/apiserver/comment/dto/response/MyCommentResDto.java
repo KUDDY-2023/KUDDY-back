@@ -16,14 +16,15 @@ public class MyCommentResDto {
     private String postTitle;
     private Boolean isJoinus;
     private LocalDateTime createdDate;
+    private Boolean isJoinus;
 
     public static MyCommentResDto of(Comment comment) {
         Post post = comment.getPost();
         return MyCommentResDto.builder()
                 .id(comment.getPost().getId())
-                .postType(comment.getPost().getPostType().equals(PostType.ITINERARY)?  "itinerary" : "talkingBoard")
-                .postTitle(comment.getPost().getTitle())
-                .isJoinus(comment.getPost().getPostType().equals(PostType.ITINERARY))
+                .postType(post.getPostType().equals(PostType.ITINERARY)?"itinerary":"talkingBoard")
+                .isJoinus(post.getPostType().equals(PostType.JOIN_US))
+                .postTitle(post.getTitle())
                 .createdDate(comment.getCreatedDate())
                 .build();
     }

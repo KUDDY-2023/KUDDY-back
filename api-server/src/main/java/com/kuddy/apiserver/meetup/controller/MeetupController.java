@@ -3,6 +3,7 @@ package com.kuddy.apiserver.meetup.controller;
 import java.util.List;
 
 import com.kuddy.apiserver.meetup.service.MeetupReviewService;
+import com.kuddy.common.member.domain.ProviderType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,8 @@ public class MeetupController {
 	@GetMapping
 	public ResponseEntity<StatusResponse> getMeetupList(@AuthUser Member member) {
 		List<Meetup> meetupList = meetupService.findListByMember(member);
-		MeetupListResDto response = MeetupListResDto.from(meetupList, member);
+		ProviderType providerType = member.getProviderType();
+		MeetupListResDto response = MeetupListResDto.from(meetupList, member, providerType);
 		return ResponseEntity.ok(StatusResponse.builder()
 			.status(StatusEnum.OK.getStatusCode())
 			.message(StatusEnum.OK.getCode())
