@@ -46,8 +46,8 @@ public class MailNotiService {
         for(Meetup meetup : meetups) {
             Member kuddy = meetup.getKuddy();
             Member traveler = meetup.getTraveler();
-            sendReviewRequestEmail(kuddy, traveler);
-            sendReviewRequestEmail(traveler, kuddy);
+            sendReviewRequestEmail(kuddy, traveler, meetup.getId());
+            sendReviewRequestEmail(traveler, kuddy, meetup.getId());
         }
     }
 
@@ -58,7 +58,7 @@ public class MailNotiService {
         sendMeetupPayedEmail(travelerEmail, travelerNickname, kuddyNickname);
 
     }
-    private void sendReviewRequestEmail(Member receiver, Member partner) throws MessagingException {
+    public void sendReviewRequestEmail(Member receiver, Member partner, Long meetupId) throws MessagingException { //TODO: private으로 수정
         String emailSubject = "[KUDDY] How was the meet up yesterday? Please write a review.";
 
         MimeMessage kuddyMessage = javaMailSender.createMimeMessage();
@@ -66,7 +66,7 @@ public class MailNotiService {
 
         kuddyMessageHelper.setTo(receiver.getEmail());
         kuddyMessageHelper.setSubject(emailSubject);
-        kuddyMessageHelper.setText(setContext(receiver.getNickname(), partner.getNickname()), true);
+        kuddyMessageHelper.setText(setContext(receiver.getNickname(), partner.getNickname(), meetupId), true);
         javaMailSender.send(kuddyMessage);
     }
 
@@ -81,10 +81,11 @@ public class MailNotiService {
         javaMailSender.send(kuddyMessage);
     }
 
-    public String setContext(String receiver, String partner){
+    public String setContext(String receiver, String partner, Long meetupId){
         Context context = new Context();
         context.setVariable("receiver", receiver);
         context.setVariable("partner", partner);
+        context.setVariable("meetupId", meetupId);
         return templateEngine.process("email-form.html",context);
     }
 
