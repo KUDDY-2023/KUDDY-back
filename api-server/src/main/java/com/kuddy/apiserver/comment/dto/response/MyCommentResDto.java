@@ -14,6 +14,7 @@ public class MyCommentResDto {
     private Long id;
     private String postType;
     private String postTitle;
+    private Boolean isJoinus;
     private LocalDateTime createdDate;
     private Boolean isJoinus;
 
