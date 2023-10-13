@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -44,11 +46,19 @@ public class MailNotiService {
         for(Meetup meetup : meetups) {
             Member kuddy = meetup.getKuddy();
             Member traveler = meetup.getTraveler();
-            sendEmail(kuddy, traveler);
-            sendEmail(traveler, kuddy);
+            sendReviewRequestEmail(kuddy, traveler);
+            sendReviewRequestEmail(traveler, kuddy);
         }
     }
-    private void sendEmail(Member receiver, Member partner) throws MessagingException {
+
+    @Async
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void sendMeetupPayedMail(String kuddyEmail, String travelerEmail, String kuddyNickname, String travelerNickname) throws MessagingException {
+        sendMeetupPayedEmail(kuddyEmail, kuddyNickname, travelerNickname);
+        sendMeetupPayedEmail(travelerEmail, travelerNickname, kuddyNickname);
+
+    }
+    private void sendReviewRequestEmail(Member receiver, Member partner) throws MessagingException {
         String emailSubject = "[KUDDY] How was the meet up yesterday? Please write a review.";
 
         MimeMessage kuddyMessage = javaMailSender.createMimeMessage();
@@ -60,6 +70,17 @@ public class MailNotiService {
         javaMailSender.send(kuddyMessage);
     }
 
+    private void sendMeetupPayedEmail(String receiverEmail, String receiverNickname, String partnerNickname) throws MessagingException {
+        String emailSubject = "[KUDDY] There is a confirmed meetup. Please check it!";
+        MimeMessage kuddyMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper kuddyMessageHelper = new MimeMessageHelper(kuddyMessage, false, "UTF-8");
+
+        kuddyMessageHelper.setTo(receiverEmail);
+        kuddyMessageHelper.setSubject(emailSubject);
+        kuddyMessageHelper.setText(setContextForMeetupPayed(receiverNickname, partnerNickname), true);
+        javaMailSender.send(kuddyMessage);
+    }
+
     public String setContext(String receiver, String partner){
         Context context = new Context();
         context.setVariable("receiver", receiver);
@@ -67,6 +88,11 @@ public class MailNotiService {
         return templateEngine.process("email-form.html",context);
     }
 
-
+    public String setContextForMeetupPayed(String receiver, String partner){
+        Context context = new Context();
+        context.setVariable("receiver", receiver);
+        context.setVariable("partner", partner);
+        return templateEngine.process("meetupPayedForm.html",context);
+    }
 
 }
