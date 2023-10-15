@@ -153,7 +153,7 @@ public class Profile extends BaseTimeEntity {
 
 
 	public void setNationality(String newNationality){
-		if (this.nationality.equals(newNationality)) {
+		if (!this.nationality.equals(newNationality)) {
 			this.nationality = newNationality;
 		}
 	}
