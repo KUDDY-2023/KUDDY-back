@@ -25,5 +25,9 @@ public enum KuddyLevel {
 			.findAny()
 			.orElse(EXPLORER);
 	}
+	public static String toString(KuddyLevel kuddyLevel){
+		return kuddyLevel.name;
+	}
+
 
 }

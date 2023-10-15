@@ -25,7 +25,7 @@ public class MeetupQueryService {
 		return jpaQueryFactory
 			.selectFrom(meetup)
 			.where(meetup.kuddy.id.eq(memberId).and(meetup.meetupStatus.notIn(excludedStatuses)))
-			.orderBy(meetup.createdDate.desc())
+			.orderBy(meetup.appointment.desc())
 			.fetch();
 	}
 	@Transactional(readOnly = true)
@@ -33,7 +33,7 @@ public class MeetupQueryService {
 		return jpaQueryFactory
 			.selectFrom(meetup)
 			.where(meetup.traveler.id.eq(memberId).and(meetup.meetupStatus.notIn(excludedStatuses)))
-			.orderBy(meetup.createdDate.desc())
+			.orderBy(meetup.appointment.desc())
 			.fetch();
 	}
 

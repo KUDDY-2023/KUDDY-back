@@ -49,7 +49,7 @@ public class MeetupListResDto {
 
 			// Null-check for spot
 			if (meetup.getSpot() != null) {
-				this.spotId = meetup.getSpot().getId();
+				this.spotId = meetup.getSpot().getContentId();
 				this.spotName = meetup.getSpot().getName();
 			} else {
 				this.spotId = null;
