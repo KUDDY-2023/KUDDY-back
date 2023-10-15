@@ -14,8 +14,8 @@ public class MyCommentResDto {
     private Long id;
     private String postType;
     private String postTitle;
-    private LocalDateTime createdDate;
     private Boolean isJoinus;
+    private LocalDateTime createdDate;
 
     public static MyCommentResDto of(Comment comment) {
         Post post = comment.getPost();

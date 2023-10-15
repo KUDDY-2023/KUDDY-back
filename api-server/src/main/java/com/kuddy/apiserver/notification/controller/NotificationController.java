@@ -2,6 +2,7 @@ package com.kuddy.apiserver.notification.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kuddy.apiserver.notification.service.CommentNotiService;
+import com.kuddy.apiserver.notification.service.MeeupNotiService;
 import com.kuddy.common.meetup.service.MeetupService;
 import com.kuddy.common.member.domain.Member;
 import com.kuddy.common.notification.calendar.service.KakaoCalendarService;
@@ -10,12 +11,11 @@ import com.kuddy.common.response.StatusResponse;
 import com.kuddy.common.security.user.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.UnsupportedEncodingException;
+import javax.mail.MessagingException;
 
 @Slf4j
 @RestController
@@ -25,6 +25,7 @@ public class NotificationController {
     private final CommentNotiService notificationService;
     private final MeetupService meetupService;
     private final KakaoCalendarService kakaoCalendarService;
+    private final MeeupNotiService meeupNotiService;
 
     //알림 구독 (SSE)
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
@@ -66,6 +67,17 @@ public class NotificationController {
                 .status(StatusEnum.OK.getStatusCode())
                 .message(StatusEnum.OK.getCode())
                 .data("일정 등록 완료")
+                .build());
+    }
+
+    @GetMapping("/mails")
+    public ResponseEntity<StatusResponse> sendEmailForMeetupSuccess(@AuthUser Member member, @RequestParam String chatId) throws MessagingException, JsonProcessingException {
+        meeupNotiService.pubishMeetupPayedEvent(chatId);
+
+        return ResponseEntity.ok(StatusResponse.builder()
+                .status(StatusEnum.OK.getStatusCode())
+                .message(StatusEnum.OK.getCode())
+                .data("메일 전송 완료")
                 .build());
     }
 
