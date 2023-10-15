@@ -20,7 +20,7 @@ public class ReplyResDto {
     private LocalDateTime createdDate;
 
     public static ReplyResDto of(Comment child, Post post, Member member) {
-        WriterInfoDto writerInfoDto = new WriterInfoDto(child.getWriter().getId(), member.getNickname(), member.getProfileImageUrl(), member.getProfile().getKuddyLevel());
+        WriterInfoDto writerInfoDto = new WriterInfoDto(child.getWriter().getId(), child.getWriter().getNickname(), child.getWriter().getProfileImageUrl(), child.getWriter().getProfile().getKuddyLevel());
         return ReplyResDto.builder()
                 .id(child.getId())
                 .content(child.getContent())
