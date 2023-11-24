@@ -7,6 +7,7 @@ import com.kuddy.apiserver.spot.dto.SpotPageResDto;
 import com.kuddy.apiserver.spot.dto.SpotResDto;
 import com.kuddy.common.heart.domain.Heart;
 import com.kuddy.common.heart.repository.HeartRepository;
+import com.kuddy.common.member.domain.MemberStatus;
 import com.kuddy.common.member.domain.RoleType;
 import com.kuddy.common.page.PageInfo;
 import com.kuddy.common.profile.exception.ProfileNotFoundException;
@@ -236,9 +237,11 @@ public class SpotService {
         for(Heart heart : heartRepository.findAllBySpot(spot)) {
             if(heart.getMember().getProfile() == null)
                 throw new ProfileNotFoundException();
-            if(heart.getMember().getRoleType().equals(RoleType.KUDDY))
+            if(heart.getMember().getRoleType().equals(RoleType.KUDDY) && !heart.getMember().getMemberStatus().equals(
+                    MemberStatus.WITHDRAW))
                 kuddyList.add(PickMemberResDto.of(heart.getMember()));
-            if(heart.getMember().getRoleType().equals(RoleType.TRAVELER))
+            if(heart.getMember().getRoleType().equals(RoleType.TRAVELER) && !heart.getMember().getMemberStatus().equals(
+                    MemberStatus.WITHDRAW))
                 travelerList.add(PickMemberResDto.of(heart.getMember()));
         }
 

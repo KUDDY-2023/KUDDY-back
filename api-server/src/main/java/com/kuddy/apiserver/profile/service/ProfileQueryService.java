@@ -7,6 +7,7 @@ import static com.kuddy.common.profile.domain.QProfile.profile;
 import static com.kuddy.common.profile.domain.QProfileArea.*;
 
 
+import com.kuddy.common.member.domain.MemberStatus;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,6 +198,7 @@ public class ProfileQueryService {
 	}
 
 	private List<Profile> executeQuery(BooleanBuilder builder,List<OrderSpecifier<?>> orderSpecifiers, Pageable pageable) {
+		builder.and(member.memberStatus.ne(MemberStatus.WITHDRAW));
 		return queryFactory.selectFrom(profile).distinct()
 				.leftJoin(profile.districts, profileArea)
 				.join(profile.member, member)
